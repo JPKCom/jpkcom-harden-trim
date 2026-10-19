@@ -1,0 +1,54 @@
+name: Dependabot auto-merge
+
+# Merges Dependabot PRs automatically - but only patch/minor, and only once the
+# required status checks are green.
+#
+# IMPORTANT, otherwise this is either useless or dangerous:
+#   1. The repo setting "Allow auto-merge" must be enabled.
+#   2. Branch protection on the target branch must list the CI job as a
+#      *required status check* ("CI / Lint & Guards"). Without that protection
+#      `gh pr merge --auto` merges IMMEDIATELY, because there is nothing left to
+#      wait for - CI would then be pure decoration.
+#
+# Major updates are deliberately not merged automatically.
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Auto-merge
+    runs-on: ubuntu-latest
+    # Only genuine Dependabot PRs from this repo - never from forks.
+    if: >-
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: Read Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98  # v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge (patch & minor)
+        if: >-
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Major update - comment instead of auto-merge
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: |
+          gh pr comment "$PR_URL" --body \
+            "Major update detected (\`${UPDATE_TYPE}\`) - auto-merge is deliberately disabled here. Please review the action's changelog and merge manually."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,33 @@
+# Dependabot - keeps the SHA-pinned GitHub Actions up to date.
+#
+# The actions in .github/workflows/ are deliberately pinned to 40-character
+# commit SHAs instead of movable tags like @v4: a tag can be repointed, a SHA
+# cannot. Since the release workflow builds the plugin ZIP *and* the SHA256
+# checksum the auto-updater trusts, a compromised action would ship a tampered
+# ZIP together with a matching checksum - the checksum secures the transport,
+# the pinning secures the build.
+#
+# Dependabot understands SHA pins and updates the SHA *and* the version comment,
+# so updates still arrive - just as a deliberately merged PR.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Never adopt a release during its first week: compromised action releases
+    # are typically discovered within that window. For the github-actions
+    # ecosystem Dependabot only supports 'default-days'; the semver-*-days keys
+    # do not exist here.
+    cooldown:
+      default-days: 7
+    # One combined PR instead of one per action.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"
+      - "github-actions"

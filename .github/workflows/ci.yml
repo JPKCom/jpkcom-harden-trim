@@ -1,0 +1,167 @@
+name: CI
+
+# Runs on every pull request. Before this workflow existed nothing checked the
+# PRs of this repo, so there was also no status check an auto-merge could wait
+# for.
+#
+# Also runs on every push to main: a required status check only applies to pull
+# requests, so a direct push with bypass rights skipped the checks entirely.
+# Tags are deliberately not covered - those are built by release.yml.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & Guards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240  # 2.37.2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: '3.x'
+
+      - name: PHP syntax check (php -l, all files)
+        run: |
+          set -euo pipefail
+          find_php() {
+            find . -name '*.php' \
+              -not -path './.git/*' \
+              -not -path './vendor/*' \
+              -not -path './node_modules/*' "$@"
+          }
+          echo "Checking $(find_php | wc -l) PHP files ..."
+          find_php -print0 | xargs -0 -r -n1 -P4 php -l > /dev/null
+          echo "OK - no syntax errors."
+
+      - name: Invalid named arguments to internal PHP functions
+        # Catches the class of error that actually occurred in this codebase:
+        # sprintf(format:, values:) binds to a variadic parameter and throws
+        # ArgumentCountError at runtime - php -l does not see that.
+        run: |
+          cat > /tmp/named_args_check.php <<'CHECK'
+          <?php
+          $bad = [];
+          $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator('.'));
+          foreach ($it as $f) {
+              $p = $f->getPathname();
+              if (!str_ends_with($p, '.php')) continue;
+              if (str_contains($p, '/vendor/') || str_contains($p, '/node_modules/') || str_contains($p, '/.git/')) continue;
+              $t = token_get_all(file_get_contents($p));
+              $n = count($t);
+              for ($i = 0; $i < $n; $i++) {
+                  if (!is_array($t[$i]) || $t[$i][0] !== T_STRING) continue;
+                  $prev = $i - 1;
+                  while ($prev >= 0 && is_array($t[$prev]) && in_array($t[$prev][0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) $prev--;
+                  if ($prev >= 0 && is_array($t[$prev]) && in_array($t[$prev][0], [T_OBJECT_OPERATOR, T_DOUBLE_COLON, T_FUNCTION, T_NEW, T_NULLSAFE_OBJECT_OPERATOR], true)) continue;
+                  $j = $i + 1;
+                  while ($j < $n && is_array($t[$j]) && $t[$j][0] === T_WHITESPACE) $j++;
+                  if ($j >= $n || $t[$j] !== '(') continue;
+                  $fn = $t[$i][1];
+                  if (!function_exists($fn)) continue;
+                  $r = new ReflectionFunction($fn);
+                  if (!$r->isInternal()) continue;
+                  $names = []; $vnames = [];
+                  foreach ($r->getParameters() as $prm) {
+                      $names[] = $prm->getName();
+                      if ($prm->isVariadic()) $vnames[] = $prm->getName();
+                  }
+                  $depth = 0;
+                  for ($k = $j; $k < $n; $k++) {
+                      $tok = $t[$k];
+                      if ($tok === '(' || $tok === '[' || $tok === '{') { $depth++; continue; }
+                      if ($tok === ')' || $tok === ']' || $tok === '}') { $depth--; if ($depth === 0) break; continue; }
+                      if ($depth !== 1) continue;
+                      if (is_array($tok) && $tok[0] === T_STRING) {
+                          $m = $k + 1;
+                          while ($m < $n && is_array($t[$m]) && $t[$m][0] === T_WHITESPACE) $m++;
+                          if ($m < $n && $t[$m] === ':') {
+                              $param = $tok[1];
+                              $isVar = in_array($param, $vnames, true);
+                              if (!in_array($param, $names, true) || $isVar) {
+                                  $why = $isVar ? 'binds to a variadic parameter -> ArgumentCountError' : 'unknown parameter name';
+                                  $bad[] = sprintf('%s:%d  %s(... %s: ...)  %s', $p, $tok[2], $fn, $param, $why);
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+          if ($bad) {
+              foreach (array_unique($bad) as $b) fwrite(STDERR, "::error::$b\n");
+              exit(1);
+          }
+          echo "OK - no invalid named arguments.\n";
+          CHECK
+          php /tmp/named_args_check.php
+
+      - name: Security and regression tests (if present)
+        run: |
+          set -euo pipefail
+          if [ ! -d tests ]; then
+            echo "No tests/ directory - skipped."
+            exit 0
+          fi
+          shopt -s nullglob
+          found=0
+          for t in tests/test-*.php; do
+            found=1
+            echo "::group::$t"
+            php "$t"
+            echo "::endgroup::"
+          done
+          if [ $found -eq 0 ]; then
+            echo "No tests/test-*.php found."
+          fi
+
+      - name: Validate workflow and Dependabot YAML
+        run: |
+          python3 -c "import yaml" 2>/dev/null || python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          import sys, pathlib, yaml
+          bad = 0
+          for f in sorted(pathlib.Path('.github').rglob('*.yml')):
+              try:
+                  yaml.safe_load(f.read_text(encoding='utf-8'))
+              except Exception as e:
+                  print(f"::error file={f}::{e}")
+                  bad = 1
+          sys.exit(bad)
+          PY
+          echo "OK - YAML valid."
+
+      - name: GitHub Actions must be pinned to a commit SHA
+        # Prevents an update (including a Dependabot PR) from turning the pins
+        # back into movable tags like @v4. A tag can be repointed, a SHA cannot
+        # - and this workflow builds the ZIP together with the checksum the
+        # auto-updater trusts.
+        run: |
+          set -euo pipefail
+          # Cover both valid YAML forms: "uses:" and "- uses:".
+          if unpinned=$(grep -rnE '^[[:space:]]*(-[[:space:]]+)?uses:' .github/workflows/ | grep -vE '@[0-9a-f]{40}'); then
+            echo "$unpinned" | while IFS= read -r line; do
+              echo "::error::Not pinned to a 40-character commit SHA: $line"
+            done
+            exit 1
+          fi
+          echo "OK - all actions pinned to a commit SHA."
