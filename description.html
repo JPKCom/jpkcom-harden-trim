@@ -1,0 +1,536 @@
+<p>A collection of small switches that make a WordPress site more
+secure, leak less information and load less unnecessary code. Every
+switch lives on one settings page under <strong>Settings → Harden &amp;
+Trim</strong> and can also be set with a PHP constant in
+<code>wp-config.php</code>. The constant always wins and locks the field
+on the settings page.</p>
+<h3 id="harmless-defaults">Harmless defaults</h3>
+<p>Activating the plugin and touching nothing must not visibly change
+your site: no layout change, no broken editor workflow, no broken
+integration. Everything that has a concrete way to break something ships
+<strong>off</strong>, with a warning next to the switch. The defaults
+only remove things nobody sees (generator tags, fingerprint headers, an
+emoji script, user enumeration paths) and add headers that match what
+browsers already do.</p>
+<p>Three presets on the settings page (Harmless, Recommended, Strict)
+apply a whole set of switches at once. A preset only assigns the keys it
+manages, never touches a locked key, and can never switch on the risky
+switches below.</p>
+<h3 id="performance">Performance</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Default</th>
+<th>Constant</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Emoji scripts</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_EMOJI</code></td>
+<td>Removes the emoji detection script and styles (front end, embeds,
+admin), the TinyMCE emoji plugin and the feed/e-mail conversion to
+<code>s.w.org</code> images. Emoji stay as Unicode. The feed/e-mail part
+is global.</td>
+</tr>
+<tr class="even">
+<td>Self pingbacks</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_SELF_PINGBACKS</code></td>
+<td>Stops WordPress from pinging your own posts. Links count as your own
+when host and path start with your site address, except a path that
+belongs to another site of the same multisite network, so on a
+subdirectory network every site, the main site included, still pings its
+sibling sites.</td>
+</tr>
+<tr class="odd">
+<td>Asset versions</td>
+<td>off (<code>off</code>, <code>hash</code>, <code>remove</code>)</td>
+<td><code>JPKCOM_HARDEN_TRIM_ASSET_VERSION</code></td>
+<td>Front end only. <code>hash</code> replaces the <code>ver</code>
+query value with a short keyed hash, so versions stay hidden and cache
+busting keeps working. <code>remove</code> drops it (stale assets after
+updates).</td>
+</tr>
+<tr class="even">
+<td>Post embeds</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_POST_EMBEDS</code></td>
+<td>Own posts cannot be embedded, other WordPress sites’ URLs are no
+longer turned into iframes, <code>wp-embed.js</code> is not loaded,
+<code>/embed/</code> answers 404. YouTube and other whitelisted
+providers keep working. The editor’s oEmbed REST route stays.</td>
+</tr>
+<tr class="odd">
+<td>Comment reply script</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_COMMENT_REPLY</code></td>
+<td>Dequeues <code>comment-reply</code>. Replies fall back to a page
+reload.</td>
+</tr>
+<tr class="even">
+<td>Dashicons</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_DASHICONS</code></td>
+<td>Dequeues dashicons for logged-out visitors. Themes and plugins that
+use dashicons on the front end lose their icons.</td>
+</tr>
+<tr class="odd">
+<td>Block library CSS</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_BLOCK_LIBRARY_CSS</code></td>
+<td>Dequeues the core block styles. Not available with block themes.
+Block content in posts loses its styling.</td>
+</tr>
+<tr class="even">
+<td>Global styles</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_GLOBAL_STYLES</code></td>
+<td>Dequeues the global styles inline CSS and the block supports CSS
+(<code>core-block-supports</code>, duotone). Not available with block
+themes. Colours, font sizes and spacing from the block editor no longer
+show, and block layouts (columns, rows, groups) lose their
+arrangement.</td>
+</tr>
+<tr class="odd">
+<td>Heartbeat</td>
+<td><code>enabled</code> (<code>enabled</code>, <code>optimized</code>,
+<code>disabled</code>)</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEARTBEAT</code></td>
+<td><code>optimized</code> sets the interval to 120 s, the documented
+safe maximum. <code>disabled</code> stops post locking, the
+session-expiry login modal, classic-editor autosave and nonce
+refresh.</td>
+</tr>
+<tr class="even">
+<td>Post revisions</td>
+<td>WordPress default</td>
+<td><code>JPKCOM_HARDEN_TRIM_POST_REVISIONS</code></td>
+<td>Limits revisions per post (0 to 100). A positive limit prunes old
+revisions on the next save. Site Editor content types are exempt. Locked
+when <code>WP_POST_REVISIONS</code> is set in
+<code>wp-config.php</code>.</td>
+</tr>
+<tr class="odd">
+<td>Autosave interval</td>
+<td>WordPress default (60 s)</td>
+<td><code>JPKCOM_HARDEN_TRIM_AUTOSAVE_INTERVAL</code></td>
+<td>Longer autosave interval (2 to 60 minutes). Locked when
+<code>AUTOSAVE_INTERVAL</code> is set in
+<code>wp-config.php</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="clean-up-head">Clean up <code>&lt;head&gt;</code></h3>
+<p>All of these are global; the role exemption does not apply.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Default</th>
+<th>Constant</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Shortlink</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEAD_SHORTLINK</code></td>
+<td>Removes the shortlink tag and the <code>Link: ...shortlink</code>
+header.</td>
+</tr>
+<tr class="even">
+<td>RSD link</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEAD_RSD</code></td>
+<td>Removes the Really Simple Discovery link.</td>
+</tr>
+<tr class="odd">
+<td>REST API links</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEAD_REST_LINKS</code></td>
+<td>Removes the REST discovery link and header. The REST API itself
+keeps working.</td>
+</tr>
+<tr class="even">
+<td>Feed links</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEAD_FEED_LINKS</code></td>
+<td>Removes feed discovery links. Feed readers can no longer
+auto-discover your feeds.</td>
+</tr>
+<tr class="odd">
+<td>Generator</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEAD_GENERATOR</code></td>
+<td>Removes the WordPress version from head, feeds and exports.</td>
+</tr>
+</tbody>
+</table>
+<p>The RSD and REST link removal is deliberately global: a version that
+only hid them from some requests would make Site Health’s HTTPS check
+report a mismatching response.</p>
+<p><strong>Why there is no switch for next/previous links or the Windows
+Live Writer manifest:</strong> WordPress 7.1 no longer prints either of
+them. A switch for them would pretend to do something.</p>
+<h3 id="privacy">Privacy</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Default</th>
+<th>Constant</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Block author enumeration</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_BLOCK_AUTHOR_ENUM</code></td>
+<td>Logged-out <code>?author=N</code> requests get a 404 instead of
+core’s redirect to <code>/author/&lt;nicename&gt;/</code>. Only with
+pretty permalinks. A request passes only when the ActivityPub plugin
+itself answers it with the actor document: ActivityPub classifies it as
+an ActivityPub request (its own content negotiation, not a header
+match), <code>author</code> is the only query argument (of the URL
+WordPress rebuilds from the <code>Host</code> header, as ActivityPub
+reads it), the user is an ActivityPub actor and the request is no feed,
+trackback, robots.txt, favicon or sitemap request (ActivityPub never
+answers those; <code>/feed/?author=N</code> would otherwise serve the
+author’s feed). So federation keeps resolving author actors, while every
+other probe, whatever its <code>Accept</code> header, gets the 404 from
+this plugin. One limit: ActivityPub reads <code>author=N</code> from the
+URL itself, so an ActivityStreams request with extra arguments
+(<code>?author=1&amp;x=1</code>) still gets the actor document from
+ActivityPub, the same document it publishes over its REST API, and never
+for a user who is not an actor. If ActivityPub still falls back to the
+theme page (an unsigned request under Authorized Fetch), that page
+becomes the 404 too. Without ActivityPub, or with a version whose
+functions are missing, nothing passes. The filter
+<code>jpkcom_harden_trim_author_enum_exempt</code> can override the
+decision per request.</td>
+</tr>
+<tr class="even">
+<td>Hide REST users</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_HIDE_REST_USERS</code></td>
+<td><code>/wp/v2/users</code> answers 401 for unauthenticated requests.
+Cookie and application-password authentication still work.</td>
+</tr>
+<tr class="odd">
+<td>oEmbed author</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_OEMBED_AUTHOR</code></td>
+<td>oEmbed responses name the site instead of the author.</td>
+</tr>
+<tr class="even">
+<td>Sitemap users</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_SITEMAP_USERS</code></td>
+<td>Removes the users provider from core sitemaps.</td>
+</tr>
+<tr class="odd">
+<td>Browse Happy</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_BROWSE_HAPPY</code></td>
+<td>Stops the dashboard call that sends the admin’s browser and your
+site URL to api.wordpress.org. The PHP version check stays.</td>
+</tr>
+<tr class="even">
+<td>Dashboard events and news</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_DASHBOARD_EVENTS</code></td>
+<td>Removes the widget that sends anonymised IP, locale and
+timezone.</td>
+</tr>
+<tr class="odd">
+<td>Local avatars</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_LOCAL_AVATARS</code></td>
+<td>Shows a local avatar instead of Gravatar, so no e-mail hash goes to
+a third party.</td>
+</tr>
+<tr class="even">
+<td>Anonymise comment IPs</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_COMMENT_IP</code></td>
+<td>Stores commenter IPs truncated (IPv4 /24, IPv6 /48; an IPv4-mapped
+IPv6 address as its IPv4 /24, a proxy list as its first address) and no
+user agent. Irreversible for new comments. Spam plugins still see the
+real IP. The comment flood check also runs against the shortened
+address, so it works per network: guests sharing one may be slowed down
+together.</td>
+</tr>
+<tr class="odd">
+<td>Embed privacy</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_EMBED_PRIVACY</code></td>
+<td>YouTube embeds use <code>youtube-nocookie.com</code>, Vimeo gets
+<code>dnt=1</code>.</td>
+</tr>
+<tr class="even">
+<td>Editor without remote content</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_EDITOR_REMOTE</code></td>
+<td>No block directory, no remote core patterns, no Openverse category,
+no Google Fonts collection.</td>
+</tr>
+<tr class="odd">
+<td>Core AI features</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_AI_FEATURES</code></td>
+<td>Disables the core AI client. Locked when <code>WP_AI_SUPPORT</code>
+is set in <code>wp-config.php</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>This is not GDPR compliance.</strong> The privacy switches
+reduce the data your site sends to third parties and exposes about its
+users. They do not replace a privacy policy, a consent tool, a data
+processing agreement or legal advice. The embed switch in particular is
+no consent solution.</p>
+<h3 id="security">Security</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Default</th>
+<th>Constant</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Neutral login errors</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_LOGIN_ERRORS</code></td>
+<td>One neutral message for unknown user, unknown e-mail and wrong
+password. Messages from other plugins (2FA, captcha, lockouts)
+stay.</td>
+</tr>
+<tr class="even">
+<td>Fingerprint headers</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_FINGERPRINT_HEADERS</code></td>
+<td>Removes <code>X-Powered-By</code> and
+<code>X-Redirect-By</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>X-Content-Type-Options</code></td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEADER_NOSNIFF</code></td>
+<td>Sends <code>nosniff</code>.</td>
+</tr>
+<tr class="even">
+<td><code>Referrer-Policy</code></td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEADER_REFERRER</code></td>
+<td>Sends <code>strict-origin-when-cross-origin</code>, the browser
+default.</td>
+</tr>
+<tr class="odd">
+<td><code>X-Frame-Options</code></td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEADER_FRAME</code></td>
+<td>Sends <code>SAMEORIGIN</code>, never on embed responses.</td>
+</tr>
+<tr class="even">
+<td><code>Permissions-Policy</code></td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEADER_PERMISSIONS</code></td>
+<td>Sends <code>camera=(), microphone=(), geolocation=()</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>Strict-Transport-Security</code></td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_HEADER_HSTS</code></td>
+<td>Sends <code>max-age=31536000</code> over HTTPS only, no subdomains,
+no preload. Browsers remember it; only switch it on when HTTPS works
+everywhere.</td>
+</tr>
+<tr class="even">
+<td>REST JSONP</td>
+<td>on</td>
+<td><code>JPKCOM_HARDEN_TRIM_REST_JSONP</code></td>
+<td>Turns off JSONP for the REST API.</td>
+</tr>
+<tr class="odd">
+<td>File editor</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_FILE_EDIT</code></td>
+<td>Turns off the theme and plugin file editors. Locked when
+<code>DISALLOW_FILE_EDIT</code> is set in
+<code>wp-config.php</code>.</td>
+</tr>
+<tr class="even">
+<td>Application passwords</td>
+<td><code>unchanged</code> (<code>unchanged</code>,
+<code>disabled</code>, <code>roles</code>)</td>
+<td><code>JPKCOM_HARDEN_TRIM_APP_PASSWORDS</code></td>
+<td><code>disabled</code> turns them off; <code>roles</code> limits them
+to the roles below. MCP and Abilities clients, the mobile app and other
+integrations stop working without them.</td>
+</tr>
+<tr class="odd">
+<td>Application password roles</td>
+<td>none</td>
+<td><code>JPKCOM_HARDEN_TRIM_APP_PASSWORD_ROLES</code></td>
+<td>Roles that may use application passwords when the setting above is
+<code>roles</code>. With no role selected nobody can use them,
+administrators included; the settings page warns about it. On multisite
+a super admin counts as <code>administrator</code> on every site.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Page caches and headers:</strong> headers are sent by PHP on
+front-end HTML responses and skipped when PHP already set a header of
+that name (WordPress or another plugin). Headers added by the web server
+(nginx <code>add_header</code>, Apache <code>mod_headers</code>), a
+proxy or a CDN are invisible to PHP, so the same header would be sent
+twice. Set each header in one place: either switch it on here, or set it
+in the server configuration and switch it off here. Two
+<code>Strict-Transport-Security</code> headers are the worst case,
+because browsers only use the first one and hstspreload.org rejects such
+responses. A page served straight from a page cache may not carry PHP
+headers at all; the server configuration is the more reliable place for
+them.</p>
+<h3 id="role-exemption">Role exemption</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Default</th>
+<th>Constant</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Exempt roles</td>
+<td>none (off)</td>
+<td><code>JPKCOM_HARDEN_TRIM_EXEMPT_ROLES</code></td>
+<td>Logged-in users with one of these roles get the untouched site for
+emoji, asset versions, comment reply script, block library CSS, global
+styles and heartbeat.</td>
+</tr>
+</tbody>
+</table>
+<p>On multisite a super admin counts as <code>administrator</code> on
+every site, also where they hold no role there. The exemption covers
+only those six switches. Everything else is global by nature (cron,
+anonymous requests, headers, constants, <code>&lt;head&gt;</code>
+output), and the settings page marks each switch accordingly. The filter
+<code>jpkcom_harden_trim_is_exempt</code> can change the decision per
+user.</p>
+<h3 id="presets">Presets</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Preset</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Harmless</td>
+<td>The defaults above.</td>
+</tr>
+<tr class="even">
+<td>Recommended</td>
+<td>Harmless plus optimized heartbeat, <code>X-Frame-Options</code>, no
+dashboard events widget, embed privacy, file editor off, 20
+revisions.</td>
+</tr>
+<tr class="odd">
+<td>Strict</td>
+<td>Recommended plus hashed asset versions, no post embeds, no comment
+reply script, no dashicons, local avatars, anonymised comment IPs, no
+remote editor content, no core AI, <code>Permissions-Policy</code>, 5
+revisions, 2 minute autosave.</td>
+</tr>
+</tbody>
+</table>
+<p>Never part of any preset: block library CSS, global styles, disabled
+heartbeat, removed asset versions, HSTS, feed link removal, application
+password settings and the role lists. Applying a preset asks for
+confirmation and lists the keys that changed.</p>
+<h3 id="import-and-export">Import and export</h3>
+<p><strong>Export</strong> downloads the stored settings as a JSON file.
+It contains no site URL and no user data. <strong>Import</strong>
+accepts a file (up to 64 KB;
+<code>JPKCOM_HARDEN_TRIM_IMPORT_MAX_BYTES</code> in
+<code>wp-config.php</code> changes the limit) or pasted JSON, accepts
+known keys only, runs every value through the same sanitiser as the
+settings form and reports how many keys were applied and which were
+rejected. A key locked by a constant is stored, but the constant still
+wins.</p>
+<h3 id="kill-switch">Kill switch</h3>
+<p><code>define( 'JPKCOM_HARDEN_TRIM_DISABLE_ALL', true );</code>
+registers no feature hooks at all. The settings page stays reachable and
+shows a notice. The value is read like every boolean constant:
+<code>'false'</code>, <code>'off'</code> or <code>0</code> keep the
+features on, and a value that is no boolean is ignored and named on the
+settings page.</p>
+<h3 id="filters-for-developers">Filters for developers</h3>
+<ul>
+<li><code>jpkcom_harden_trim_settings</code> (array) changes the
+effective settings; values are validated again. It runs once, on
+<code>plugins_loaded</code>, so add it in a plugin or mu-plugin, not in
+a theme’s <code>functions.php</code>. The settings page marks fields it
+changes and keeps saving the stored values.</li>
+<li><code>jpkcom_harden_trim_is_exempt</code> (bool, user) changes the
+role exemption.</li>
+<li><code>jpkcom_harden_trim_author_enum_exempt</code> (bool, query
+vars, Accept header, REQUEST_URI, requested URL as core rebuilds it)
+lets an anonymous <code>?author=N</code> request through.</li>
+</ul>
+<h3 id="privacy-of-the-plugin-itself">Privacy of the plugin itself</h3>
+<p>No remote requests, no telemetry, no tracking. The one exception is
+the plugin updater, which fetches a manifest from GitHub Pages whenever
+WordPress reads its list of plugin updates: in wp-admin, on the front
+end for logged-in users who can update plugins (the toolbar’s update
+counter), and in WordPress’s own update cron. The manifest is cached for
+a day, a failed fetch for an hour.</p>
+<h3 id="documentation">Documentation</h3>
+<p><strong>API Documentation:</strong> Complete PHPDoc-generated API
+documentation is available at: <a
+href="https://jpkcom.github.io/jpkcom-harden-trim/docs/">https://jpkcom.github.io/jpkcom-harden-trim/docs/</a></p>

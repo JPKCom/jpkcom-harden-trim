@@ -1,0 +1,54 @@
+<h3 id="how-do-i-set-options-in-wp-config.php">How do I set options in
+wp-config.php?</h3>
+<p>Define the constant before the “That’s all, stop editing” line. The
+constant wins over the stored value and locks the field on the settings
+page:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode php"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">define</span>( <span class="st">&#39;JPKCOM_HARDEN_TRIM_EMOJI&#39;</span><span class="ot">,</span> <span class="kw">true</span> )<span class="ot">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">define</span>( <span class="st">&#39;JPKCOM_HARDEN_TRIM_HEARTBEAT&#39;</span><span class="ot">,</span> <span class="st">&#39;optimized&#39;</span> )<span class="ot">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">define</span>( <span class="st">&#39;JPKCOM_HARDEN_TRIM_POST_REVISIONS&#39;</span><span class="ot">,</span> <span class="dv">20</span> )<span class="ot">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">define</span>( <span class="st">&#39;JPKCOM_HARDEN_TRIM_EXEMPT_ROLES&#39;</span><span class="ot">,</span> <span class="st">&#39;editor,author&#39;</span> )<span class="ot">;</span></span></code></pre></div>
+<p>Booleans take <code>true</code>/<code>false</code>, enums an exact
+value from the table, integers a value from the allowed list, role lists
+an array or a comma separated string. An invalid value is ignored and
+the settings page names the constant.</p>
+<p><code>WP_POST_REVISIONS</code>, <code>AUTOSAVE_INTERVAL</code>,
+<code>DISALLOW_FILE_EDIT</code> and <code>WP_AI_SUPPORT</code> in
+<code>wp-config.php</code> win over this plugin, including its
+constants: WordPress follows them, the matching field is locked and its
+disabled control shows their value the way WordPress reads it
+(<code>WP_POST_REVISIONS</code> <code>true</code> or <code>-1</code> as
+“WordPress default”, a number outside the list as an extra entry), and a
+<code>JPKCOM_HARDEN_TRIM_*</code> constant for the same setting is
+marked as ignored.</p>
+<h3 id="something-broke.-how-do-i-switch-everything-off">Something
+broke. How do I switch everything off?</h3>
+<p>Add <code>define( 'JPKCOM_HARDEN_TRIM_DISABLE_ALL', true );</code> to
+<code>wp-config.php</code>. No feature runs while it is defined.
+Deactivating the plugin does the same.</p>
+<h3 id="does-it-work-with-block-themes">Does it work with block
+themes?</h3>
+<p>Yes. Block library CSS and global styles are unavailable with block
+themes (the switches are disabled and do nothing there), because a block
+theme depends on those styles.</p>
+<h3 id="does-it-overlap-with-rank-math-caching-plugins-or-defender">Does
+it overlap with Rank Math, caching plugins or Defender?</h3>
+<p>Possibly. SEO plugins may remove the same <code>&lt;head&gt;</code>
+links or replace the core sitemaps (then the sitemap switch has nothing
+to do). Caching and optimisation plugins may offer emoji, embed or
+heartbeat switches. Security plugins may send the same headers; this
+plugin skips a header another plugin already set in PHP, but cannot see
+headers from the web server or a CDN. Run each switch in one place
+only.</p>
+<h3 id="what-about-xml-rpc-comments-and-the-login-url">What about
+XML-RPC, comments and the login URL?</h3>
+<p>Those are covered by sibling plugins: JPKCom Disable XML-RPC, JPKCom
+Disable Comments and JPKCom Hide Login. This plugin does not duplicate
+them.</p>
+<h3 id="does-it-make-my-site-gdpr-compliant">Does it make my site GDPR
+compliant?</h3>
+<p>No. See the note in the description.</p>
+<h3 id="what-happens-when-i-uninstall-it">What happens when I uninstall
+it?</h3>
+<p>Deleting the plugin removes its settings option and its cached data
+(on multisite, from every site). Deactivating keeps them.</p>

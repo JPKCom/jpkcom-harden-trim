@@ -1,0 +1,65 @@
+/**
+ * JPKCom Harden & Trim - settings page.
+ *
+ * Loaded on Settings > Harden & Trim only. Core admin markup does the layout;
+ * this file only adds the badges and lists.
+ */
+
+.jpkcom-harden-trim .jht-badges {
+	margin: 0.5em 0 0.25em;
+}
+
+.jpkcom-harden-trim .jht-badge {
+	display: inline-block;
+	margin: 0 0.4em 0.25em 0;
+	padding: 0 0.6em;
+	border: 1px solid #c3c4c7;
+	border-radius: 2px;
+	background: #f6f7f7;
+	color: #1d2327;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.8;
+}
+
+.jpkcom-harden-trim .jht-badge-appearance {
+	border-color: #dba617;
+	background: #fcf9e8;
+}
+
+.jpkcom-harden-trim .jht-badge-editors {
+	border-color: #72aee6;
+	background: #f0f6fc;
+}
+
+.jpkcom-harden-trim .jht-badge-block-theme,
+.jpkcom-harden-trim .jht-badge-global {
+	border-color: #8c8f94;
+}
+
+.jpkcom-harden-trim .jht-badge-locked {
+	border-color: #d63638;
+	background: #fcf0f1;
+}
+
+.jpkcom-harden-trim .jht-badge-filtered {
+	border-color: #9a6fd8;
+	background: #f6f1fc;
+}
+
+.jpkcom-harden-trim .jht-lock {
+	margin-top: 0.4em;
+}
+
+.jpkcom-harden-trim .jht-list {
+	margin-left: 1.5em;
+	list-style: disc;
+}
+
+.jpkcom-harden-trim .jht-role-scope h3 {
+	font-size: 1em;
+}
+
+.jpkcom-harden-trim .jht-preset-buttons .button {
+	margin: 0 0.5em 0.5em 0;
+}

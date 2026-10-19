@@ -1,0 +1,22 @@
+{
+  "Author": "Jean Pierre Kolb <jpk@jpkc.com>",
+  "TextDomain": "jpkcom-harden-trim",
+  "UpdateURI": "https://github.com/JPKCom/jpkcom-harden-trim",
+  "APIDocumentation": "Complete PHPDoc-generated API documentation is available at",
+  "Version": "1.0.0",
+  "Description": "Secure, private & lean WordPress: hardening, privacy and performance tweaks with safe defaults.",
+  "PluginURI": "https://github.com/JPKCom/jpkcom-harden-trim",
+  "DomainPath": "/languages",
+  "PluginName": "JPKCom Harden & Trim",
+  "Contributors": "JPKCom",
+  "Requiresatleast": "7.1",
+  "Testedupto": "7.1",
+  "Pagecachesandheaders": "headers are sent by PHP on front-end HTML",
+  "Stabletag": "1.0.0",
+  "RequiresPHP": "8.3",
+  "License": "GPL-2.0-or-later",
+  "LicenseURI": "https://www.gnu.org/licenses/gpl-2.0.html",
+  "Tags": "Security, Privacy, Performance, Hardening, Cleanup",
+  "AuthorURI": "https://www.jpkc.com",
+  "_generated": true
+}
