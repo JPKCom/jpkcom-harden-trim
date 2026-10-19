@@ -47,7 +47,9 @@ chk( 'main file exists', is_file( filename: $main ) );
 if ( is_file( filename: $main ) ) {
 	require_once $main;
 
-	chk( 'version constant', defined( constant_name: 'JPKCOM_HARDEN_TRIM_VERSION' ) && '1.0.0' === JPKCOM_HARDEN_TRIM_VERSION );
+	// The header is the source of truth; the constant and the Stable tag follow it.
+	$bm_header_version = preg_match( '/^Version:\s*(\d+\.\d+\.\d+)\s*$/m', (string) file_get_contents( filename: $main ), $bm_m ) ? $bm_m[1] : '';
+	chk( 'version constant matches the header Version (' . $bm_header_version . ')', '' !== $bm_header_version && defined( constant_name: 'JPKCOM_HARDEN_TRIM_VERSION' ) && $bm_header_version === JPKCOM_HARDEN_TRIM_VERSION );
 	chk( 'file constant', defined( constant_name: 'JPKCOM_HARDEN_TRIM_FILE' ) && JPKCOM_HARDEN_TRIM_FILE === $main );
 	chk( 'path constant', defined( constant_name: 'JPKCOM_HARDEN_TRIM_PATH' ) && str_ends_with( haystack: JPKCOM_HARDEN_TRIM_PATH, needle: '/' ) );
 	chk( 'url constant', defined( constant_name: 'JPKCOM_HARDEN_TRIM_URL' ) );
@@ -113,7 +115,7 @@ $text = (string) file_get_contents( filename: $main );
 chk( 'header Requires at least 7.1', str_contains( haystack: $text, needle: 'Requires at least: 7.1' ) );
 chk( 'header Requires PHP 8.3', str_contains( haystack: $text, needle: 'Requires PHP: 8.3' ) );
 chk( 'header Tested up to 7.1', str_contains( haystack: $text, needle: 'Tested up to: 7.1' ) );
-chk( 'header Stable tag 1.0.0', str_contains( haystack: $text, needle: 'Stable tag: 1.0.0' ) );
+chk( 'header Stable tag matches Version', 1 === preg_match( '/^Version:\s*(\S+)\s*$/m', $text, $bm_v ) && str_contains( haystack: $text, needle: 'Stable tag: ' . $bm_v[1] . "\n" ) );
 chk( 'header has no Network line', ! str_contains( haystack: $text, needle: 'Network:' ) );
 // Update URI: read the header exactly as core's get_file_data() does (wp-includes/functions.php).
 $jht_update_uri = preg_match( '/^(?:[ \t]*<?php)?[ \t\/*#@]*' . preg_quote( 'Update URI', '/' ) . ':(.*)$/mi', $text, $jht_m ) ? trim( string: $jht_m[1] ) : '';

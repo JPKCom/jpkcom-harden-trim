@@ -28,6 +28,11 @@ function delete_transient( string $transient ): bool {
 	return true;
 }
 
+function delete_site_transient( string $transient ): bool {
+	$GLOBALS['jht_log'][] = array( 'delete_site_transient', $GLOBALS['jht_ms']['blog'], $transient );
+	return true;
+}
+
 
 function get_sites( $args = array() ): array {
 	$GLOBALS['jht_log'][] = array( 'get_sites', $args );

@@ -64,6 +64,7 @@ $jht_notice_only = static fn( array $entries ): array => array_values( array: ar
 $jht_updater_only = static fn( array $entries ): array => array_values( array: array_filter( array: $entries, callback: static fn( array $e ): bool => str_starts_with( haystack: (string) $e[2], needle: 'jpk_git_update_' ) ) );
 chk( 'single: leftover transient deleted through delete_transient', array( array( 'delete_transient', 1, 'jpkcom_harden_trim_notice_1' ) ) === $jht_notice_only( jht_entries( $log, 'delete_transient' ) ) );
 chk( 'single: updater cache transients deleted', array( array( 'delete_transient', 1, $jht_upd ), array( 'delete_transient', 1, $jht_upd . '_fail' ), array( 'delete_transient', 1, $jht_upd . '_lock' ) ) === $jht_updater_only( jht_entries( $log, 'delete_transient' ) ) );
+chk( 'single: network-wide updater cache deleted once', array( array( 'delete_site_transient', 1, $jht_upd ), array( 'delete_site_transient', 1, $jht_upd . '_fail' ), array( 'delete_site_transient', 1, $jht_upd . '_lock' ) ) === jht_entries( $log, 'delete_site_transient' ) );
 chk( 'single: no site switching', array() === jht_entries( $log, 'switch_to_blog' ) && array() === jht_entries( $log, 'get_sites' ) );
 
 // Multisite.
@@ -91,6 +92,7 @@ chk(
 	) === $jht_notice_only( jht_entries( $log, 'delete_transient' ) )
 );
 chk( 'multisite: updater cache transients deleted on every site', 9 === count( $jht_updater_only( jht_entries( $log, 'delete_transient' ) ) ) && array( 1, 1, 1, 2, 2, 2, 3, 3, 3 ) === array_map( callback: static fn( array $e ): int => (int) $e[1], array: $jht_updater_only( jht_entries( $log, 'delete_transient' ) ) ) );
+chk( 'multisite: network-wide updater cache deleted once, not per site', array( array( 'delete_site_transient', 1, $jht_upd ), array( 'delete_site_transient', 1, $jht_upd . '_fail' ), array( 'delete_site_transient', 1, $jht_upd . '_lock' ) ) === jht_entries( $log, 'delete_site_transient' ) );
 $jht_order = array_map( callback: static fn( array $e ): string => $e[0], array: array_values( array: array_filter( array: $log, callback: static fn( array $e ): bool => in_array( needle: $e[0], haystack: array( 'switch_to_blog', 'delete_option', 'restore_current_blog' ), strict: true ) ) ) );
 chk( 'multisite: each delete happens between switch and restore', array( 'switch_to_blog', 'delete_option', 'restore_current_blog', 'switch_to_blog', 'delete_option', 'restore_current_blog', 'switch_to_blog', 'delete_option', 'restore_current_blog' ) === $jht_order );
 

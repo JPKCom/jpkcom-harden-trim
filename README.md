@@ -3,7 +3,7 @@
 **Plugin Name:** JPKCom Harden & Trim  
 **Plugin URI:** https://github.com/JPKCom/jpkcom-harden-trim  
 **Description:** Secure, private & lean WordPress: hardening, privacy and performance tweaks with safe defaults.  
-**Version:** 1.0.0  
+**Version:** 1.0.1  
 **Author:** Jean Pierre Kolb <jpk@jpkc.com>  
 **Author URI:** https://www.jpkc.com  
 **Contributors:** JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 7.1  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.0.0  
+**Stable tag:** 1.0.1  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** jpkcom-harden-trim  
@@ -260,6 +260,10 @@ multisite, from every site). Deactivating keeps them.
 
 
 ## Changelog
+
+### 1.0.1
+* Changed: the updater keeps its manifest cache, its failure marker and its fetch lock in site transients. On multisite the network now fetches the manifest once instead of once per site; on a single site nothing changes
+* Changed: uninstalling also removes the updater's network-wide cache entries, and still the per-site ones 1.0.0 wrote
 
 ### 1.0.0
 * Added: Initial release.

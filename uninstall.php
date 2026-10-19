@@ -3,9 +3,9 @@
  * Uninstall: remove everything this plugin stored.
  *
  * Runs only when WordPress deletes the plugin (WP_UNINSTALL_PLUGIN), never on
- * deactivation. Removes the settings option, leftover notice transients and
- * the bundled updater's cache transients; on multisite on every site,
- * because the settings are per site.
+ * deactivation. Removes the settings option and leftover notice transients,
+ * on multisite on every site, because the settings are per site, and the
+ * bundled updater's cache, which is one set of site transients per network.
  *
  * Notice transients live 60 seconds. They are found by name in the options
  * table; with a persistent object cache they are not stored there and simply
@@ -50,13 +50,28 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_uninstall_site' ) ) {
 			}
 		}
 
-		// The family updater's manifest cache, negative cache and fetch lock
-		// (class-plugin-updater.php: 'jpk_git_update_' . md5( plugin directory )).
-		$updater_key = 'jpk_git_update_' . md5( string: basename( path: __DIR__ ) );
-
+		// Per-site copies of the updater cache, written by 1.0.0 before the
+		// updater moved to site transients; they would otherwise expire on their own.
 		foreach ( array( '', '_fail', '_lock' ) as $suffix ) {
-			delete_transient( $updater_key . $suffix );
+			delete_transient( jpkcom_harden_trim_uninstall_updater_key() . $suffix );
 		}
+	}
+
+}
+
+if ( ! function_exists( function: 'jpkcom_harden_trim_uninstall_updater_key' ) ) {
+
+	/**
+	 * The family updater's cache key (class-plugin-updater.php:
+	 * 'jpk_git_update_' . md5( plugin directory )).
+	 *
+	 * @since 1.0.1
+	 *
+	 * @return string The key; `_fail` and `_lock` are appended for the
+	 *                negative cache and the fetch lock.
+	 */
+	function jpkcom_harden_trim_uninstall_updater_key(): string {
+		return 'jpk_git_update_' . md5( string: basename( path: __DIR__ ) );
 	}
 
 }
@@ -69,4 +84,10 @@ if ( is_multisite() ) {
 	}
 } else {
 	jpkcom_harden_trim_uninstall_site();
+}
+
+// The updater's manifest cache, negative cache and fetch lock: site transients,
+// so one set per network, deleted once.
+foreach ( array( '', '_fail', '_lock' ) as $jpkcom_harden_trim_suffix ) {
+	delete_site_transient( jpkcom_harden_trim_uninstall_updater_key() . $jpkcom_harden_trim_suffix );
 }
