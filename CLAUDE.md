@@ -12,7 +12,10 @@ behind one settings page. Every switch can also be set by a PHP constant in
   verified against 7.1.3)
 - **Not network-only** (no `Network:` header); settings are per site
 - **Harmless defaults:** activating with defaults must not visibly change a
-  site. Everything with a break path ships OFF.
+  site. Everything with a break path ships OFF. **One owner-decided exception:**
+  `xmlrpc` ships ON (see Presets and "Parity with the standalone plugins"), so
+  XML-RPC is refused right after activation, and right after an update from 1.0.x
+  (the stored option has no `xmlrpc` key, so the default applies).
 - **No remote requests, no telemetry.** The only outbound call is the bundled
   updater's manifest fetch.
 
@@ -92,9 +95,17 @@ role scoping, core constants and badge flags. Presets live there too.
 `harmless` = the defaults. `recommended` and `strict` list overrides only. The
 **preset-managed** keys are every schema key except `block_library_css`,
 `global_styles`, `header_hsts`, `head_feed_links`, `app_passwords`,
-`app_password_roles` and `exempt_roles`. Applying a preset assigns every
-unlocked managed key (the preset value, or the default when unlisted); the
+`app_password_roles`, `exempt_roles` and `comments`. Applying a preset assigns
+every unlocked managed key (the preset value, or the default when unlisted); the
 excluded keys are never touched.
+
+`xmlrpc` is on in every preset: `harmless` gets it from the default,
+`recommended` and `strict` list `'xmlrpc' => true`. No preset ever turns it off,
+so applying one can never silently reopen XML-RPC. The accepted flip side is
+that applying a preset turns it back **on** on a site that had it off (for
+example for Jetpack); the preset confirm text and the field description say so,
+and a `JPKCOM_HARDEN_TRIM_XMLRPC` constant keeps it off regardless. `comments`
+is never in a preset because it hides existing content.
 
 ### Role exemption
 
@@ -164,6 +175,69 @@ Features are registered in `includes/features*.php`.
 | `rest_jsonp` | `rest_jsonp_enabled` false |
 | `file_edit` | `define( 'DISALLOW_FILE_EDIT', true )` at plugin load if undefined |
 | `app_passwords` | `wp_is_application_passwords_available` false, or `wp_is_application_passwords_available_for_user` against `app_password_roles` |
+
+### Site-wide (`features-sitewide.php`, both global)
+
+Registered by `jpkcom_harden_trim_register_sitewide_features()` at plugin load,
+only for a switch that is on. Parity details in the next section.
+
+| Feature | Hooks |
+|---|---|
+| `xmlrpc` | `xmlrpc_enabled` false and `xmlrpc_methods` empty array, both @PHP_INT_MAX; `pings_open` false @PHP_INT_MAX (2 args; stops `X-Pingback` and `<link rel="pingback">`, also refuses trackbacks); `init` @0 `jpkcom_harden_trim_xmlrpc_refuse` (when `XMLRPC_REQUEST` is defined: `nocache_headers()`, 403, `text/xml`, an XML-RPC fault, `exit`); `wp_xmlrpc_server_class` last-resort `wp_die( 403 )` |
+| `comments` | `comments_open`, `pings_open` false and `comments_array` empty array, all @PHP_INT_MAX (2 args); `wp_count_comments` zeroed @PHP_INT_MAX; `comments_pre_query` short-circuit @PHP_INT_MAX (`[]`, or `0` for a count query); `wp_loaded` removes `comments` and `trackbacks` support from every post type (independently); `rest_api_init` attaches `rest_prepare_{post_type}` @PHP_INT_MAX that rewrites `comment_status` and `ping_status` to `closed`; `rest_endpoints` drops `/wp/v2/comments` and `/wp/v2/comments/…`; `template_redirect` @0 404 for comment feeds; `feed_links_show_comments_feed` false; `admin_menu` removes the Comments page; `admin_bar_menu` @999 removes the node; `admin_init` redirects `edit-comments.php` to the dashboard |
+
+---
+
+## Parity with the standalone plugins
+
+`xmlrpc` and `comments` mirror **JPKCom Disable XML-RPC 1.0.10** and **JPKCom
+Disable Comments 1.0.10**: same hooks, priorities, accepted arguments and return
+values. Only the callback names (`jpkcom_harden_trim_…`, so both can be active
+together without a redeclare) and the text domain differ, plus two documented
+exceptions:
+
+- **XML-RPC fault text is an English literal** (`XML-RPC is disabled.`): the
+  guard runs at `init` priority 0, before this plugin loads its text domain at
+  priority 1, and the body is machine-facing. The `wp_die()` last-resort path
+  and the comment-feed refusal use translated strings (they run later).
+- **The comment-feed 404 stays `wp_die( …, 404 )`** and deliberately does not go
+  through `jpkcom_harden_trim_force_404()`. While `is_comment_feed()` is true
+  core routes `wp_die()` to `_xml_wp_die_handler` (7.1.3 `functions.php:3866-3878`),
+  so the answer is a 404 **XML** error document, not the theme's 404 template.
+  This is the one forced 404 that is not an HTML page.
+
+Carried-over facts (the standalone plugins measured them against WP 7.0.2; the
+code comments cite the 7.1.3 lines):
+
+- The 403 is written directly at `init` priority 0: with `XMLRPC_REQUEST`
+  defined `wp_die()` dispatches to `_xmlrpc_wp_die_handler()`, which emits
+  nothing unless `$wp_xmlrpc_server` exists, and it never calls
+  `status_header()`; `xmlrpc.php` creates that object after `init`. The request
+  is detected by the `XMLRPC_REQUEST` constant, not by `SCRIPT_FILENAME`.
+- `pings_open` false stops `X-Pingback` and the themes' pingback link and, as a
+  side effect, refuses trackbacks and incoming pingbacks, independent of
+  `self_pingbacks` (which governs outgoing self-pings).
+- Support removal runs on `wp_loaded`, not `admin_init`, so REST requests are
+  covered. Removing support is not enough for `post`, `page`, `attachment`:
+  `WP_REST_Posts_Controller` keeps `comments` in a hardcoded `$fixed_schemas`
+  list, hence the `rest_prepare_{post_type}` rewrite to `closed` for every type.
+- `comments_array` covers only the template path; the dashboard Activity widget
+  needs the `comments_pre_query` short-circuit; the At a Glance line needs the
+  zeroed `wp_count_comments`.
+- Comment feeds are built by `WP_Query` through `$wpdb` and bypass both comment
+  filters, hence the `template_redirect` @0 refusal. `/feed/` is unaffected.
+- With `comments` on, `comment_ip` and its flood check have nothing to act on.
+
+**Maintenance rule:** a behaviour fix in either standalone plugin must be carried
+over here (the reverse is the owner's call). Keep the mirrored versions above
+current and port the matching cases of their `tests/test-hooks.php` into
+`tests/test-features-sitewide.php`. If a WordPress release changes a core fact
+listed here, parity still wins: copy the standalone behaviour, record the
+difference in this section and tell the owner.
+
+**Multisite:** like every presentation hook, these hooks are registered once from
+the settings of the site the request boots on and follow that site after
+`switch_to_blog()`. The settings themselves are per site.
 
 ---
 
@@ -258,6 +332,7 @@ jpkcom-harden-trim/
 │   ├── features-head.php
 │   ├── features-privacy.php
 │   ├── features-security.php
+│   ├── features-sitewide.php        ← xmlrpc and comments switches (parity with the standalone plugins)
 │   ├── admin-page.php               ← Settings screen, save and preset handlers
 │   ├── import-export.php            ← Export download, import
 │   └── class-plugin-updater.php     ← GitHub updater (namespace JPKComHardenTrimGitUpdate)
@@ -384,8 +459,8 @@ Triggered by **pushing a `v*` tag**; the workflow creates the GitHub release aut
 **phpDocumentor is pinned.** Step 10 downloads `phpDocumentor.phar` from a
 fixed GitHub release (`PHPDOC_VERSION`) and runs `sha256sum -c` against the
 hard-coded `PHPDOC_SHA256` before executing it; a mismatch fails the job before
-anything is deployed. This deviates from the family's unpinned
-`https://phpdoc.org/phpDocumentor.phar`. To bump: pick a release on
+anything is deployed. The family has been pinned the same way since
+2026-10-19 (the old unpinned `https://phpdoc.org/phpDocumentor.phar` is gone). To bump: pick a release on
 <https://github.com/phpDocumentor/phpDocumentor/releases>, download its
 `phpDocumentor.phar`, check `sha256sum` against the digest the release page
 lists, and change both values in the same commit (currently 3.10.0).
@@ -408,6 +483,7 @@ the module and asserts; a failure exits 1.
 - `test-settings-store.php` — sanitiser edge cases, constant resolution, read/write round trip, exemption logic
 - `test-presets.php` — preset-managed keys, locked keys untouched, never-in-preset keys
 - `test-features-performance.php`, `test-features-head-security.php`, `test-features-privacy.php` — hook registration per setting, including "default settings register exactly the harmless set"
+- `test-features-sitewide.php` — the `xmlrpc` and `comments` switches: registration only when on, every ported parity case of the standalone suites, the `init` @0 guard as a subprocess (`fixture-xmlrpc-refuse.php`)
 - `test-admin-page.php`, `test-import-export.php` — form application, import validation and rejection codes
 - `test-bootstrap-main.php` — main file, `Update URI`, module load order, kill switch values, activation callback
 - `test-uninstall.php`, `test-i18n.php` — uninstall cleanup, catalogue guard (`.pot` coverage, `.po` = `.mo` = `.l10n.php` per entry, one form of address per locale)

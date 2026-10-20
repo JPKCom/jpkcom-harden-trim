@@ -156,4 +156,16 @@ chk( 'do_action/apply_filters on unregistered hook do not throw', ! $jht_threw )
 chk( 'apply_filters on unregistered hook returns the value', 5 === $jht_val );
 chk( 'unregistered hook leaves no entry in jht_hooks', ! array_key_exists( key: 'jht_nothing_registered', array: $GLOBALS['jht_hooks'] ) && ! array_key_exists( key: 'jht_nothing_registered_filter', array: $GLOBALS['jht_hooks'] ) );
 
+// Release metadata: README and phpdoc.xml follow the header version, and the changelog block for it leads with the XML-RPC consequence.
+$jht_ver    = $bm_v[1] ?? '';
+$jht_readme = (string) file_get_contents( filename: $root . '/README.md' );
+$jht_phpdoc = (string) file_get_contents( filename: $root . '/phpdoc.xml' );
+chk( 'README **Version:** matches the header', str_contains( haystack: $jht_readme, needle: '**Version:** ' . $jht_ver . "  \n" ) );
+chk( 'README **Stable tag:** matches the header', str_contains( haystack: $jht_readme, needle: '**Stable tag:** ' . $jht_ver . "  \n" ) );
+chk( 'phpdoc.xml version matches the header', str_contains( haystack: $jht_phpdoc, needle: '<version number="' . $jht_ver . '">' ) );
+$jht_block = preg_match( '/^### ' . preg_quote( $jht_ver, '/' ) . '\R(.*?)(?:^### |\z)/ms', $jht_readme, $jht_cl ) ? trim( string: $jht_cl[1] ) : '';
+$jht_first = strtok( $jht_block, "\n" );
+chk( 'changelog has a block for the header version', '' !== $jht_block );
+chk( 'changelog first entry states that XML-RPC is blocked after the update', false !== $jht_first && str_contains( haystack: $jht_first, needle: 'XML-RPC' ) && str_contains( haystack: $jht_first, needle: "define( 'JPKCOM_HARDEN_TRIM_XMLRPC', false );" ) );
+
 summary();

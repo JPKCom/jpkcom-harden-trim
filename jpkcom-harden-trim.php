@@ -3,7 +3,7 @@
 Plugin Name: JPKCom Harden & Trim
 Plugin URI: https://github.com/JPKCom/jpkcom-harden-trim
 Description: Secure, private & lean WordPress: hardening, privacy and performance tweaks with safe defaults.
-Version: 1.0.1
+Version: 1.1.0
 Author: Jean Pierre Kolb <jpk@jpkc.com>
 Author URI: https://www.jpkc.com
 Contributors: JPKCom
@@ -11,7 +11,7 @@ Tags: Security, Privacy, Performance, Hardening, Cleanup
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: jpkcom-harden-trim
@@ -32,7 +32,7 @@ if ( ! defined( constant_name: 'WPINC' ) ) {
  * @since 1.0.0
  */
 if ( ! defined( 'JPKCOM_HARDEN_TRIM_VERSION' ) ) {
-	define( 'JPKCOM_HARDEN_TRIM_VERSION', '1.0.1' );
+	define( 'JPKCOM_HARDEN_TRIM_VERSION', '1.1.0' );
 }
 
 if ( ! defined( 'JPKCOM_HARDEN_TRIM_FILE' ) ) {
