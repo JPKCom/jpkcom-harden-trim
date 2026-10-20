@@ -154,6 +154,9 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_schema' ) ) {
 				'flags'   => array( 'editors', 'global' ),
 			) ),
 			'app_password_roles' => jpkcom_harden_trim_schema_entry( 'roles', array(), 'security' ),
+			// Owner decision 2026-10-20: the one security switch that is on by default (see CLAUDE.md).
+			'xmlrpc'             => jpkcom_harden_trim_schema_entry( 'bool', true, 'security', $global ),
+			'comments'           => jpkcom_harden_trim_schema_entry( 'bool', false, 'security', array( 'flags' => array( 'appearance', 'editors', 'global' ) ) ),
 
 			// 4.5 Roles. Default: nobody is exempt (user decision).
 			'exempt_roles'       => jpkcom_harden_trim_schema_entry( 'roles', array(), 'roles' ),
@@ -202,6 +205,7 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_presets' ) ) {
 			'embed_privacy'    => true,
 			'file_edit'        => true,
 			'post_revisions'   => 20,
+			'xmlrpc'           => true,
 		);
 
 		$strict = array_merge(
@@ -237,14 +241,15 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_preset_managed_keys' ) ) {
 	 *
 	 * The excluded keys either have a break path no preset may switch on, or
 	 * hold a decision only the site owner can make (role lists, application
-	 * passwords, HSTS, feed discovery).
+	 * passwords, HSTS, feed discovery, comments). `xmlrpc` is managed: it is
+	 * on in every preset, so no preset can reopen XML-RPC.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return list<string> Keys in schema order.
 	 */
 	function jpkcom_harden_trim_preset_managed_keys(): array {
-		$never = array( 'block_library_css', 'global_styles', 'header_hsts', 'head_feed_links', 'app_passwords', 'app_password_roles', 'exempt_roles' );
+		$never = array( 'block_library_css', 'global_styles', 'header_hsts', 'head_feed_links', 'app_passwords', 'app_password_roles', 'comments', 'exempt_roles' );
 
 		return array_values( array: array_diff( array_keys( array: jpkcom_harden_trim_schema() ), $never ) );
 	}

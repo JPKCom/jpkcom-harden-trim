@@ -34,11 +34,11 @@ $schema   = jpkcom_harden_trim_schema();
 $defaults = jpkcom_harden_trim_defaults();
 $presets  = jpkcom_harden_trim_presets();
 $managed  = jpkcom_harden_trim_preset_managed_keys();
-$never    = array( 'block_library_css', 'global_styles', 'header_hsts', 'head_feed_links', 'app_passwords', 'app_password_roles', 'exempt_roles' );
+$never    = array( 'block_library_css', 'global_styles', 'header_hsts', 'head_feed_links', 'app_passwords', 'app_password_roles', 'comments', 'exempt_roles' );
 
 chk( 'presets are exactly harmless, recommended, strict', array( 'harmless', 'recommended', 'strict' ) === array_keys( array: $presets ) );
 chk( 'harmless preset is empty (= defaults)', array() === $presets['harmless'] );
-chk( 'managed keys exclude the seven never-keys', array() === array_intersect( $never, $managed ) );
+chk( 'managed keys exclude the eight never-keys', array() === array_intersect( $never, $managed ) );
 chk( 'managed keys = all other schema keys, in schema order', array_values( array: array_diff( array_keys( array: $schema ), $never ) ) === $managed );
 
 $jht_valid = true;
@@ -101,6 +101,19 @@ foreach ( array_keys( array: $presets ) as $name ) {
 	chk( "{$name}: block_library_css, head_feed_links untouched", true === $s['block_library_css'] && true === $s['head_feed_links'] );
 }
 
+// xmlrpc is on under every preset; comments is never preset-managed.
+
+chk( 'xmlrpc is preset-managed, comments is not', in_array( needle: 'xmlrpc', haystack: $managed, strict: true ) && ! in_array( needle: 'comments', haystack: $managed, strict: true ) );
+chk( 'recommended and strict list xmlrpc => true, harmless stays empty', true === ( $presets['recommended']['xmlrpc'] ?? null ) && true === ( $presets['strict']['xmlrpc'] ?? null ) && array() === $presets['harmless'] );
+foreach ( array_keys( array: $presets ) as $name ) {
+	$jht_off = array_merge( $defaults, array( 'xmlrpc' => false, 'comments' => true ) );
+	$s       = jpkcom_harden_trim_apply_preset( $name, $jht_off )['settings'];
+	chk( "{$name}: xmlrpc switched on again from off", true === $s['xmlrpc'] );
+	chk( "{$name}: comments keeps its stored value (on)", true === $s['comments'] );
+	$jht_on_off = array_merge( $defaults, array( 'comments' => false ) );
+	chk( "{$name}: comments keeps its stored value (off)", false === jpkcom_harden_trim_apply_preset( $name, $jht_on_off )['settings']['comments'] );
+}
+
 // Harmless restores defaults from strict.
 
 $strict = jpkcom_harden_trim_apply_preset( 'strict', $defaults )['settings'];
@@ -136,6 +149,15 @@ foreach ( $presets as $values ) {
 chk( 'no preset sets heartbeat=disabled or asset_version=remove', ! $jht_forbidden );
 
 // Locked keys are skipped (child process: needs a constant).
+
+$run = jht_run_fixture( __DIR__ . '/fixture-constants.php', array( 'JHT_MODE' => 'xmlrpc' ) );
+$out = json_decode( json: $run['out'], associative: true );
+chk( 'fixture-constants xmlrpc (presets): exits 0 with JSON', 0 === $run['exit'] && is_array( $out ) );
+if ( is_array( $out ) ) {
+	foreach ( array( 'harmless', 'recommended', 'strict' ) as $name ) {
+		chk( "locked xmlrpc (constant false): {$name} leaves it false and out of changed", false === $out['presets'][ $name ]['settings']['xmlrpc'] && ! in_array( needle: 'xmlrpc', haystack: $out['presets'][ $name ]['changed'], strict: true ) );
+	}
+}
 
 $run = jht_run_fixture( __DIR__ . '/fixture-constants.php', array( 'JHT_MODE' => 'preset' ) );
 $out = json_decode( json: $run['out'], associative: true );

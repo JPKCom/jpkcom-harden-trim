@@ -74,7 +74,7 @@ $expected_order = array(
 	'block_author_enum', 'hide_rest_users', 'oembed_author', 'sitemap_users', 'browse_happy', 'dashboard_events',
 	'local_avatars', 'comment_ip', 'embed_privacy', 'editor_remote', 'ai_features',
 	'login_errors', 'fingerprint_headers', 'header_nosniff', 'header_referrer', 'header_frame', 'header_permissions',
-	'header_hsts', 'rest_jsonp', 'file_edit', 'app_passwords', 'app_password_roles',
+	'header_hsts', 'rest_jsonp', 'file_edit', 'app_passwords', 'app_password_roles', 'xmlrpc', 'comments',
 	'exempt_roles',
 );
 chk( 'schema keys in settings-page order', array_keys( array: $schema ) === $expected_order );
@@ -120,7 +120,7 @@ $jht_block = array_keys( array: array_filter( array: $schema, callback: static f
 chk( 'block_theme_unavailable keys', array( 'block_library_css', 'global_styles' ) === $jht_block );
 
 $jht_groups = array_count_values( array: array_column( array: $schema, column_key: 'group' ) );
-chk( 'group sizes 11/5/11/11/1', array( 'performance' => 11, 'head' => 5, 'privacy' => 11, 'security' => 11, 'roles' => 1 ) === $jht_groups );
+chk( 'group sizes 11/5/11/13/1', array( 'performance' => 11, 'head' => 5, 'privacy' => 11, 'security' => 13, 'roles' => 1 ) === $jht_groups );
 
 $jht_global_ok = true;
 foreach ( $schema as $key => $entry ) {
@@ -140,11 +140,15 @@ $defaults = jpkcom_harden_trim_defaults();
 $jht_on   = array_keys( array: array_filter( array: $defaults, callback: static fn( mixed $v ): bool => true === $v ) );
 chk(
 	'defaults_are_harmless: ON set is exactly the harmless set',
-	array( 'emoji', 'self_pingbacks', 'head_shortlink', 'head_rsd', 'head_rest_links', 'head_generator', 'block_author_enum', 'hide_rest_users', 'oembed_author', 'sitemap_users', 'browse_happy', 'login_errors', 'fingerprint_headers', 'header_nosniff', 'header_referrer', 'rest_jsonp' ) === $jht_on
+	array( 'emoji', 'self_pingbacks', 'head_shortlink', 'head_rsd', 'head_rest_links', 'head_generator', 'block_author_enum', 'hide_rest_users', 'oembed_author', 'sitemap_users', 'browse_happy', 'login_errors', 'fingerprint_headers', 'header_nosniff', 'header_referrer', 'rest_jsonp', 'xmlrpc' ) === $jht_on
 );
 chk( 'defaults_are_harmless: enum defaults', 'off' === $defaults['asset_version'] && 'enabled' === $defaults['heartbeat'] && 'unchanged' === $defaults['app_passwords'] );
 chk( 'defaults_are_harmless: int defaults null', null === $defaults['post_revisions'] && null === $defaults['autosave_interval'] );
 chk( 'defaults_are_harmless: role lists empty', array() === $defaults['exempt_roles'] && array() === $defaults['app_password_roles'] );
+chk( 'defaults: xmlrpc on (owner exception), comments off', true === $defaults['xmlrpc'] && false === $defaults['comments'] );
+chk( 'schema: xmlrpc and comments sit after app_password_roles, before exempt_roles, xmlrpc first', array( 'app_password_roles', 'xmlrpc', 'comments', 'exempt_roles' ) === array_slice( array: array_keys( array: $schema ), offset: -4 ) );
+chk( 'schema: xmlrpc is a global security bool', 'bool' === $schema['xmlrpc']['type'] && 'security' === $schema['xmlrpc']['group'] && array( 'global' ) === $schema['xmlrpc']['flags'] && ! $schema['xmlrpc']['role_scoped'] && null === $schema['xmlrpc']['core_constant'] );
+chk( 'schema: comments is a global security bool flagged appearance and editors', 'bool' === $schema['comments']['type'] && 'security' === $schema['comments']['group'] && array( 'appearance', 'editors', 'global' ) === $schema['comments']['flags'] && ! $schema['comments']['role_scoped'] && null === $schema['comments']['core_constant'] );
 chk( 'defaults equal schema defaults', array_map( callback: static fn( array $e ): mixed => $e['default'], array: $schema ) === $defaults );
 chk( 'option name', 'jpkcom_harden_trim_settings' === jpkcom_harden_trim_option_name() );
 
@@ -424,6 +428,26 @@ if ( is_array( $out ) ) {
 	chk( 'constants: core_lock post_revisions', array( 'name' => 'WP_POST_REVISIONS', 'value' => 3 ) === $out['core_lock'] );
 	chk( 'constants: constant_state of invalid constant', array( 'name' => 'JPKCOM_HARDEN_TRIM_HEARTBEAT', 'defined' => true, 'valid' => false, 'value' => null ) === $out['state_heartbeat'] );
 }
+
+// A stored option without the 1.1.0 keys reads back with their defaults; a constant locks xmlrpc.
+$run = jht_run_fixture( __DIR__ . '/fixture-constants.php', array( 'JHT_MODE' => 'xmlrpc' ) );
+$out = json_decode( json: $run['out'], associative: true );
+chk( 'fixture-constants xmlrpc: exits 0 with JSON (' . trim( string: $run['out'] ) . ')', 0 === $run['exit'] && is_array( $out ) );
+if ( is_array( $out ) ) {
+	chk( 'xmlrpc constant false: effective xmlrpc false', false === $out['settings']['xmlrpc'] );
+	chk( 'xmlrpc constant: comments (absent from the stored option) reads back false', false === $out['settings']['comments'] );
+	chk( 'xmlrpc constant: xmlrpc locked by JPKCOM_HARDEN_TRIM_XMLRPC, nothing else', array( 'xmlrpc' => 'JPKCOM_HARDEN_TRIM_XMLRPC' ) === $out['locked'] );
+}
+
+// An option stored without both keys reads back xmlrpc true, comments false.
+jht_reset_wp();
+$jht_old = jpkcom_harden_trim_defaults();
+unset( $jht_old['xmlrpc'], $jht_old['comments'] );
+$GLOBALS['jht_options'][ jpkcom_harden_trim_option_name() ] = array( 'schema' => 1, 'updated' => '', 'settings' => $jht_old );
+jpkcom_harden_trim_settings_reset_cache();
+chk( 'upgrade: option without xmlrpc/comments reads xmlrpc true, comments false', true === jpkcom_harden_trim_settings()['xmlrpc'] && false === jpkcom_harden_trim_settings()['comments'] );
+jht_reset_wp();
+jpkcom_harden_trim_settings_reset_cache();
 
 $run = jht_run_fixture( __DIR__ . '/fixture-constants.php', array( 'JHT_MODE' => 'save' ) );
 $out = json_decode( json: $run['out'], associative: true );

@@ -12,6 +12,9 @@
  *            values and what a save stores.
  * - preset:  one plugin constant and one core lock; prints the result of
  *            applying the strict preset (used by test-presets.php).
+ * - xmlrpc:  JPKCOM_HARDEN_TRIM_XMLRPC = false with a stored option that has
+ *            no xmlrpc/comments key; prints the effective settings, the locks
+ *            and what every preset leaves in the locked key.
  *
  * Not named test-*.php on purpose: CI runs tests/test-*.php and this is not a
  * suite, it is the subject of one.
@@ -57,6 +60,33 @@ if ( 'preset' === $jht_mode ) {
 
 	echo json_encode(
 		jpkcom_harden_trim_apply_preset( 'strict', array_merge( jpkcom_harden_trim_defaults(), array( 'post_revisions' => 10 ) ) )
+	);
+	exit( 0 );
+}
+
+if ( 'xmlrpc' === $jht_mode ) {
+	define( 'JPKCOM_HARDEN_TRIM_XMLRPC', false );
+
+	$jht_stored = jpkcom_harden_trim_defaults();
+	unset( $jht_stored['xmlrpc'], $jht_stored['comments'] );
+	$GLOBALS['jht_options'][ jpkcom_harden_trim_option_name() ] = array(
+		'schema'   => 1,
+		'updated'  => '',
+		'settings' => $jht_stored,
+	);
+
+	$jht_effective = jpkcom_harden_trim_settings();
+	$jht_presets   = array();
+	foreach ( array( 'harmless', 'recommended', 'strict' ) as $jht_name ) {
+		$jht_presets[ $jht_name ] = jpkcom_harden_trim_apply_preset( $jht_name, $jht_effective );
+	}
+
+	echo json_encode(
+		array(
+			'settings' => $jht_effective,
+			'locked'   => jpkcom_harden_trim_locked_keys(),
+			'presets'  => $jht_presets,
+		)
 	);
 	exit( 0 );
 }

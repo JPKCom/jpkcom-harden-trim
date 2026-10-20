@@ -767,3 +767,19 @@ msgstr ""
 #: includes/import-export.php:369
 msgid "Import settings"
 msgstr ""
+
+#: includes/admin-page.php:86
+msgid "Disable XML-RPC"
+msgstr ""
+
+#: includes/admin-page.php:87
+msgid "Disable comments"
+msgstr ""
+
+#: includes/admin-page.php:145
+msgid "Blocks xmlrpc.php and stops advertising the endpoint. On by default and in every preset, so applying a preset turns it on again; a wp-config.php constant keeps it off. Warning: Jetpack, the WordPress mobile apps and pingbacks stop working, and trackbacks are refused too."
+msgstr ""
+
+#: includes/admin-page.php:146
+msgid "Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear."
+msgstr ""

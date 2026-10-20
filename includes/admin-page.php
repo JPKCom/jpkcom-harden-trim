@@ -83,6 +83,8 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_field_label' ) ) {
 			'file_edit'           => __( 'Disable the file editors', 'jpkcom-harden-trim' ),
 			'app_passwords'       => __( 'Application passwords', 'jpkcom-harden-trim' ),
 			'app_password_roles'  => __( 'Roles allowed to use application passwords', 'jpkcom-harden-trim' ),
+			'xmlrpc'              => __( 'Disable XML-RPC', 'jpkcom-harden-trim' ),
+			'comments'            => __( 'Disable comments', 'jpkcom-harden-trim' ),
 			'exempt_roles'        => __( 'Roles exempt from the role-scoped features', 'jpkcom-harden-trim' ),
 			default               => '',
 		};
@@ -140,6 +142,8 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_field_description' ) ) {
 			'file_edit'           => __( 'Removes the theme and plugin file editors, so a taken-over admin account cannot change PHP code there. Warning: theme and plugin files then have to be edited another way, for example over SFTP.', 'jpkcom-harden-trim' ),
 			'app_passwords'       => __( 'Application passwords let external tools sign in through the REST API. Warning: MCP and Abilities API clients, the WordPress mobile app and integrations that use them stop working for users who lose access.', 'jpkcom-harden-trim' ),
 			'app_password_roles'  => __( 'Only used when application passwords are limited to selected roles. With no role selected, nobody can use them, administrators included.', 'jpkcom-harden-trim' ),
+			'xmlrpc'              => __( 'Blocks xmlrpc.php and stops advertising the endpoint. On by default and in every preset, so applying a preset turns it on again; a wp-config.php constant keeps it off. Warning: Jetpack, the WordPress mobile apps and pingbacks stop working, and trackbacks are refused too.', 'jpkcom-harden-trim' ),
+			'comments'            => __( 'Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear.', 'jpkcom-harden-trim' ),
 			'exempt_roles'        => __( 'Logged-in users with one of these roles get the unchanged site for the features listed below. By default no role is exempt.', 'jpkcom-harden-trim' ),
 			default               => '',
 		};
