@@ -164,8 +164,10 @@ chk( 'README **Version:** matches the header', str_contains( haystack: $jht_read
 chk( 'README **Stable tag:** matches the header', str_contains( haystack: $jht_readme, needle: '**Stable tag:** ' . $jht_ver . "  \n" ) );
 chk( 'phpdoc.xml version matches the header', str_contains( haystack: $jht_phpdoc, needle: '<version number="' . $jht_ver . '">' ) );
 $jht_block = preg_match( '/^### ' . preg_quote( $jht_ver, '/' ) . '\R(.*?)(?:^### |\z)/ms', $jht_readme, $jht_cl ) ? trim( string: $jht_cl[1] ) : '';
-$jht_first = strtok( $jht_block, "\n" );
 chk( 'changelog has a block for the header version', '' !== $jht_block );
-chk( 'changelog first entry states that XML-RPC is blocked after the update', false !== $jht_first && str_contains( haystack: $jht_first, needle: 'XML-RPC' ) && str_contains( haystack: $jht_first, needle: "define( 'JPKCOM_HARDEN_TRIM_XMLRPC', false );" ) );
+// The XML-RPC consequence belongs to the release that introduced the switch (1.1.0); later releases have their own blocks.
+$jht_block_110 = preg_match( '/^### 1\.1\.0\R(.*?)(?:^### |\z)/ms', $jht_readme, $jht_cl110 ) ? trim( string: $jht_cl110[1] ) : '';
+$jht_first     = strtok( $jht_block_110, "\n" );
+chk( 'changelog 1.1.0 first entry states that XML-RPC is blocked after the update', false !== $jht_first && str_contains( haystack: $jht_first, needle: 'XML-RPC' ) && str_contains( haystack: $jht_first, needle: "define( 'JPKCOM_HARDEN_TRIM_XMLRPC', false );" ) );
 
 summary();

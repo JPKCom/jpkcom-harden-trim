@@ -31,7 +31,7 @@ msgstr "https://github.com/JPKCom/jpkcom-harden-trim"
 #. Description of the plugin
 #: jpkcom-harden-trim.php
 msgid "Secure, private & lean WordPress: hardening, privacy and performance tweaks with safe defaults."
-msgstr "Sicheres, privates und schlankes WordPress: Härtungs-, Datenschutz- und Performance-Anpassungen mit sicheren Voreinstellungen."
+msgstr "Sicheres, privates und schlankes WordPress: Härtungs-, Datenschutz- und Performance-Anpassungen mit sicheren Standardwerten."
 
 #. Author of the plugin
 #: jpkcom-harden-trim.php
@@ -601,7 +601,7 @@ msgstr "Streng"
 
 #: includes/admin-page.php:1083
 msgid "The defaults: nothing that changes how the site looks or how editors work. XML-RPC is disabled, as in every preset."
-msgstr "Die Voreinstellungen: nichts, was das Aussehen der Website oder die Arbeit der Redakteure verändert. XML-RPC ist deaktiviert, wie in jeder Voreinstellung."
+msgstr "Die Standardwerte: nichts, was das Aussehen der Website oder die Arbeit der Redakteure verändert. XML-RPC ist deaktiviert, wie in jeder Voreinstellung."
 
 #. translators: %s: comma-separated settings.
 #: includes/admin-page.php:1085
@@ -683,7 +683,7 @@ msgstr "Ausgenommene Rollen sehen die Website ohne die rollenbezogenen Funktione
 
 #: includes/admin-page.php:1170
 msgid "Hardening, privacy and performance switches. The defaults change nothing visible; everything with a known side effect is off and says so, except XML-RPC, which is blocked from the start. A constant in wp-config.php (JPKCOM_HARDEN_TRIM_ followed by the setting key in capitals) overrides a setting and locks it here."
-msgstr "Schalter für Härtung, Datenschutz und Performance. Die Voreinstellungen ändern nichts Sichtbares; alles mit bekannter Nebenwirkung ist ausgeschaltet und weist darauf hin, außer XML-RPC, das von Anfang an gesperrt ist. Eine Konstante in der wp-config.php (JPKCOM_HARDEN_TRIM_ gefolgt vom Einstellungsschlüssel in Großbuchstaben) überschreibt eine Einstellung und sperrt sie hier."
+msgstr "Schalter für Härtung, Datenschutz und Performance. Die Standardwerte ändern nichts Sichtbares; alles mit bekannter Nebenwirkung ist ausgeschaltet und weist darauf hin, außer XML-RPC, das von Anfang an gesperrt ist. Eine Konstante in der wp-config.php (JPKCOM_HARDEN_TRIM_ gefolgt vom Einstellungsschlüssel in Großbuchstaben) überschreibt eine Einstellung und sperrt sie hier."
 
 #: includes/admin-page.php:1194
 msgid "Save Changes"

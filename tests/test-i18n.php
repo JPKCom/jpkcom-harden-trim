@@ -444,6 +444,49 @@ foreach ( glob( $root . '/languages/*-*.po' ) as $po_path ) {
 	);
 }
 
+// --- "defaults" and "presets" are two different words ------------------------
+//
+// "Voreinstellungen" is the German for the three presets (Harmless / Recommended /
+// Strict). The values the plugin runs with after installation are the
+// "Standardwerte". One word for both made the settings page ambiguous: "the
+// presets change nothing visible" read as a statement about the buttons.
+// Each of the three English texts below says "defaults" and must not use the
+// preset word for it. The only "Voreinstellung" the Harmless summary keeps is
+// "jeder Voreinstellung" (every preset), which is the correct use.
+
+$defaults_texts = [
+	'Secure, private & lean WordPress: hardening'   => 'the plugin header description',
+	'The defaults: nothing that changes how the site' => 'the Harmless preset summary',
+	'Hardening, privacy and performance switches. The defaults' => 'the settings page intro',
+];
+
+foreach ( $po_catalogues as $locale => $po_tr ) {
+	foreach ( $defaults_texts as $prefix => $what ) {
+		$hits = [];
+
+		foreach ( $po_tr as $key => $value ) {
+			if ( strpos( $key, $prefix ) === 0 ) {
+				$hits[] = $value;
+			}
+		}
+
+		i18n_chk(
+			$locale . ': ' . $what . ' is translated',
+			count( $hits ) === 1,
+			'Expected exactly one translated msgid starting "' . $prefix . '", found ' . count( $hits ) . '.'
+		);
+
+		$value = $hits[0] ?? '';
+		$rest  = str_replace( 'jeder Voreinstellung', '', $value );
+
+		i18n_chk(
+			$locale . ': ' . $what . ' calls the defaults "Standardwerte"',
+			strpos( $value, 'Standardwert' ) !== false && strpos( $rest, 'Voreinstellung' ) === false,
+			'"defaults" must be "Standardwerte"; "Voreinstellung(en)" means the presets. Got: ' . substr( $value, 0, 120 )
+		);
+	}
+}
+
 // --- One form of address per locale -----------------------------------------
 //
 // de_DE addresses the reader with "du", de_DE_formal with "Sie". A sentence
