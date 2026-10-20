@@ -13,6 +13,11 @@
  * - core:   the core constants in JHT_CORE_JSON (object) were defined before the
  *           plugin loaded, and the stored settings carry JHT_STORED_JSON (object),
  *           so the page must show the core value, not the stored one.
+ * - standalone_xmlrpc / standalone_comments: JPKCom Disable XML-RPC or JPKCom
+ *           Disable Comments is active (its version constant is defined), so the
+ *           matching field shows the standalone hint.
+ * - sitewide_locked: JPKCOM_HARDEN_TRIM_XMLRPC is false and
+ *           JPKCOM_HARDEN_TRIM_COMMENTS is true in wp-config.php.
  *
  * Not named test-*.php on purpose: CI runs tests/test-*.php and this is not a
  * suite, it is the subject of one.
@@ -42,6 +47,13 @@ if ( 'locked' === $jht_mode ) {
 	define( 'JPKCOM_HARDEN_TRIM_CORE_CONSTANTS_AT_LOAD', (array) json_decode( (string) getenv( 'JHT_CORE_JSON' ), true ) );
 } elseif ( 'kill_json' === $jht_mode ) {
 	define( 'JPKCOM_HARDEN_TRIM_DISABLE_ALL', json_decode( (string) getenv( 'JHT_KILL_JSON' ), true ) );
+} elseif ( 'standalone_xmlrpc' === $jht_mode ) {
+	define( 'JPKCOM_DISABLE_XMLRPC_VERSION', '1.0.10' );
+} elseif ( 'standalone_comments' === $jht_mode ) {
+	define( 'JPKCOM_DISABLE_COMMENTS_VERSION', '1.0.10' );
+} elseif ( 'sitewide_locked' === $jht_mode ) {
+	define( 'JPKCOM_HARDEN_TRIM_XMLRPC', false );
+	define( 'JPKCOM_HARDEN_TRIM_COMMENTS', true );
 } else {
 	echo 'unknown JHT_MODE';
 	exit( 1 );

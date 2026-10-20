@@ -142,11 +142,40 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_field_description' ) ) {
 			'file_edit'           => __( 'Removes the theme and plugin file editors, so a taken-over admin account cannot change PHP code there. Warning: theme and plugin files then have to be edited another way, for example over SFTP.', 'jpkcom-harden-trim' ),
 			'app_passwords'       => __( 'Application passwords let external tools sign in through the REST API. Warning: MCP and Abilities API clients, the WordPress mobile app and integrations that use them stop working for users who lose access.', 'jpkcom-harden-trim' ),
 			'app_password_roles'  => __( 'Only used when application passwords are limited to selected roles. With no role selected, nobody can use them, administrators included.', 'jpkcom-harden-trim' ),
-			'xmlrpc'              => __( 'Blocks xmlrpc.php and stops advertising the endpoint. On by default and in every preset, so applying a preset turns it on again; a wp-config.php constant keeps it off. Warning: Jetpack, the WordPress mobile apps and pingbacks stop working, and trackbacks are refused too.', 'jpkcom-harden-trim' ),
+			'xmlrpc'              => __( 'Answers requests to xmlrpc.php with a 403 error and stops advertising the endpoint; trackbacks are refused too. On by default and in every preset, so applying a preset switches it back on; to keep it off for good, set JPKCOM_HARDEN_TRIM_XMLRPC to false in wp-config.php. Warning: Jetpack, the WordPress mobile apps and incoming pingbacks stop working.', 'jpkcom-harden-trim' ),
 			'comments'            => __( 'Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear.', 'jpkcom-harden-trim' ),
 			'exempt_roles'        => __( 'Logged-in users with one of these roles get the unchanged site for the features listed below. By default no role is exempt.', 'jpkcom-harden-trim' ),
 			default               => '',
 		};
+	}
+
+}
+
+if ( ! function_exists( function: 'jpkcom_harden_trim_standalone_hint' ) ) {
+
+	/**
+	 * Note for a field whose standalone JPKCom plugin is active.
+	 *
+	 * JPKCom Disable XML-RPC and JPKCom Disable Comments define their version
+	 * constant at load; while one of them is active, the matching switch here
+	 * is redundant (both together are harmless). Information only: no notice,
+	 * no link, nothing is changed.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $key Setting key.
+	 * @return string Translated hint, '' when not applicable.
+	 */
+	function jpkcom_harden_trim_standalone_hint( string $key ): string {
+		if ( 'xmlrpc' === $key && defined( constant_name: 'JPKCOM_DISABLE_XMLRPC_VERSION' ) ) {
+			return __( 'XML-RPC is already disabled by the JPKCom Disable XML-RPC plugin, so this switch is not needed while that plugin is active.', 'jpkcom-harden-trim' );
+		}
+
+		if ( 'comments' === $key && defined( constant_name: 'JPKCOM_DISABLE_COMMENTS_VERSION' ) ) {
+			return __( 'Comments are already disabled by the JPKCom Disable Comments plugin, so this switch is not needed while that plugin is active.', 'jpkcom-harden-trim' );
+		}
+
+		return '';
 	}
 
 }
@@ -924,6 +953,12 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_render_field' ) ) {
 		echo '<div id="' . esc_attr( $desc_id ) . '" class="jht-description">';
 		echo '<p class="description">' . esc_html( jpkcom_harden_trim_field_description( $key ) ) . '</p>';
 
+		$hint = jpkcom_harden_trim_standalone_hint( $key );
+
+		if ( '' !== $hint ) {
+			echo '<p class="description">' . esc_html( $hint ) . '</p>';
+		}
+
 		if ( null !== $lock ) {
 			$core  = jpkcom_harden_trim_core_lock( $key );
 			$state = jpkcom_harden_trim_constant_state( $key );
@@ -1039,7 +1074,7 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_render_presets' ) ) {
 		};
 
 		$summaries = array(
-			'harmless'    => __( 'The defaults: nothing that changes how the site looks or how editors work.', 'jpkcom-harden-trim' ),
+			'harmless'    => __( 'The defaults: nothing that changes how the site looks or how editors work. XML-RPC is disabled, as in every preset.', 'jpkcom-harden-trim' ),
 			/* translators: %s: comma-separated settings. */
 			'recommended' => sprintf( __( 'Harmless, plus: %s.', 'jpkcom-harden-trim' ), $describe( $presets['recommended'], $presets['harmless'] ) ),
 			/* translators: %s: comma-separated settings. */
@@ -1063,7 +1098,7 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_render_presets' ) ) {
 
 		foreach ( $names as $preset => $preset_name ) {
 			/* translators: 1: preset name, 2: comma-separated settings. */
-			$confirm = sprintf( __( 'Apply the preset "%1$s"? Every setting the presets manage is overwritten, except settings locked by wp-config.php. No preset ever touches: %2$s.', 'jpkcom-harden-trim' ), $preset_name, $untouch );
+			$confirm = sprintf( __( 'Apply the preset "%1$s"? Every setting the presets manage is overwritten, except settings locked by wp-config.php; this also switches XML-RPC blocking back on unless a wp-config.php constant keeps it off. No preset ever touches: %2$s.', 'jpkcom-harden-trim' ), $preset_name, $untouch );
 
 			/* translators: %s: preset name. */
 			echo '<button type="submit" class="button" name="preset" value="' . esc_attr( $preset ) . '" data-jht-confirm="' . esc_attr( $confirm ) . '">' . esc_html( sprintf( __( 'Apply %s', 'jpkcom-harden-trim' ), $preset_name ) ) . '</button> ';
@@ -1126,7 +1161,7 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_render_page' ) ) {
 
 		jpkcom_harden_trim_render_notices();
 
-		echo '<p>' . esc_html__( 'Hardening, privacy and performance switches. The defaults change nothing visible; everything with a known side effect is off and says so. A constant in wp-config.php (JPKCOM_HARDEN_TRIM_ followed by the setting key in capitals) overrides a setting and locks it here.', 'jpkcom-harden-trim' ) . '</p>';
+		echo '<p>' . esc_html__( 'Hardening, privacy and performance switches. The defaults change nothing visible; everything with a known side effect is off and says so, except XML-RPC, which is blocked from the start. A constant in wp-config.php (JPKCOM_HARDEN_TRIM_ followed by the setting key in capitals) overrides a setting and locks it here.', 'jpkcom-harden-trim' ) . '</p>';
 
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		wp_nonce_field( 'jpkcom_harden_trim_save', 'jpkcom_harden_trim_nonce' );

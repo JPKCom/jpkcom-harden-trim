@@ -248,7 +248,7 @@ foreach ( $jht_buttons[0] as $jht_button ) {
 		continue;
 	}
 	$jht_text = html_entity_decode( string: $jht_m[1], flags: ENT_QUOTES );
-	foreach ( array( 'block_library_css', 'global_styles', 'header_hsts', 'head_feed_links', 'app_passwords', 'app_password_roles', 'exempt_roles' ) as $jht_key ) {
+	foreach ( array( 'block_library_css', 'global_styles', 'header_hsts', 'head_feed_links', 'app_passwords', 'app_password_roles', 'comments', 'exempt_roles' ) as $jht_key ) {
 		if ( ! str_contains( haystack: $jht_text, needle: jpkcom_harden_trim_field_label( $jht_key ) ) ) {
 			$jht_confirm_ok = false;
 			echo "  confirm text lacks {$jht_key}\n";
@@ -469,6 +469,71 @@ chk( 'render_page without capability: wp_die 403', 403 === $r['die'] );
 chk( 'render_page without capability: no settings markup', ! str_contains( haystack: $ap_out, needle: 'jpkcom_harden_trim_nonce' ) );
 $GLOBALS['jht_caps'] = array( 'manage_options' => true );
 
+// XML-RPC and comments (1.1.0): end of the Security section, badges from the schema flags,
+// a hint only while the standalone plugin is active (constant cases in the fixture below).
+
+/**
+ * The form-table row of one setting.
+ *
+ * @param string $html Rendered page.
+ * @param string $key  Setting key.
+ * @return string Row markup, '' when absent.
+ */
+function jht_field_row( string $html, string $key ): string {
+	return 1 === preg_match( '/<tr class="jht-field jht-field-' . preg_quote( str: $key, delimiter: '/' ) . '">.*?<\/tr>/s', $html, $m ) ? $m[0] : '';
+}
+
+$sw_hint_xmlrpc   = 'XML-RPC is already disabled by the JPKCom Disable XML-RPC plugin, so this switch is not needed while that plugin is active.';
+$sw_hint_comments = 'Comments are already disabled by the JPKCom Disable Comments plugin, so this switch is not needed while that plugin is active.';
+
+chk( 'xmlrpc label', 'Disable XML-RPC' === jpkcom_harden_trim_field_label( 'xmlrpc' ) );
+chk( 'comments label', 'Disable comments' === jpkcom_harden_trim_field_label( 'comments' ) );
+$sw_desc = jpkcom_harden_trim_field_description( 'xmlrpc' );
+chk( 'xmlrpc description: xmlrpc.php refused with a 403, endpoint no longer advertised, trackbacks refused', str_contains( haystack: $sw_desc, needle: 'xmlrpc.php' ) && str_contains( haystack: $sw_desc, needle: '403' ) && str_contains( haystack: $sw_desc, needle: 'advertis' ) && str_contains( haystack: $sw_desc, needle: 'trackbacks are refused' ) );
+chk( 'xmlrpc description warns: Jetpack, the mobile apps and incoming pingbacks stop working', (bool) preg_match( '/Warning:.*Jetpack.*mobile apps.*incoming pingbacks stop working/s', $sw_desc ) );
+chk( 'xmlrpc description: every preset switches it back on, the constant keeps it off', str_contains( haystack: $sw_desc, needle: 'every preset' ) && str_contains( haystack: $sw_desc, needle: 'back on' ) && str_contains( haystack: $sw_desc, needle: 'JPKCOM_HARDEN_TRIM_XMLRPC' ) );
+$sw_desc = jpkcom_harden_trim_field_description( 'comments' );
+chk( 'comments description: comments, pings and trackbacks closed on every post type', str_contains( haystack: $sw_desc, needle: 'comments, pings and trackbacks on every post type' ) );
+chk( 'comments description: existing comments hidden, not deleted', str_contains( haystack: $sw_desc, needle: 'hides existing comments (they are not deleted)' ) );
+chk( 'comments description: screen, menu, dashboard counts, comment feeds and REST routes disappear', (bool) preg_match( '/Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear/', $sw_desc ) );
+
+chk( 'standalone hint API exists', function_exists( 'jpkcom_harden_trim_standalone_hint' ) );
+$sw_hint = static fn( string $key ): ?string => function_exists( 'jpkcom_harden_trim_standalone_hint' ) ? jpkcom_harden_trim_standalone_hint( $key ) : null;
+chk( 'hint: empty without the standalone constants', '' === $sw_hint( 'xmlrpc' ) && '' === $sw_hint( 'comments' ) );
+chk( 'hint: empty for every other key', '' === $sw_hint( 'emoji' ) && '' === $sw_hint( 'nope' ) );
+
+jht_reset_admin();
+jht_store();
+$html = jht_render();
+$sw_security = 1 === preg_match( '/<h2 id="jht-security">.*?<h2 id="jht-roles">/s', $html, $sw_m ) ? $sw_m[0] : '';
+preg_match_all( '/<tr class="jht-field jht-field-([a-z_]+)">/', $sw_security, $sw_rows );
+chk( 'security section ends with xmlrpc, then comments (' . implode( separator: ',', array: array_slice( array: $sw_rows[1], offset: -3 ) ) . ')', array( 'app_password_roles', 'xmlrpc', 'comments' ) === array_slice( array: $sw_rows[1], offset: -3 ) );
+
+$sw_x = jht_field_row( $html, 'xmlrpc' );
+$sw_c = jht_field_row( $html, 'comments' );
+chk( 'xmlrpc row: label for its checkbox', str_contains( haystack: $sw_x, needle: '<label for="jpkcom-harden-trim-xmlrpc">Disable XML-RPC</label>' ) );
+chk( 'comments row: label for its checkbox', str_contains( haystack: $sw_c, needle: '<label for="jpkcom-harden-trim-comments">Disable comments</label>' ) );
+chk( 'xmlrpc row: checkbox described by the description block', (bool) preg_match( '/<input type="checkbox" id="jpkcom-harden-trim-xmlrpc"[^>]*aria-describedby="jpkcom-harden-trim-xmlrpc-description"/', $sw_x ) && str_contains( haystack: $sw_x, needle: '<div id="jpkcom-harden-trim-xmlrpc-description" class="jht-description"><p class="description">' . esc_html( jpkcom_harden_trim_field_description( 'xmlrpc' ) ) . '</p>' ) );
+chk( 'comments row: checkbox described by the description block', (bool) preg_match( '/<input type="checkbox" id="jpkcom-harden-trim-comments"[^>]*aria-describedby="jpkcom-harden-trim-comments-description"/', $sw_c ) && str_contains( haystack: $sw_c, needle: '<div id="jpkcom-harden-trim-comments-description" class="jht-description"><p class="description">' . esc_html( jpkcom_harden_trim_field_description( 'comments' ) ) . '</p>' ) );
+chk( 'xmlrpc checked by default, comments not', true === jht_checkbox_checked( $html, 'xmlrpc' ) && false === jht_checkbox_checked( $html, 'comments' ) );
+chk( 'xmlrpc row: no appearance or editors badge', '' !== $sw_x && ! str_contains( haystack: $sw_x, needle: 'jht-badge-' ) );
+chk( 'comments row: Changes appearance and Affects editors badges', str_contains( haystack: $sw_c, needle: '<span class="jht-badge jht-badge-appearance">Changes appearance</span>' ) && str_contains( haystack: $sw_c, needle: '<span class="jht-badge jht-badge-editors">Affects editors</span>' ) && 2 === substr_count( haystack: $sw_c, needle: 'jht-badge-' ) );
+$sw_global = 1 === preg_match( '/Global — role exemption does not apply.*?<\/ul>/s', $html, $sw_m ) ? $sw_m[0] : '';
+chk( 'both listed as global (role exemption does not apply)', str_contains( haystack: $sw_global, needle: '<li>Disable XML-RPC</li>' ) && str_contains( haystack: $sw_global, needle: '<li>Disable comments</li>' ) );
+chk( 'page intro names XML-RPC as the exception to the harmless defaults', (bool) preg_match( '/<h1>Harden &amp; Trim<\/h1>.*?<p>[^<]*The defaults change nothing visible[^<]*except XML-RPC[^<]*<\/p>/s', $html ) );
+chk( 'no standalone hint without the standalone plugins', ! str_contains( haystack: $html, needle: 'is already disabled by the JPKCom' ) && ! str_contains( haystack: $html, needle: 'are already disabled by the JPKCom' ) );
+
+$sw_presets = 1 === preg_match( '/<h2 id="jht-presets">.*?<ul class="jht-list">(.*?)<\/ul>/s', $html, $sw_m ) ? $sw_m[1] : '';
+chk( 'preset summaries say every preset disables XML-RPC', str_contains( haystack: $sw_presets, needle: 'XML-RPC is disabled, as in every preset' ) );
+preg_match_all( '/<button\b[^>]*name="preset"[^>]*data-jht-confirm="([^"]+)"/', $html, $sw_m );
+$sw_confirm_ok = 3 === count( $sw_m[1] );
+foreach ( $sw_m[1] as $sw_text ) {
+	if ( ! str_contains( haystack: html_entity_decode( string: $sw_text, flags: ENT_QUOTES ), needle: 'switches XML-RPC blocking back on unless a wp-config.php constant keeps it off' ) ) {
+		$sw_confirm_ok = false;
+	}
+}
+chk( 'every preset confirm says XML-RPC blocking is switched back on unless a constant keeps it off', $sw_confirm_ok );
+
 // Constant scenarios (one process each: constants cannot be undefined).
 
 $run = jht_run_fixture( __DIR__ . '/fixture-admin-page.php', array( 'JHT_MODE' => 'locked' ) );
@@ -539,6 +604,30 @@ foreach ( $ap_core_cases as $ap_label => list( $ap_core, $ap_stored, $ap_expect 
 			chk( "core lock ({$ap_label}): {$ap_key} selects exactly " . implode( separator: ',', array: $ap_state ) . ' (got ' . implode( separator: ',', array: $ap_sel ) . ')', $ap_state === $ap_sel );
 		}
 	}
+}
+
+// The standalone plugins' hints: plain informational text under the description, nothing else changes.
+foreach ( array( 'xmlrpc' => array( 'comments', $sw_hint_xmlrpc ), 'comments' => array( 'xmlrpc', $sw_hint_comments ) ) as $sw_key => list( $sw_other, $sw_text ) ) {
+	$run  = jht_run_fixture( __DIR__ . '/fixture-admin-page.php', array( 'JHT_MODE' => 'standalone_' . $sw_key ) );
+	$html = $run['out'];
+	$sw_row = jht_field_row( $html, $sw_key );
+	chk( "standalone {$sw_key}: exits 0", 0 === $run['exit'] );
+	chk( "standalone {$sw_key}: exact hint text as a description paragraph", str_contains( haystack: $sw_row, needle: '<p class="description">' . $sw_text . '</p>' ) );
+	chk( "standalone {$sw_key}: hint below the description, inside the described block", str_contains( haystack: $sw_row, needle: esc_html( jpkcom_harden_trim_field_description( $sw_key ) ) . '</p><p class="description">' . esc_html( $sw_text ) . '</p>' ) );
+	chk( "standalone {$sw_key}: hint shown once on the page, no notice, no link", 1 === substr_count( haystack: $html, needle: $sw_text ) && ! str_contains( haystack: $html, needle: 'notice-' ) && ! str_contains( haystack: $sw_row, needle: '<a ' ) );
+	chk( "standalone {$sw_key}: the other field has no hint", '' !== jht_field_row( $html, $sw_other ) && ! str_contains( haystack: jht_field_row( $html, $sw_other ), needle: 'already disabled by the JPKCom' ) );
+	chk( "standalone {$sw_key}: the field stays enabled", array() !== jht_field_tags( $html, $sw_key ) && array() === array_filter( array: jht_field_tags( $html, $sw_key ), callback: 'jht_tag_disabled' ) );
+}
+
+$run  = jht_run_fixture( __DIR__ . '/fixture-admin-page.php', array( 'JHT_MODE' => 'sitewide_locked' ) );
+$html = $run['out'];
+chk( 'sitewide locked: exits 0', 0 === $run['exit'] );
+foreach ( array( 'xmlrpc' => array( 'JPKCOM_HARDEN_TRIM_XMLRPC', false ), 'comments' => array( 'JPKCOM_HARDEN_TRIM_COMMENTS', true ) ) as $sw_key => list( $sw_const, $sw_value ) ) {
+	$sw_row = jht_field_row( $html, $sw_key );
+	chk( "sitewide locked: {$sw_key} inputs all disabled", array() !== jht_field_tags( $html, $sw_key ) && array() === array_filter( array: jht_field_tags( $html, $sw_key ), callback: static fn( string $t ): bool => ! jht_tag_disabled( $t ) ) );
+	chk( "sitewide locked: {$sw_key} checkbox shows the constant's value", $sw_value === jht_checkbox_checked( $html, $sw_key ) );
+	chk( "sitewide locked: {$sw_key} names {$sw_const} and its value", (bool) preg_match( '/' . $sw_const . '<\/code>\s*=\s*<code>' . ( $sw_value ? 'true' : 'false' ) . '<\/code>/', $sw_row ) );
+	chk( "sitewide locked: {$sw_key} badge Locked by wp-config.php", str_contains( haystack: $sw_row, needle: 'jht-badge-locked' ) );
 }
 
 $run = jht_run_fixture( __DIR__ . '/fixture-admin-page.php', array( 'JHT_MODE' => 'kill_json', 'JHT_KILL_JSON' => '"false"' ) );
