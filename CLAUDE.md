@@ -239,9 +239,12 @@ except where a bullet says otherwise; the code comments cite the 7.1.3 lines):
   only note requests through: the collection with `type` exactly `note` (core's
   own strict `'note' ===`, GET and POST), or the item route for an existing
   comment whose stored `comment_type` is `note` (any method; core refuses a type
-  change on update, `:925`). Everything else — no `type`, `type=comment`/`all`,
-  `NOTE`, `note,comment`, `type[]=note`, a regular, pingback or unknown ID, ID 0,
-  sub-routes, `OPTIONS` — gets the 404. `WP_Comment_Query` leaves notes out of
+  change on update, `:925`) and whose request carries no `id` parameter naming a
+  different comment: an `id` in the query string, JSON body or form body must be
+  numeric and equal to the route ID. Everything else — no `type`,
+  `type=comment`/`all`, `NOTE`, `note,comment`, `type[]=note`, a regular,
+  pingback or unknown ID, ID 0, a note's route with `?id=<other comment>` (or
+  that `id` in the body), sub-routes, `OPTIONS` — gets the 404. `WP_Comment_Query` leaves notes out of
   every query that does not request `all` or `note`
   (`class-wp-comment-query.php:776-789`), so passing note-only queries through
   exposes nothing else.
@@ -251,7 +254,20 @@ except where a bullet says otherwise; the code comments cite the 7.1.3 lines):
   is passed with them cleared (`:1860-1866`). The gate parses `get_route()`
   itself the way core matches it (`@^…$@i`, `:1172`): case-insensitive, and `$`
   also matches before a trailing newline. `get_comment()` of an empty ID falls
-  back to the global `$comment`, hence the `id > 0` check. The 404 goes out
+  back to the global `$comment`, hence the `id > 0` check. The route ID is not
+  the ID the controller uses, though: it reads `$request['id']`
+  (`class-wp-rest-comments-controller.php:435`, `:480`, `:873`, `:918`,
+  `:1042`, `:1066`), and `WP_REST_Request::get_param()` takes the JSON body,
+  then the form body (POST, PUT, PATCH, DELETE), then the query string, and the
+  URL parameters only last (`class-wp-rest-request.php:362-384`, `:408-418`).
+  `/wp/v2/comments/<note>?id=<comment>` — or `rest_route=` with that `id`, or
+  `{"id":…}` as the body — would pass a route-only check and load the other
+  comment, which an anonymous visitor may read when it is approved on a public
+  post (`check_read_permission()`, `:1944-1951`), and which the post's author or
+  an administrator may update or delete. The gate therefore also reads
+  `get_param( 'id' )`: before routing the URL parameters are empty, so this is
+  exactly the value core will prefer later. Absent, or numeric and equal to the
+  route ID, it passes; anything else gets the 404. The 404 goes out
   through `rest_convert_error_to_response()`, not as a `WP_Error`: in a batch the
   pre-dispatch result reaches `rest_post_dispatch` unconverted (`:1894`), where
   `rest_send_allow_header()` calls `get_matched_route()` on it — a fatal on
@@ -537,7 +553,7 @@ the module and asserts; a failure exits 1.
 - `test-settings-store.php` — sanitiser edge cases, constant resolution, read/write round trip, exemption logic
 - `test-presets.php` — preset-managed keys, locked keys untouched, never-in-preset keys
 - `test-features-performance.php`, `test-features-head-security.php`, `test-features-privacy.php` — hook registration per setting, including "default settings register exactly the harmless set"
-- `test-features-sitewide.php` — the `xmlrpc` and `comments` switches: registration only when on, every ported parity case of the standalone suites (including the Notes gate: note and non-note requests, the 404's exact shape, case, trailing-slash and trailing-newline spellings; the note-only query pass-through; the comment count), the 404 message staying core's string under a translating gettext stub, the `init` @0 guard as a subprocess (`fixture-xmlrpc-refuse.php`)
+- `test-features-sitewide.php` — the `xmlrpc` and `comments` switches: registration only when on, every ported parity case of the standalone suites (including the Notes gate: note and non-note requests, an `id` parameter in the query string, JSON body or form body that overrides the route ID (the stubbed `get_param()` follows core's precedence), the 404's exact shape, case, trailing-slash and trailing-newline spellings; the note-only query pass-through; the comment count), the 404 message staying core's string under a translating gettext stub, the `init` @0 guard as a subprocess (`fixture-xmlrpc-refuse.php`)
 - `test-admin-page.php`, `test-import-export.php` — form application, import validation and rejection codes
 - `test-bootstrap-main.php` — main file, `Update URI`, module load order, kill switch values, activation callback
 - `test-uninstall.php`, `test-i18n.php` — uninstall cleanup, catalogue guard (`.pot` coverage, `.po` = `.mo` = `.l10n.php` per entry, one form of address per locale)
@@ -578,6 +594,12 @@ Not covered: the `admin_post_*` handlers end to end (real nonces, `$_FILES`,
   code; the family updater logs failures under `WP_DEBUG`, exactly like every
   sibling plugin (`tests/test-debug-gate.php` guards both)
 - No PHP notice, `_doing_it_wrong` or JS console error in any mode
+- The `comments` REST gate fails closed: anything on `/wp/v2/comments*` that is
+  not provably a note request gets the 404; the note decision uses core's own
+  strict `'note' ===` comparison and the stored `comment_type` of the comment
+  core will actually load: the controller reads `$request['id']`, which an `id`
+  in the query string, JSON body or form body overrides, so an item request
+  whose `id` parameter is not numeric and equal to the route ID gets the 404
 - Updater: SHA256 verification + URL validation
 
 ---

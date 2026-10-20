@@ -277,6 +277,16 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_comments_is_note_request' 
 	 * matches the route (:1096), and a batch sub-request is passed with its URL
 	 * parameters cleared (:1860-1866).
 	 *
+	 * The controller itself does not use the ID in the route: it reads
+	 * `$request['id']` (class-wp-rest-comments-controller.php:435, :480, :873,
+	 * :918, :1042, :1066), and `get_param()` prefers the JSON body, the form body
+	 * and the query string to the URL parameters (class-wp-rest-request.php:362-384,
+	 * :408-418). `/wp/v2/comments/<note>?id=<n>` would therefore load comment
+	 * `<n>`. An item request with an `id` parameter is a note request only when
+	 * that parameter is numeric and equal to the ID in the route. Read here,
+	 * before routing, `get_param( 'id' )` returns exactly the value core will
+	 * prefer later, since the URL parameters are still empty.
+	 *
 	 * Core's own permission checks still decide who may read or write notes.
 	 *
 	 * @since 1.1.0
@@ -300,6 +310,13 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_comments_is_note_request' 
 
 		// get_comment() of an empty ID falls back to the global $comment.
 		if ( $comment_id <= 0 ) {
+			return false;
+		}
+
+		// The controller loads $request['id'], which a body or query `id` overrides.
+		$param_id = $request->get_param( 'id' );
+
+		if ( null !== $param_id && ( ! is_numeric( $param_id ) || (float) $param_id !== (float) $comment_id ) ) {
 			return false;
 		}
 

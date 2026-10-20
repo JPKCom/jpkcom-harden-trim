@@ -198,10 +198,30 @@ if ( ! class_exists( class: 'WP_REST_Response' ) ) {
 }
 
 if ( ! class_exists( class: 'WP_REST_Request' ) ) {
-	/** Minimal request: method, route and the merged request parameters. */
+	/**
+	 * Minimal request: method, route and the parameters by source.
+	 *
+	 * get_param() follows core's precedence (7.1.3 class-wp-rest-request.php
+	 * get_parameter_order(), get_param()): JSON body (when it is JSON), then the
+	 * form body for POST, PUT, PATCH and DELETE only, then the query string,
+	 * then the URL parameters; a null value counts as absent (core's isset()).
+	 * On rest_pre_dispatch the URL parameters are still empty.
+	 */
 	class WP_REST_Request {
-		/** @param array<string,mixed> $params */
-		public function __construct( private string $method = 'GET', private string $route = '', private array $params = array() ) {
+		/**
+		 * @param array<string,mixed> $params Query-string (GET) parameters.
+		 * @param array<string,mixed> $json   JSON body parameters.
+		 * @param array<string,mixed> $body   Form body (POST) parameters.
+		 * @param array<string,mixed> $url    URL parameters from route matching.
+		 */
+		public function __construct(
+			private string $method = 'GET',
+			private string $route = '',
+			private array $params = array(),
+			private array $json = array(),
+			private array $body = array(),
+			private array $url = array()
+		) {
 		}
 
 		public function get_method(): string {
@@ -213,7 +233,22 @@ if ( ! class_exists( class: 'WP_REST_Request' ) ) {
 		}
 
 		public function get_param( string $key ): mixed {
-			return $this->params[ $key ] ?? null;
+			$order = array( $this->json );
+
+			if ( in_array( $this->method, array( 'POST', 'PUT', 'PATCH', 'DELETE' ), true ) ) {
+				$order[] = $this->body;
+			}
+
+			$order[] = $this->params;
+			$order[] = $this->url;
+
+			foreach ( $order as $source ) {
+				if ( isset( $source[ $key ] ) ) {
+					return $source[ $key ];
+				}
+			}
+
+			return null;
 		}
 	}
 }
@@ -824,6 +859,46 @@ if ( null !== $jht_gate ) {
 	chk( 'comments: upper-case collection with type=note passes', null === $jht_dispatch( 'GET', '/WP/V2/COMMENTS', array( 'type' => 'note' ) ) );
 	chk( 'comments: upper-case note item passes', null === $jht_dispatch( 'GET', '/WP/V2/COMMENTS/13' ) );
 	chk( 'comments: note item with leading zeros passes', null === $jht_dispatch( 'GET', '/wp/v2/comments/013' ) );
+
+	// Source: comments "404: note item, query id of a regular comment" through "passes: GET note
+	// item, form-body id core does not read". The comments controller does not use the ID in the
+	// route: it reads $request['id'] (7.1.3 class-wp-rest-comments-controller.php:435, :480, :873,
+	// :918, :1042, :1066), and get_param() prefers the JSON body, the form body and the query
+	// string to the URL parameters. A note's route with an `id` parameter naming a regular comment
+	// would load and return - or update, or delete - that comment. The gate must refuse it.
+	$jht_request = static fn ( string $method, string $route, array $params = array(), array $json = array(), array $body = array() ): WP_REST_Request
+		=> new WP_REST_Request( $method, $route, $params, $json, $body );
+
+	foreach (
+		array(
+			'note item, query id of a regular comment'         => $jht_request( 'GET', '/wp/v2/comments/13', array( 'id' => '12' ) ),
+			'note item, query id via ?rest_route spelling'     => $jht_request( 'GET', '/wp/v2/comments/13', array( 'rest_route' => '/wp/v2/comments/13', 'id' => '12' ) ),
+			'note item, JSON body id (GET)'                    => $jht_request( 'GET', '/wp/v2/comments/13', array(), array( 'id' => 12 ) ),
+			'note item, JSON body id (PUT)'                    => $jht_request( 'PUT', '/wp/v2/comments/13', array(), array( 'id' => 12, 'content' => 'x' ) ),
+			'note item, POST body id'                          => $jht_request( 'POST', '/wp/v2/comments/13', array(), array(), array( 'id' => '12', 'content' => 'x' ) ),
+			'note item, DELETE body id'                        => $jht_request( 'DELETE', '/wp/v2/comments/13', array(), array(), array( 'id' => '12' ) ),
+			'note item, JSON id wins over a matching query id' => $jht_request( 'GET', '/wp/v2/comments/13', array( 'id' => '13' ), array( 'id' => 12 ) ),
+			'note item, query id of an unknown comment'        => $jht_request( 'GET', '/wp/v2/comments/13', array( 'id' => '999' ) ),
+			'note item, non-numeric id'                        => $jht_request( 'GET', '/wp/v2/comments/13', array( 'id' => '13abc' ) ),
+			'note item, fractional id'                         => $jht_request( 'GET', '/wp/v2/comments/13', array( 'id' => '13.5' ) ),
+			'note item, array id'                              => $jht_request( 'GET', '/wp/v2/comments/13', array( 'id' => array( '13' ) ) ),
+			'note item, boolean id'                            => $jht_request( 'GET', '/wp/v2/comments/13', array(), array( 'id' => true ) ),
+		) as $jht_label => $jht_case
+	) {
+		chk( "comments: 404: {$jht_label}", $jht_is_404( $jht_gate( null, null, $jht_case ) ) );
+	}
+
+	foreach (
+		array(
+			'note item, query id equal to the route ID'        => $jht_request( 'GET', '/wp/v2/comments/13', array( 'id' => '13' ) ),
+			'note item, JSON id equal to the route ID (PUT)'   => $jht_request( 'PUT', '/wp/v2/comments/13', array(), array( 'id' => 13, 'content' => 'x' ) ),
+			'note item, POST body id equal to the route ID'    => $jht_request( 'POST', '/wp/v2/comments/13', array(), array(), array( 'id' => '13' ) ),
+			'note item, JSON id wins: equal, query id differs' => $jht_request( 'GET', '/wp/v2/comments/13', array( 'id' => '12' ), array( 'id' => 13 ) ),
+			'GET note item, form-body id core does not read'   => $jht_request( 'GET', '/wp/v2/comments/13', array(), array(), array( 'id' => '12' ) ),
+		) as $jht_label => $jht_case
+	) {
+		chk( "comments: passes: {$jht_label}", null === $jht_gate( null, null, $jht_case ) );
+	}
 
 	// Source: comments "is_note_request: true for a note item, false for a regular one".
 	if ( function_exists( function: 'jpkcom_harden_trim_comments_is_note_request' ) ) {
