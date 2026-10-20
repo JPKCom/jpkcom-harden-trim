@@ -32,7 +32,7 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_register_features' ) ) {
 	 * @return void
 	 */
 	function jpkcom_harden_trim_register_features( array $settings ): void {
-		foreach ( array( 'performance', 'head', 'privacy', 'security' ) as $group ) {
+		foreach ( array( 'performance', 'head', 'privacy', 'security', 'sitewide' ) as $group ) {
 			$registrar = 'jpkcom_harden_trim_register_' . $group . '_features';
 
 			if ( function_exists( function: $registrar ) ) {

@@ -12,7 +12,10 @@
  *
  * The stub of jpkcom_harden_trim_register_features() is defined before the
  * main file is read; the real one in features.php is function_exists-guarded
- * and therefore yields to it.
+ * and therefore yields to it. JHT_REAL=1 skips the stub, so the real
+ * registrar and every feature module run; the output then says whether the
+ * XML-RPC and comment hooks were registered. JHT_COMMENTS=1 defines
+ * JPKCOM_HARDEN_TRIM_COMMENTS as true (the switch is off by default).
  *
  * Not named test-*.php on purpose: CI runs tests/test-*.php and this is not a
  * suite, it is the subject of one.
@@ -32,11 +35,17 @@ if ( '1' === getenv( 'JHT_KILL' ) ) {
 	define( 'JPKCOM_HARDEN_TRIM_DISABLE_ALL', json_decode( (string) getenv( 'JHT_KILL_JSON' ), true ) );
 }
 
+if ( '1' === getenv( 'JHT_COMMENTS' ) ) {
+	define( 'JPKCOM_HARDEN_TRIM_COMMENTS', true );
+}
+
 $GLOBALS['jht_register_called'] = false;
 
-function jpkcom_harden_trim_register_features( array $settings ): void {
-	$GLOBALS['jht_register_called'] = true;
-	add_action( 'wp_head', 'jht_probe_feature_hook' );
+if ( '1' !== getenv( 'JHT_REAL' ) ) {
+	function jpkcom_harden_trim_register_features( array $settings ): void {
+		$GLOBALS['jht_register_called'] = true;
+		add_action( 'wp_head', 'jht_probe_feature_hook' );
+	}
 }
 
 function plugin_dir_path( string $file ): string {
@@ -87,6 +96,8 @@ echo json_encode(
 		'new_hooks'    => jht_count_hooks() - $jht_before,
 		'store_loaded' => function_exists( 'jpkcom_harden_trim_settings' ),
 		'invalid'      => function_exists( 'jpkcom_harden_trim_invalid_constants' ) ? jpkcom_harden_trim_invalid_constants() : null,
+		'xmlrpc'       => array() !== ( $GLOBALS['jht_hooks']['xmlrpc_enabled'] ?? array() ) || array() !== ( $GLOBALS['jht_hooks']['wp_xmlrpc_server_class'] ?? array() ),
+		'comments'     => array() !== ( $GLOBALS['jht_hooks']['comments_open'] ?? array() ) || array() !== ( $GLOBALS['jht_hooks']['rest_endpoints'] ?? array() ),
 	)
 );
 exit( 0 );

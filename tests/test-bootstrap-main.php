@@ -111,6 +111,21 @@ foreach ( array(
 	chk( "kill switch {$bm_json}: " . ( $bm_expect['invalid'] ? 'named as invalid' : 'not named as invalid' ), is_array( $out ) && $bm_expect['invalid'] === in_array( needle: 'JPKCOM_HARDEN_TRIM_DISABLE_ALL', haystack: (array) ( $out['invalid'] ?? array() ), strict: true ) );
 }
 
+// Kill switch with the real registrar and every feature module (JHT_REAL=1): the site-wide
+// switches register nothing either. The unkilled runs prove the probe sees their hooks.
+foreach ( array(
+	'defaults'          => array( 'env' => array(), 'xmlrpc' => true, 'comments' => false ),
+	'comments on'       => array( 'env' => array( 'JHT_COMMENTS' => '1' ), 'xmlrpc' => true, 'comments' => true ),
+	'killed, both on'   => array( 'env' => array( 'JHT_COMMENTS' => '1', 'JHT_KILL' => '1' ), 'xmlrpc' => false, 'comments' => false ),
+	'killed, defaults'  => array( 'env' => array( 'JHT_KILL' => '1' ), 'xmlrpc' => false, 'comments' => false ),
+) as $bm_case => $bm_expect ) {
+	$run = jht_run_fixture( __DIR__ . '/fixture-kill-switch.php', array_merge( array( 'JHT_REAL' => '1' ), $bm_expect['env'] ) );
+	$out = json_decode( json: $run['out'], associative: true );
+	chk( "kill switch, real registrar, {$bm_case}: silent run (" . trim( string: $run['out'] ) . ')', 0 === $run['exit'] && is_array( $out ) );
+	chk( "kill switch, real registrar, {$bm_case}: XML-RPC hooks " . ( $bm_expect['xmlrpc'] ? 'registered' : 'absent' ), is_array( $out ) && $bm_expect['xmlrpc'] === ( $out['xmlrpc'] ?? null ) );
+	chk( "kill switch, real registrar, {$bm_case}: comment hooks " . ( $bm_expect['comments'] ? 'registered' : 'absent' ), is_array( $out ) && $bm_expect['comments'] === ( $out['comments'] ?? null ) );
+}
+
 $text = (string) file_get_contents( filename: $main );
 chk( 'header Requires at least 7.1', str_contains( haystack: $text, needle: 'Requires at least: 7.1' ) );
 chk( 'header Requires PHP 8.3', str_contains( haystack: $text, needle: 'Requires PHP: 8.3' ) );

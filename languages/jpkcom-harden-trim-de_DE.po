@@ -787,3 +787,19 @@ msgstr "Sperrt xmlrpc.php und bewirbt den Endpunkt nicht mehr. Standardmäßig u
 #: includes/admin-page.php:146
 msgid "Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear."
 msgstr "Schließt Kommentare, Pings und Trackbacks bei allen Beitragstypen und blendet bestehende Kommentare aus (sie werden nicht gelöscht). Der Kommentarbildschirm, das Menü, die Zähler im Dashboard, die Kommentar-Feeds und die REST-Kommentarrouten verschwinden."
+
+#: includes/features-sitewide.php:197
+msgid "XML-RPC is disabled."
+msgstr "XML-RPC ist deaktiviert."
+
+#: includes/features-sitewide.php:198
+msgid "Error"
+msgstr "Fehler"
+
+#: includes/features-sitewide.php:408
+msgid "Comments are disabled."
+msgstr "Kommentare sind deaktiviert."
+
+#: includes/features-sitewide.php:409
+msgid "Not Found"
+msgstr "Nicht gefunden"

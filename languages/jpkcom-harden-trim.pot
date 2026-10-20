@@ -783,3 +783,19 @@ msgstr ""
 #: includes/admin-page.php:146
 msgid "Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear."
 msgstr ""
+
+#: includes/features-sitewide.php:197
+msgid "XML-RPC is disabled."
+msgstr ""
+
+#: includes/features-sitewide.php:198
+msgid "Error"
+msgstr ""
+
+#: includes/features-sitewide.php:408
+msgid "Comments are disabled."
+msgstr ""
+
+#: includes/features-sitewide.php:409
+msgid "Not Found"
+msgstr ""
