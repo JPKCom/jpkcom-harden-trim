@@ -244,10 +244,10 @@ except where a bullet says otherwise; the code comments cite the 7.1.3 lines):
   numeric and equal to the route ID. Everything else — no `type`,
   `type=comment`/`all`, `NOTE`, `note,comment`, `type[]=note`, a regular,
   pingback or unknown ID, ID 0, a note's route with `?id=<other comment>` (or
-  that `id` in the body), sub-routes, `OPTIONS` — gets the 404. `WP_Comment_Query` leaves notes out of
-  every query that does not request `all` or `note`
-  (`class-wp-comment-query.php:776-789`), so passing note-only queries through
-  exposes nothing else.
+  that `id` in the body), sub-routes, `OPTIONS` — gets the 404.
+  `WP_Comment_Query` leaves notes out of every query that does not request
+  `all` or `note` (`class-wp-comment-query.php:776-789`), so passing note-only
+  queries through exposes nothing else.
 - **`rest_pre_dispatch` sees the request before routing.** `dispatch()` applies
   the filter (`class-wp-rest-server.php:1079`) and only then matches the route
   (`:1096`), so URL parameters such as `id` are not set yet; a batch sub-request
@@ -280,11 +280,20 @@ except where a bullet says otherwise; the code comments cite the 7.1.3 lines):
   Atom the `replies` links and `<thr:total>` (`feed-atom.php:98-102`). Filtering
   it to `0` removes them and the themes' "N comments". Notes are unaffected:
   core excludes them from `comment_count` (`comment.php:3138`).
-- The three bullets above were read in the 7.1.3 source for Disable Comments
-  1.0.11 and have **not yet been measured on a running site** (Notes created,
-  listed and resolved through the gate, the exact 404 bytes, `/feed/` without
-  the comment elements). Replace this bullet with what was measured once it has
-  been.
+- The three bullets above were read in the 7.1.3 source and then measured on a
+  running WordPress 7.1.3 (2026-10-20, harden-trim.ddev.site) for the
+  `comments` switch, for Disable Comments 1.0.11 and with both active: Notes
+  over REST as admin and as an editor (create 201, list
+  `?post=<id>&type=note&status=all&context=edit` 200, reply 201, get 200,
+  resolve/update, delete) and in the block editor itself (headless Chromium:
+  note added through the Notes UI, still listed after reload); anonymous note
+  access refused by core (401); every non-note `/wp/v2/comments*` request
+  answered with a 404 byte-identical to core's missing-route answer; `/feed/`
+  and Atom without `<comments>`, `<wfw:commentRss>`, `<slash:comments>`,
+  `rel=replies`, `<thr:total>`; `get_comments_number()` 0 while the stored
+  `comment_count` is 1; `debug.log` empty. Attack check of the note-route `id`
+  override (`?id=<regular comment>`, via `?rest_route=`, JSON body, form body):
+  all 404 with each gate; without any gate the regular comment came back with 200.
 - **Deliberate, documented:** the query-string comment feeds
   (`?feed=comments-rss2`, `?p=N&feed=rss2`) get the 404 from the
   `template_redirect` @0 guard before `redirect_canonical()` (priority 10) would
