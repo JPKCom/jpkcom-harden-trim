@@ -4,7 +4,7 @@
 https://github.com/JPKCom/jpkcom-harden-trim<br />
 <strong>Description:</strong> Secure, private &amp; lean WordPress:
 hardening, privacy and performance tweaks with safe defaults.<br />
-<strong>Version:</strong> 1.0.1<br />
+<strong>Version:</strong> 1.1.0<br />
 <strong>Author:</strong> Jean Pierre Kolb <a href="mailto:jpk@jpkc.com"
 class="email">jpk@jpkc.com</a><br />
 <strong>Author URI:</strong> https://www.jpkc.com<br />
@@ -14,7 +14,7 @@ Cleanup<br />
 <strong>Requires at least:</strong> 7.1<br />
 <strong>Tested up to:</strong> 7.1<br />
 <strong>Requires PHP:</strong> 8.3<br />
-<strong>Stable tag:</strong> 1.0.1<br />
+<strong>Stable tag:</strong> 1.1.0<br />
 <strong>License:</strong> GPL-2.0-or-later<br />
 <strong>License URI:</strong>
 https://www.gnu.org/licenses/gpl-2.0.html<br />
@@ -39,6 +39,12 @@ integration. Everything that has a concrete way to break something ships
 only remove things nobody sees (generator tags, fingerprint headers, an
 emoji script, user enumeration paths) and add headers that match what
 browsers already do.</p>
+<p><strong>One deliberate exception: XML-RPC.</strong> The XML-RPC
+switch is <strong>on</strong> by default and in every preset, so
+<code>xmlrpc.php</code> is refused on every site that runs this plugin
+unless you switch it off. Jetpack, the WordPress mobile apps and
+incoming pingbacks stop working while it is on; see the Security table
+and the changelog of 1.1.0.</p>
 <p>Three presets on the settings page (Harmless, Recommended, Strict)
 apply a whole set of switches at once. A preset only assigns the keys it
 manages, never touches a locked key, and can never switch on the risky
@@ -436,6 +442,49 @@ integrations stop working without them.</td>
 administrators included; the settings page warns about it. On multisite
 a super admin counts as <code>administrator</code> on every site.</td>
 </tr>
+<tr class="even">
+<td>Disable XML-RPC</td>
+<td><strong>on</strong></td>
+<td><code>JPKCOM_HARDEN_TRIM_XMLRPC</code></td>
+<td>Refuses <code>xmlrpc.php</code> with a 403 and an XML-RPC fault,
+empties the method list, and stops advertising the endpoint
+(<code>X-Pingback</code> header,
+<code>&lt;link rel="pingback"&gt;</code>). <strong>Jetpack, the
+WordPress mobile apps and pingbacks stop working</strong>, and
+trackbacks are refused too. Turn it off, or set the constant to
+<code>false</code>, when you need any of them. Global; the role
+exemption does not apply.</td>
+</tr>
+<tr class="odd">
+<td>Disable comments</td>
+<td>off</td>
+<td><code>JPKCOM_HARDEN_TRIM_COMMENTS</code></td>
+<td>Closes comments, pings and trackbacks on every post type and hides
+existing comments (nothing is deleted; switching it off brings them
+back). Removes the Comments screen, admin menu entry and admin-bar node
+and the comment counts on the dashboard. Every post reports zero
+comments, so <code>/feed/</code> and the Atom feed carry no comment
+links or counts and themes print no “N comments”. The comment feeds
+answer 404 (<code>/feed/</code> stays); their query-string spellings
+(<code>?feed=comments-rss2</code>, <code>?p=123&amp;feed=rss2</code>)
+get that 404 directly instead of WordPress’ redirect to a pretty URL
+that would 404 as well, deliberately. The REST comment routes answer
+every request with the <code>rest_no_route</code> 404 a missing route
+gives (<code>OPTIONS</code> too, which a missing route answers with an
+empty 200), and REST post responses report <code>comment_status</code>
+and <code>ping_status</code> as <code>closed</code>. <strong>Block
+editor Notes keep working</strong>: they are comments of type
+<code>note</code> on the same REST routes, so the routes stay registered
+and a request for notes (the collection with <code>type=note</code>, or
+an existing note by its ID) reaches WordPress, whose own permission
+checks decide. A note’s route whose <code>id</code> parameter names a
+different comment
+(<code>/wp/v2/comments/&lt;note ID&gt;?id=&lt;comment ID&gt;</code>, or
+that <code>id</code> in the request body, which WordPress would load
+instead) gets the 404. Because the routes stay registered, the REST
+index at <code>/wp-json/</code> lists them. Global. Never part of a
+preset.</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Page caches and headers:</strong> headers are sent by PHP on
@@ -499,7 +548,7 @@ user.</p>
 <tbody>
 <tr class="odd">
 <td>Harmless</td>
-<td>The defaults above.</td>
+<td>The defaults above (including XML-RPC refused).</td>
 </tr>
 <tr class="even">
 <td>Recommended</td>
@@ -516,10 +565,15 @@ revisions, 2 minute autosave.</td>
 </tr>
 </tbody>
 </table>
-<p>Never part of any preset: block library CSS, global styles, disabled
-heartbeat, removed asset versions, HSTS, feed link removal, application
-password settings and the role lists. Applying a preset asks for
-confirmation and lists the keys that changed.</p>
+<p>XML-RPC is refused in every preset (Harmless, Recommended and Strict
+all list it as on), so applying a preset never reopens it. The flip
+side: applying a preset switches it <strong>on</strong> again, also on a
+site where you had turned it off (for example for Jetpack). A
+<code>wp-config.php</code> constant keeps it off regardless.</p>
+<p>Never part of any preset: disabling comments, block library CSS,
+global styles, disabled heartbeat, removed asset versions, HSTS, feed
+link removal, application password settings and the role lists. Applying
+a preset asks for confirmation and lists the keys that changed.</p>
 <h3 id="import-and-export">Import and export</h3>
 <p><strong>Export</strong> downloads the stored settings as a JSON file.
 It contains no site URL and no user data. <strong>Import</strong>
@@ -615,9 +669,16 @@ headers from the web server or a CDN. Run each switch in one place
 only.</p>
 <h3 id="what-about-xml-rpc-comments-and-the-login-url">What about
 XML-RPC, comments and the login URL?</h3>
-<p>Those are covered by sibling plugins: JPKCom Disable XML-RPC, JPKCom
-Disable Comments and JPKCom Hide Login. This plugin does not duplicate
-them.</p>
+<p>XML-RPC and comments are built in since 1.1.0 (the two switches in
+the Security table) and behave like the standalone plugins JPKCom
+Disable XML-RPC and JPKCom Disable Comments, hook for hook. Those
+plugins remain available and maintained, and running one of them next to
+the matching switch is harmless: the same hooks fire twice, and the
+settings page notes that the plugin is already active. One exception:
+JPKCom Disable Comments up to 1.0.10 removes the REST comment routes,
+which breaks block editor Notes even with this switch; update it to
+1.0.11 or later. Hiding the login URL stays with JPKCom Hide Login; this
+plugin does not duplicate it.</p>
 <h3 id="does-it-make-my-site-gdpr-compliant">Does it make my site GDPR
 compliant?</h3>
 <p>No. See the note in the description.</p>
@@ -626,7 +687,42 @@ it?</h3>
 <p>Deleting the plugin removes its settings option and its cached data
 (on multisite, from every site). Deactivating keeps them.</p>
 <h2 id="changelog">Changelog</h2>
-<h3 id="section">1.0.1</h3>
+<h3 id="section">1.1.0</h3>
+<ul>
+<li>Changed: <strong>XML-RPC is blocked on every site right after this
+update</strong>, because the new “Disable XML-RPC” switch is on by
+default and the stored settings of an earlier version do not contain it.
+Jetpack, the WordPress mobile apps and incoming pingbacks stop working
+until you untick the switch in <strong>Settings → Harden &amp;
+Trim</strong> or set
+<code>define( 'JPKCOM_HARDEN_TRIM_XMLRPC', false );</code> in
+<code>wp-config.php</code>. Every preset keeps it on, so applying a
+preset also switches it on again</li>
+<li>Added: “Disable XML-RPC” switch, mirroring JPKCom Disable XML-RPC
+1.0.10: <code>xmlrpc.php</code> answers 403 with an XML-RPC fault, the
+endpoint is no longer advertised, trackbacks are refused</li>
+<li>Added: “Disable comments” switch (off by default, never part of a
+preset), mirroring JPKCom Disable Comments 1.0.11: comments and pings
+closed on every post type, existing comments hidden, every post reports
+zero comments (no comment links or counts in <code>/feed/</code> and the
+Atom feed, no “N comments” in themes), comment screens and feeds
+removed. The REST comment routes answer every request that is not a
+block editor Notes request with the <code>rest_no_route</code> 404 a
+missing route gives (<code>OPTIONS</code> too, which a missing route
+answers with an empty 200); a note’s route whose <code>id</code>
+parameter names a different comment is not a Notes request. Notes keep
+working, and WordPress’ own permission checks decide who may read or
+write them. Because the routes stay registered for Notes, the REST index
+at <code>/wp-json/</code> lists them. The query-string comment feeds
+(<code>?feed=comments-rss2</code>, <code>?p=123&amp;feed=rss2</code>)
+answer 404 directly instead of redirecting to a pretty URL that would
+404 as well; this is deliberate</li>
+<li>Added: a hint on the settings page while the matching standalone
+plugin is active</li>
+<li>Added: German translations of the new texts (<code>de_DE</code>,
+<code>de_DE_formal</code>)</li>
+</ul>
+<h3 id="section-1">1.0.1</h3>
 <ul>
 <li>Changed: the updater keeps its manifest cache, its failure marker
 and its fetch lock in site transients. On multisite the network now
@@ -635,7 +731,7 @@ nothing changes</li>
 <li>Changed: uninstalling also removes the updater’s network-wide cache
 entries, and still the per-site ones 1.0.0 wrote</li>
 </ul>
-<h3 id="section-1">1.0.0</h3>
+<h3 id="section-2">1.0.0</h3>
 <ul>
 <li>Added: Initial release.</li>
 <li>Added: performance switches (emoji, self pingbacks, asset versions,

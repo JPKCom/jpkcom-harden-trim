@@ -16,6 +16,11 @@ Search.appendIndex(
             "summary": "Description\u0020of\u0020a\u0020setting,\u0020with\u0020a\u0020warning\u0020wherever\u0020switching\u0020it\u0020on\u0020can\u0020break\u0020something.",
             "url": "namespaces/default.html#function_jpkcom_harden_trim_field_description"
         },                {
+            "fqsen": "\\jpkcom_harden_trim_standalone_hint\u0028\u0029",
+            "name": "jpkcom_harden_trim_standalone_hint",
+            "summary": "Note\u0020for\u0020a\u0020field\u0020whose\u0020standalone\u0020JPKCom\u0020plugin\u0020is\u0020active.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_standalone_hint"
+        },                {
             "fqsen": "\\jpkcom_harden_trim_choice_label\u0028\u0029",
             "name": "jpkcom_harden_trim_choice_label",
             "summary": "Display\u0020name\u0020of\u0020one\u0020choice\u0020of\u0020an\u0020enum\u0020or\u0020int\u0020setting.",
@@ -520,6 +525,91 @@ Search.appendIndex(
             "name": "jpkcom_harden_trim_filter_app_passwords_for_user",
             "summary": "\u0060wp_is_application_passwords_available_for_user\u0060\u0020callback\u0020for\u0020the\u0020\u0060roles\u0060\u0020mode.",
             "url": "namespaces/default.html#function_jpkcom_harden_trim_filter_app_passwords_for_user"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_register_sitewide_features\u0028\u0029",
+            "name": "jpkcom_harden_trim_register_sitewide_features",
+            "summary": "Register\u0020the\u0020hooks\u0020of\u0020the\u0020active\u0020site\u002Dwide\u0020features.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_register_sitewide_features"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_is_xmlrpc_request\u0028\u0029",
+            "name": "jpkcom_harden_trim_is_xmlrpc_request",
+            "summary": "Whether\u0020the\u0020current\u0020request\u0020is\u0020being\u0020served\u0020by\u0020xmlrpc.php.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_is_xmlrpc_request"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_xmlrpc_fault_xml\u0028\u0029",
+            "name": "jpkcom_harden_trim_xmlrpc_fault_xml",
+            "summary": "Build\u0020the\u0020XML\u002DRPC\u0020fault\u0020sent\u0020in\u0020place\u0020of\u0020a\u0020served\u0020request.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_fault_xml"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_xmlrpc_refuse\u0028\u0029",
+            "name": "jpkcom_harden_trim_xmlrpc_refuse",
+            "summary": "\u0060init\u0060\u0020priority\u00200\u003A\u0020reject\u0020XML\u002DRPC\u0020requests\u0020with\u0020a\u0020403\u0020and\u0020an\u0020XML\u002DRPC\u0020fault.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_refuse"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_xmlrpc_server_class\u0028\u0029",
+            "name": "jpkcom_harden_trim_xmlrpc_server_class",
+            "summary": "\u0060wp_xmlrpc_server_class\u0060\u0020callback,\u0020last\u0020resort\u003A\u0020block\u0020the\u0020server\u0020class.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_server_class"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_close_rest_status\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_close_rest_status",
+            "summary": "Report\u0020comments\u0020and\u0020pings\u0020as\u0020closed\u0020in\u0020a\u0020REST\u0020post\u0020response.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_close_rest_status"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_is_note_request\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_is_note_request",
+            "summary": "Whether\u0020a\u0020REST\u0020request\u0020on\u0020the\u0020comment\u0020routes\u0020is\u0020a\u0020block\u002Deditor\u0020Notes\u0020request.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_is_note_request"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_is_note_query\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_is_note_query",
+            "summary": "Whether\u0020a\u0020comment\u0020query\u0020asks\u0020for\u0020notes\u0020and\u0020nothing\u0020else.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_is_note_query"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_attach_rest_status\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_attach_rest_status",
+            "summary": "\u0060rest_api_init\u0060\u0020callback\u003A\u0020apply\u0020the\u0020REST\u0020status\u0020rewrite\u0020to\u0020every\u0020post\u0020type.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_attach_rest_status"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_remove_support\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_remove_support",
+            "summary": "\u0060wp_loaded\u0060\u0020callback\u003A\u0020remove\u0020comment\u0020and\u0020trackback\u0020support\u0020from\u0020every\u0020post\u0020type.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_remove_support"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_redirect_screen\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_redirect_screen",
+            "summary": "\u0060admin_init\u0060\u0020callback\u003A\u0020redirect\u0020the\u0020comments\u0020screen\u0020to\u0020the\u0020dashboard.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_redirect_screen"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_zero_counts\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_zero_counts",
+            "summary": "\u0060wp_count_comments\u0060\u0020callback\u003A\u0020report\u0020zero\u0020comments\u0020everywhere.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_zero_counts"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_short_circuit_query\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_short_circuit_query",
+            "summary": "\u0060comments_pre_query\u0060\u0020callback\u003A\u0020short\u002Dcircuit\u0020every\u0020comment\u0020query\u0020except\u0020note\u002Donly\u0020ones.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_short_circuit_query"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_block_feed\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_block_feed",
+            "summary": "\u0060template_redirect\u0060\u0020priority\u00200\u003A\u0020refuse\u0020the\u0020comment\u0020feeds.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_block_feed"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_remove_menu\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_remove_menu",
+            "summary": "\u0060admin_menu\u0060\u0020callback\u003A\u0020remove\u0020the\u0020Comments\u0020entry\u0020from\u0020the\u0020admin\u0020menu.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_remove_menu"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_remove_admin_bar_node\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_remove_admin_bar_node",
+            "summary": "\u0060admin_bar_menu\u0060\u0020priority\u0020999\u003A\u0020remove\u0020the\u0020Comments\u0020node\u0020from\u0020the\u0020admin\u0020bar.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_remove_admin_bar_node"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_comments_rest_gate\u0028\u0029",
+            "name": "jpkcom_harden_trim_comments_rest_gate",
+            "summary": "\u0060rest_pre_dispatch\u0060\u0020callback\u003A\u0020close\u0020the\u0020REST\u0020comment\u0020routes\u0020to\u0020everything\u0020except\u0020block\u002Deditor\u0020Notes.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_comments_rest_gate"
         },                {
             "fqsen": "\\jpkcom_harden_trim_register_features\u0028\u0029",
             "name": "jpkcom_harden_trim_register_features",

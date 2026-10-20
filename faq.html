@@ -42,9 +42,16 @@ headers from the web server or a CDN. Run each switch in one place
 only.</p>
 <h3 id="what-about-xml-rpc-comments-and-the-login-url">What about
 XML-RPC, comments and the login URL?</h3>
-<p>Those are covered by sibling plugins: JPKCom Disable XML-RPC, JPKCom
-Disable Comments and JPKCom Hide Login. This plugin does not duplicate
-them.</p>
+<p>XML-RPC and comments are built in since 1.1.0 (the two switches in
+the Security table) and behave like the standalone plugins JPKCom
+Disable XML-RPC and JPKCom Disable Comments, hook for hook. Those
+plugins remain available and maintained, and running one of them next to
+the matching switch is harmless: the same hooks fire twice, and the
+settings page notes that the plugin is already active. One exception:
+JPKCom Disable Comments up to 1.0.10 removes the REST comment routes,
+which breaks block editor Notes even with this switch; update it to
+1.0.11 or later. Hiding the login URL stays with JPKCom Hide Login; this
+plugin does not duplicate it.</p>
 <h3 id="does-it-make-my-site-gdpr-compliant">Does it make my site GDPR
 compliant?</h3>
 <p>No. See the note in the description.</p>

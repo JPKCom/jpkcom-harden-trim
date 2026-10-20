@@ -188,7 +188,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_VERSION">JPKCOM_HARDEN_TRIM_VERSION</a>
     <span>
-        &nbsp;: mixed&nbsp;= &#039;1.0.1&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;1.1.0&#039;                            </span>
 </dt>
 
     </dl>
@@ -222,6 +222,13 @@
                                 &nbsp;: string    </span>
 </dt>
 <dd>Description of a setting, with a warning wherever switching it on can break something.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_standalone_hint">jpkcom_harden_trim_standalone_hint()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Note for a field whose standalone JPKCom plugin is active.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_choice_label">jpkcom_harden_trim_choice_label()</a>
@@ -820,6 +827,125 @@ ActivityPub&#039;s own document.</dd>
 <dd>`wp_is_application_passwords_available_for_user` callback for the `roles` mode.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_register_sitewide_features">jpkcom_harden_trim_register_sitewide_features()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Register the hooks of the active site-wide features.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_is_xmlrpc_request">jpkcom_harden_trim_is_xmlrpc_request()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether the current request is being served by xmlrpc.php.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_fault_xml">jpkcom_harden_trim_xmlrpc_fault_xml()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Build the XML-RPC fault sent in place of a served request.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_refuse">jpkcom_harden_trim_xmlrpc_refuse()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>`init` priority 0: reject XML-RPC requests with a 403 and an XML-RPC fault.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_server_class">jpkcom_harden_trim_xmlrpc_server_class()</a>
+    <span>
+                                &nbsp;: never    </span>
+</dt>
+<dd>`wp_xmlrpc_server_class` callback, last resort: block the server class.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_close_rest_status">jpkcom_harden_trim_comments_close_rest_status()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>Report comments and pings as closed in a REST post response.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_is_note_request">jpkcom_harden_trim_comments_is_note_request()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether a REST request on the comment routes is a block-editor Notes request.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_is_note_query">jpkcom_harden_trim_comments_is_note_query()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether a comment query asks for notes and nothing else.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_attach_rest_status">jpkcom_harden_trim_comments_attach_rest_status()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>`rest_api_init` callback: apply the REST status rewrite to every post type.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_remove_support">jpkcom_harden_trim_comments_remove_support()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>`wp_loaded` callback: remove comment and trackback support from every post type.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_redirect_screen">jpkcom_harden_trim_comments_redirect_screen()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>`admin_init` callback: redirect the comments screen to the dashboard.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_zero_counts">jpkcom_harden_trim_comments_zero_counts()</a>
+    <span>
+                                &nbsp;: object    </span>
+</dt>
+<dd>`wp_count_comments` callback: report zero comments everywhere.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_short_circuit_query">jpkcom_harden_trim_comments_short_circuit_query()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>`comments_pre_query` callback: short-circuit every comment query except note-only ones.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_block_feed">jpkcom_harden_trim_comments_block_feed()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>`template_redirect` priority 0: refuse the comment feeds.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_remove_menu">jpkcom_harden_trim_comments_remove_menu()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>`admin_menu` callback: remove the Comments entry from the admin menu.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_remove_admin_bar_node">jpkcom_harden_trim_comments_remove_admin_bar_node()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>`admin_bar_menu` priority 999: remove the Comments node from the admin bar.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_comments_rest_gate">jpkcom_harden_trim_comments_rest_gate()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>`rest_pre_dispatch` callback: close the REST comment routes to everything except block-editor Notes.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_register_features">jpkcom_harden_trim_register_features()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -1334,7 +1460,7 @@ ActivityPub&#039;s own document.</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">JPKCOM_HARDEN_TRIM_VERSION</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;1.0.1&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;1.1.0&#039;</span>
 </code>
 
 
@@ -1469,7 +1595,7 @@ ActivityPub&#039;s own document.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">103</span>
+    <span class="phpdocumentor-element-found-in__line">105</span>
 
     </aside>
 
@@ -1521,6 +1647,71 @@ ActivityPub&#039;s own document.</dd>
 
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_standalone_hint">
+        jpkcom_harden_trim_standalone_hint()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_standalone_hint" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">169</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Note for a field whose standalone JPKCom plugin is active.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_standalone_hint</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>JPKCom Disable XML-RPC and JPKCom Disable Comments define their version
+constant at load; while one of them is active, the matching switch here
+is redundant (both together are harmless). Information only: no notice,
+no link, nothing is changed.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Setting key.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_standalone_hint_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_standalone_hint_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Translated hint, '' when not applicable.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_choice_label">
         jpkcom_harden_trim_choice_label()
         <a href="namespaces/default.html#function_jpkcom_harden_trim_choice_label" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1529,7 +1720,7 @@ ActivityPub&#039;s own document.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">161</span>
+    <span class="phpdocumentor-element-found-in__line">194</span>
 
     </aside>
 
@@ -1598,7 +1789,7 @@ ActivityPub&#039;s own document.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">209</span>
+    <span class="phpdocumentor-element-found-in__line">242</span>
 
     </aside>
 
@@ -1649,7 +1840,7 @@ nothing, so a crafted link cannot put words in front of an administrator.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">233</span>
+    <span class="phpdocumentor-element-found-in__line">266</span>
 
     </aside>
 
@@ -1700,7 +1891,7 @@ so they never travel through the URL and no other user can read them.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">248</span>
+    <span class="phpdocumentor-element-found-in__line">281</span>
 
     </aside>
 
@@ -1748,7 +1939,7 @@ so they never travel through the URL and no other user can read them.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">271</span>
+    <span class="phpdocumentor-element-found-in__line">304</span>
 
     </aside>
 
@@ -1819,7 +2010,7 @@ thousands of unknown keys cannot bloat the transient or the notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">320</span>
+    <span class="phpdocumentor-element-found-in__line">353</span>
 
     </aside>
 
@@ -1888,7 +2079,7 @@ thousands of unknown keys cannot bloat the transient or the notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">347</span>
+    <span class="phpdocumentor-element-found-in__line">380</span>
 
     </aside>
 
@@ -1932,7 +2123,7 @@ the default. Locked keys keep theirs inside the store.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">391</span>
+    <span class="phpdocumentor-element-found-in__line">424</span>
 
     </aside>
 
@@ -1975,7 +2166,7 @@ would change nothing, writes nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">432</span>
+    <span class="phpdocumentor-element-found-in__line">465</span>
 
     </aside>
 
@@ -2015,7 +2206,7 @@ would change nothing, writes nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">460</span>
+    <span class="phpdocumentor-element-found-in__line">493</span>
 
     </aside>
 
@@ -2055,7 +2246,7 @@ would change nothing, writes nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">475</span>
+    <span class="phpdocumentor-element-found-in__line">508</span>
 
     </aside>
 
@@ -2095,7 +2286,7 @@ would change nothing, writes nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">491</span>
+    <span class="phpdocumentor-element-found-in__line">524</span>
 
     </aside>
 
@@ -2155,7 +2346,7 @@ would change nothing, writes nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">512</span>
+    <span class="phpdocumentor-element-found-in__line">545</span>
 
     </aside>
 
@@ -2215,7 +2406,7 @@ would change nothing, writes nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">536</span>
+    <span class="phpdocumentor-element-found-in__line">569</span>
 
     </aside>
 
@@ -2284,7 +2475,7 @@ would change nothing, writes nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">581</span>
+    <span class="phpdocumentor-element-found-in__line">614</span>
 
     </aside>
 
@@ -2371,7 +2562,7 @@ option the disabled select shows selected.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">643</span>
+    <span class="phpdocumentor-element-found-in__line">676</span>
 
     </aside>
 
@@ -2419,7 +2610,7 @@ option the disabled select shows selected.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">668</span>
+    <span class="phpdocumentor-element-found-in__line">701</span>
 
     </aside>
 
@@ -2459,7 +2650,7 @@ option the disabled select shows selected.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">810</span>
+    <span class="phpdocumentor-element-found-in__line">843</span>
 
     </aside>
 
@@ -2545,7 +2736,7 @@ name the value in effect.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">967</span>
+    <span class="phpdocumentor-element-found-in__line">1006</span>
 
     </aside>
 
@@ -2585,7 +2776,7 @@ name the value in effect.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1011</span>
+    <span class="phpdocumentor-element-found-in__line">1050</span>
 
     </aside>
 
@@ -2625,7 +2816,7 @@ name the value in effect.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/admin-page.php"><a href="files/includes-admin-page.html"><abbr title="includes/admin-page.php">admin-page.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1082</span>
+    <span class="phpdocumentor-element-found-in__line">1127</span>
 
     </aside>
 
@@ -6732,6 +6923,1170 @@ core's answer and a <code class="prettyprint">disabled</code> site denies.</p>
 
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_register_sitewide_features">
+        jpkcom_harden_trim_register_sitewide_features()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_register_sitewide_features" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">41</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Register the hooks of the active site-wide features.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_register_sitewide_features</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$settings</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>Nothing is registered for a switch that is off. Registered at plugin
+load (plugins_loaded priority 5), so the XML-RPC guard is in place
+before <code class="prettyprint">init</code>.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$settings</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Effective settings.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_register_sitewide_features_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_register_sitewide_features_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_is_xmlrpc_request">
+        jpkcom_harden_trim_is_xmlrpc_request()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_is_xmlrpc_request" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">104</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether the current request is being served by xmlrpc.php.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_is_xmlrpc_request</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p><code class="prettyprint">XMLRPC_REQUEST</code> is defined at the top of <code class="prettyprint">xmlrpc.php</code> (7.1.3
+xmlrpc.php:13), before <code class="prettyprint">wp-load.php</code> runs, so it is set for every
+request that reaches the endpoint and cannot be spoofed by the request.
+The standalone plugin derived it from <code class="prettyprint">$_SERVER['SCRIPT_FILENAME']</code> up to
+1.0.8, which depends on how a SAPI fills that variable.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_is_xmlrpc_request_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_is_xmlrpc_request_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-xmlrpc/jpkcom-disable-xmlrpc.php jpkcom_disable_xmlrpc_is_xmlrpc_request()</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>True when serving an XML-RPC request.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_xmlrpc_fault_xml">
+        jpkcom_harden_trim_xmlrpc_fault_xml()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_fault_xml" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">126</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Build the XML-RPC fault sent in place of a served request.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_xmlrpc_fault_xml</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+        <section class="phpdocumentor-description"><p>A fault response keeps the refusal machine-readable for XML-RPC clients,
+which cannot parse an HTML error page. The fault string is the English
+literal, not a translation: the guard runs at <code class="prettyprint">init</code> priority 0, before
+this plugin loads its text domain at <code class="prettyprint">init</code> priority 1, and the body is
+read by machines. It is escaped like the standalone plugin's string.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_xmlrpc_fault_xml_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_fault_xml_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-xmlrpc/jpkcom-disable-xmlrpc.php jpkcom_disable_xmlrpc_fault_xml()</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>A complete XML-RPC <code class="prettyprint">methodResponse</code> fault document (faultCode 403).</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_xmlrpc_refuse">
+        jpkcom_harden_trim_xmlrpc_refuse()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_refuse" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">160</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`init` priority 0: reject XML-RPC requests with a 403 and an XML-RPC fault.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_xmlrpc_refuse</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>The response is written here instead of being left to <code class="prettyprint">wp_die()</code>. With
+<code class="prettyprint">XMLRPC_REQUEST</code> defined, <code class="prettyprint">wp_die()</code> dispatches to
+<code class="prettyprint">_xmlrpc_wp_die_handler()</code>, which only emits anything when the global
+<code class="prettyprint">$wp_xmlrpc_server</code> already exists (7.1.3 functions.php:4254), and
+<code class="prettyprint">xmlrpc.php</code> creates that object after <code class="prettyprint">init</code> (xmlrpc.php:82). That
+handler also never calls <code class="prettyprint">status_header()</code>. Measured by the standalone
+plugin against 7.0.2: up to its 1.0.8 the endpoint answered HTTP 200 with
+an empty body.</p>
+<p>Priority 0 puts it ahead of the text domain (1) and the updater (5), so
+a refused request does no further work.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_xmlrpc_refuse_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_refuse_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-xmlrpc/jpkcom-disable-xmlrpc.php the init priority 0 closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_xmlrpc_server_class">
+        jpkcom_harden_trim_xmlrpc_server_class()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_server_class" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">196</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`wp_xmlrpc_server_class` callback, last resort: block the server class.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_xmlrpc_server_class</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$class</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">never</span></code>
+
+        <section class="phpdocumentor-description"><p>Unreachable while the init guard is in place (xmlrpc.php:81 runs after
+<code class="prettyprint">init</code>), and kept so that removing or short-circuiting the guard cannot
+silently re-enable the endpoint. <code class="prettyprint">status_header()</code> is called explicitly
+because the XML-RPC die handler never sets one. These strings are
+translated: the text domain is loaded by then.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$class</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The XML-RPC server class name.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_xmlrpc_server_class_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_xmlrpc_server_class_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-xmlrpc/jpkcom-disable-xmlrpc.php the wp_xmlrpc_server_class closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">never</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_close_rest_status">
+        jpkcom_harden_trim_comments_close_rest_status()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_close_rest_status" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">232</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Report comments and pings as closed in a REST post response.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_close_rest_status</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$response</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+        <section class="phpdocumentor-description"><p>Removing post type support is not enough for <code class="prettyprint">post</code>, <code class="prettyprint">page</code> and
+<code class="prettyprint">attachment</code>: <code class="prettyprint">WP_REST_Posts_Controller::get_item_schema()</code> carries a
+hardcoded <code class="prettyprint">$fixed_schemas</code> list for those three in which <code class="prettyprint">comments</code> is
+always present (7.1.3 class-wp-rest-posts-controller.php:2552, :2586-2588);
+the <code class="prettyprint">post_type_supports()</code> check applies only to other post types. The
+response therefore kept reporting the stored value, typically <code class="prettyprint">open</code>.</p>
+<p>The fields are rewritten rather than removed, so the block editor keeps
+the response shape it expects. A REST write can still store <code class="prettyprint">open</code>, but
+it is inert: <code class="prettyprint">comments_open</code> is filtered false and this reports closed.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$response</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Prepared response, a WP_REST_Response in practice.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_close_rest_status_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_close_rest_status_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php jpkcom_disable_comments_close_rest_status()</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">mixed</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The response with both status fields set to closed.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_is_note_request">
+        jpkcom_harden_trim_comments_is_note_request()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_is_note_request" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">298</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether a REST request on the comment routes is a block-editor Notes request.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_is_note_request</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\WP_REST_Request">WP_REST_Request</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>Notes (core since 6.9) are comments of type <code class="prettyprint">note</code>, created and read
+through <code class="prettyprint">/wp/v2/comments</code>. A request counts as a note request when</p>
+<ul>
+<li>it targets the collection route and its <code class="prettyprint">type</code> parameter is exactly
+<code class="prettyprint">note</code> - the same strict comparison core's controller makes
+(<code class="prettyprint">'note' === $request['type']</code>), for GET and POST alike;</li>
+<li>it targets the item route <code class="prettyprint">/wp/v2/comments/&lt;id&gt;</code> and that comment exists
+and is of type <code class="prettyprint">note</code> (any method; core refuses to change a comment's
+type on update, 7.1.3 class-wp-rest-comments-controller.php:925).</li>
+</ul>
+<p>The route is read from <code class="prettyprint">get_route()</code> and matched the way core matches it
+(class-wp-rest-server.php:1172): case-insensitively, against the same
+<code class="prettyprint">[\d]+</code> item pattern, and with <code class="prettyprint">$</code> accepting a trailing newline as core's
+<code class="prettyprint">@^…$@i</code> does. A trailing slash is tolerated as well. The ID is taken from
+the route because the URL parameters are not populated yet on
+<code class="prettyprint">rest_pre_dispatch</code>: <code class="prettyprint">dispatch()</code> applies the filter (:1079) before it
+matches the route (:1096), and a batch sub-request is passed with its URL
+parameters cleared (:1860-1866).</p>
+<p>The controller itself does not use the ID in the route: it reads
+<code class="prettyprint">$request['id']</code> (class-wp-rest-comments-controller.php:435, :480, :873,
+:918, :1042, :1066), and <code class="prettyprint">get_param()</code> prefers the JSON body, the form body
+and the query string to the URL parameters (class-wp-rest-request.php:362-384,
+:408-418). <code class="prettyprint">/wp/v2/comments/&lt;note&gt;?id=&lt;n&gt;</code> would therefore load comment
+<code class="prettyprint">&lt;n&gt;</code>. An item request with an <code class="prettyprint">id</code> parameter is a note request only when
+that parameter is numeric and equal to the ID in the route. Read here,
+before routing, <code class="prettyprint">get_param( 'id' )</code> returns exactly the value core will
+prefer later, since the URL parameters are still empty.</p>
+<p>Core's own permission checks still decide who may read or write notes.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$request</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\WP_REST_Request">WP_REST_Request</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The request about to be dispatched.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_is_note_request_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_is_note_request_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php jpkcom_disable_comments_is_note_request()</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>True for a note request, false for anything else.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_is_note_query">
+        jpkcom_harden_trim_comments_is_note_query()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_is_note_query" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">349</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether a comment query asks for notes and nothing else.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_is_note_query</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\WP_Comment_Query">WP_Comment_Query</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$query</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>Mirrors how <code class="prettyprint">WP_Comment_Query::get_comment_ids()</code> reads the requested
+types (7.1.3 class-wp-comment-query.php:776-789): <code class="prettyprint">type</code> and <code class="prettyprint">type__in</code>
+are merged, and an empty string means &quot;all types&quot;. The query counts as a
+note query only when, after dropping those empty entries, exactly <code class="prettyprint">note</code>
+remains. <code class="prettyprint">all</code>, <code class="prettyprint">comment</code>, an empty type, a mix such as
+<code class="prettyprint">[ 'note', 'comment' ]</code> or a spelling core would not treat as a note
+(<code class="prettyprint">NOTE</code>, <code class="prettyprint">note,comment</code>) do not qualify.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$query</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\WP_Comment_Query">WP_Comment_Query</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The query about to run.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_is_note_query_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_is_note_query_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php jpkcom_disable_comments_is_note_query()</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>True when only notes are requested.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_attach_rest_status">
+        jpkcom_harden_trim_comments_attach_rest_status()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_attach_rest_status" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">379</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`rest_api_init` callback: apply the REST status rewrite to every post type.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_attach_rest_status</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>Registered on rest_api_init because the filter name is per post type and
+every post type is registered by then.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_attach_rest_status_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_attach_rest_status_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php the rest_api_init closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_remove_support">
+        jpkcom_harden_trim_comments_remove_support()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_remove_support" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">407</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`wp_loaded` callback: remove comment and trackback support from every post type.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_remove_support</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>Bound to <code class="prettyprint">wp_loaded</code>, not <code class="prettyprint">admin_init</code>: every post type is registered
+once <code class="prettyprint">init</code> has completed (7.1.3 wp-settings.php:779 <code class="prettyprint">init</code>, :801
+<code class="prettyprint">wp_loaded</code>), while <code class="prettyprint">admin_init</code> and <code class="prettyprint">rest_api_init</code> fire later. On
+<code class="prettyprint">admin_init</code> (the standalone plugin up to 1.0.8) the removal never
+reached REST requests, so <code class="prettyprint">/wp/v2/posts</code> kept reporting
+<code class="prettyprint">comment_status: open</code>.</p>
+<p>The two supports are checked independently: a post type may declare
+<code class="prettyprint">trackbacks</code> without <code class="prettyprint">comments</code>, and a nested check left those untouched.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_remove_support_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_remove_support_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php the wp_loaded closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_redirect_screen">
+        jpkcom_harden_trim_comments_redirect_screen()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_redirect_screen" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">431</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`admin_init` callback: redirect the comments screen to the dashboard.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_redirect_screen</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_redirect_screen_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_redirect_screen_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php the admin_init closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_zero_counts">
+        jpkcom_harden_trim_comments_zero_counts()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_zero_counts" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">459</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`wp_count_comments` callback: report zero comments everywhere.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_zero_counts</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$counts</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$post_id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">object</span></code>
+
+        <section class="phpdocumentor-description"><p>The dashboard's &quot;At a Glance&quot; widget builds its comment line from
+<code class="prettyprint">wp_count_comments()</code> (filter at 7.1.3 comment.php:1529); with a non-zero
+count it linked to <code class="prettyprint">edit-comments.php</code>, which is redirected away. A
+non-empty object also keeps core from running its own count query.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$counts</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Counts assembled so far, an empty array by default.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$post_id</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Post ID the counts were requested for.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_zero_counts_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_zero_counts_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php the wp_count_comments closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">object</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Zeroed count object in the shape core expects.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_short_circuit_query">
+        jpkcom_harden_trim_comments_short_circuit_query()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_short_circuit_query" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">497</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`comments_pre_query` callback: short-circuit every comment query except note-only ones.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_short_circuit_query</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$comment_data</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\WP_Comment_Query">WP_Comment_Query</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$query</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+        <section class="phpdocumentor-description"><p><code class="prettyprint">comments_array</code> only covers the template path. The dashboard Activity
+widget queries comments straight through <code class="prettyprint">WP_Comment_Query</code> (filter at
+7.1.3 class-wp-comment-query.php:441), which is why the full moderation
+list still appeared there. <code class="prettyprint">dashboard_recent_comments</code> has not been a
+widget since WordPress 3.8, so removing that meta box does nothing.</p>
+<p>Queries for block-editor Notes and nothing else pass through untouched
+(see jpkcom_harden_trim_comments_is_note_query()), so the Notes panel can
+list notes and core gets the real note count. Notes are not public: core
+leaves them out of every query that does not ask for them (:782-789), and
+out of <code class="prettyprint">comment_count</code> (comment.php:3138).</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$comment_data</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Short-circuit value, null by default.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$query</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\WP_Comment_Query">WP_Comment_Query</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The query instance.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_short_circuit_query_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_short_circuit_query_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php the comments_pre_query closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">mixed</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p><code class="prettyprint">0</code> for counting queries, an empty array otherwise; the
+incoming value for a note-only query.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_block_feed">
+        jpkcom_harden_trim_comments_block_feed()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_block_feed" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">529</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`template_redirect` priority 0: refuse the comment feeds.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_block_feed</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>Comment feeds are assembled by <code class="prettyprint">WP_Query</code> directly through <code class="prettyprint">$wpdb</code> (only
+the <code class="prettyprint">comment_feed_*</code> filters apply), so they bypass <code class="prettyprint">comments_array</code> and
+<code class="prettyprint">comments_pre_query</code>: approved comments stayed readable at
+<code class="prettyprint">/comments/feed/</code> and <code class="prettyprint">&lt;post&gt;/feed/</code>. <code class="prettyprint">/feed/</code> is unaffected, because
+<code class="prettyprint">is_comment_feed()</code> is false there.</p>
+<p>Deliberately a <code class="prettyprint">wp_die( ..., 404 )</code> and not
+jpkcom_harden_trim_force_404(), as in the standalone plugin: while
+<code class="prettyprint">is_comment_feed()</code> is true core routes it to <code class="prettyprint">_xml_wp_die_handler</code>
+(7.1.3 functions.php:3866-3878), so the answer is a 404 XML error
+document, not the theme's 404 template.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_block_feed_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_block_feed_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php the template_redirect closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_remove_menu">
+        jpkcom_harden_trim_comments_remove_menu()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_remove_menu" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">551</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`admin_menu` callback: remove the Comments entry from the admin menu.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_remove_menu</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_remove_menu_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_remove_menu_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php the admin_menu closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_remove_admin_bar_node">
+        jpkcom_harden_trim_comments_remove_admin_bar_node()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_remove_admin_bar_node" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">568</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`admin_bar_menu` priority 999: remove the Comments node from the admin bar.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_remove_admin_bar_node</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\WP_Admin_Bar">WP_Admin_Bar</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wp_admin_bar</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$wp_admin_bar</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\WP_Admin_Bar">WP_Admin_Bar</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The admin bar instance.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_remove_admin_bar_node_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_remove_admin_bar_node_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php the admin_bar_menu closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_comments_rest_gate">
+        jpkcom_harden_trim_comments_rest_gate()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_rest_gate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/features-sitewide.php"><a href="files/includes-features-sitewide.html"><abbr title="includes/features-sitewide.php">features-sitewide.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">615</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">`rest_pre_dispatch` callback: close the REST comment routes to everything except block-editor Notes.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_comments_rest_gate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$result</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$server</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+        <section class="phpdocumentor-description"><p>Up to Disable Comments 1.0.10 the <code class="prettyprint">/wp/v2/comments</code> routes were removed on
+<code class="prettyprint">rest_endpoints</code>. That also broke Notes, which core reads and writes
+through exactly those routes. The routes now stay registered, and this
+gate answers every request on them that is not a note request (see
+jpkcom_harden_trim_comments_is_note_request()) the way a missing route is
+answered: <code class="prettyprint">rest_no_route</code>, core's own message (default text domain, so the
+translation is core's too) and status 404.</p>
+<p>A request is on the comment routes when its route is <code class="prettyprint">/wp/v2/comments</code> or
+lies below <code class="prettyprint">/wp/v2/comments/</code>, compared case-insensitively as core does;
+<code class="prettyprint">?rest_route=</code> requests arrive with the same route. <code class="prettyprint">/wp/v2/commentsfoo</code>
+and other namespaces are not touched.</p>
+<p>PHP_INT_MAX, and a non-note request is answered even when an earlier
+filter already produced a result - that includes core's OPTIONS handler
+at priority 10 (7.1.3 rest-api.php:837), which would otherwise describe
+the route. For a note request the incoming value is returned unchanged.</p>
+<p>The error is returned as a response, not as a <code class="prettyprint">WP_Error</code>: in a batch
+request core passes a <code class="prettyprint">rest_pre_dispatch</code> result straight on to
+<code class="prettyprint">rest_post_dispatch</code> (class-wp-rest-server.php:1894), where
+<code class="prettyprint">rest_send_allow_header()</code> calls <code class="prettyprint">get_matched_route()</code> on it, which a
+<code class="prettyprint">WP_Error</code> does not have. In a single request <code class="prettyprint">dispatch()</code> returns the
+response as is - the same bytes as core's own missing-route answer.</p>
+<p>Side effect: the route index at <code class="prettyprint">/wp-json/</code> lists the comment routes
+again; that is inherent to keeping them for Notes.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$result</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Response from an earlier filter, null by default.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$server</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Server instance.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$request</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The request about to be dispatched.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_comments_rest_gate_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_comments_rest_gate_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.1.0</span>
+                                                                                                        
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>jpkcom-disable-comments/jpkcom-disable-comments.php the rest_pre_dispatch closure</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">mixed</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The incoming value, or the 404 response.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_register_features">
         jpkcom_harden_trim_register_features()
         <a href="namespaces/default.html#function_jpkcom_harden_trim_register_features" class="headerlink"><i class="fas fa-link"></i></a>
@@ -7509,7 +8864,7 @@ switch-off does not undo).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-schema.php"><a href="files/includes-settings-schema.html"><abbr title="includes/settings-schema.php">settings-schema.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">176</span>
+    <span class="phpdocumentor-element-found-in__line">179</span>
 
     </aside>
 
@@ -7557,7 +8912,7 @@ switch-off does not undo).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-schema.php"><a href="files/includes-settings-schema.html"><abbr title="includes/settings-schema.php">settings-schema.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">197</span>
+    <span class="phpdocumentor-element-found-in__line">200</span>
 
     </aside>
 
@@ -7604,7 +8959,7 @@ switch-off does not undo).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-schema.php"><a href="files/includes-settings-schema.html"><abbr title="includes/settings-schema.php">settings-schema.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">246</span>
+    <span class="phpdocumentor-element-found-in__line">251</span>
 
     </aside>
 
@@ -7617,7 +8972,8 @@ switch-off does not undo).</p>
 
         <section class="phpdocumentor-description"><p>The excluded keys either have a break path no preset may switch on, or
 hold a decision only the site owner can make (role lists, application
-passwords, HSTS, feed discovery).</p>
+passwords, HSTS, feed discovery, comments). <code class="prettyprint">xmlrpc</code> is managed: it is
+on in every preset, so no preset can reopen XML-RPC.</p>
 </section>
 
     

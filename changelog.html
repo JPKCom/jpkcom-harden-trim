@@ -1,4 +1,39 @@
-<h3 id="section">1.0.1</h3>
+<h3 id="section">1.1.0</h3>
+<ul>
+<li>Changed: <strong>XML-RPC is blocked on every site right after this
+update</strong>, because the new “Disable XML-RPC” switch is on by
+default and the stored settings of an earlier version do not contain it.
+Jetpack, the WordPress mobile apps and incoming pingbacks stop working
+until you untick the switch in <strong>Settings → Harden &amp;
+Trim</strong> or set
+<code>define( 'JPKCOM_HARDEN_TRIM_XMLRPC', false );</code> in
+<code>wp-config.php</code>. Every preset keeps it on, so applying a
+preset also switches it on again</li>
+<li>Added: “Disable XML-RPC” switch, mirroring JPKCom Disable XML-RPC
+1.0.10: <code>xmlrpc.php</code> answers 403 with an XML-RPC fault, the
+endpoint is no longer advertised, trackbacks are refused</li>
+<li>Added: “Disable comments” switch (off by default, never part of a
+preset), mirroring JPKCom Disable Comments 1.0.11: comments and pings
+closed on every post type, existing comments hidden, every post reports
+zero comments (no comment links or counts in <code>/feed/</code> and the
+Atom feed, no “N comments” in themes), comment screens and feeds
+removed. The REST comment routes answer every request that is not a
+block editor Notes request with the <code>rest_no_route</code> 404 a
+missing route gives (<code>OPTIONS</code> too, which a missing route
+answers with an empty 200); a note’s route whose <code>id</code>
+parameter names a different comment is not a Notes request. Notes keep
+working, and WordPress’ own permission checks decide who may read or
+write them. Because the routes stay registered for Notes, the REST index
+at <code>/wp-json/</code> lists them. The query-string comment feeds
+(<code>?feed=comments-rss2</code>, <code>?p=123&amp;feed=rss2</code>)
+answer 404 directly instead of redirecting to a pretty URL that would
+404 as well; this is deliberate</li>
+<li>Added: a hint on the settings page while the matching standalone
+plugin is active</li>
+<li>Added: German translations of the new texts (<code>de_DE</code>,
+<code>de_DE_formal</code>)</li>
+</ul>
+<h3 id="section-1">1.0.1</h3>
 <ul>
 <li>Changed: the updater keeps its manifest cache, its failure marker
 and its fetch lock in site transients. On multisite the network now
@@ -7,7 +42,7 @@ nothing changes</li>
 <li>Changed: uninstalling also removes the updater’s network-wide cache
 entries, and still the per-site ones 1.0.0 wrote</li>
 </ul>
-<h3 id="section-1">1.0.0</h3>
+<h3 id="section-2">1.0.0</h3>
 <ul>
 <li>Added: Initial release.</li>
 <li>Added: performance switches (emoji, self pingbacks, asset versions,
