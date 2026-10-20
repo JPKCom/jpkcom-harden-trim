@@ -97,7 +97,7 @@ echo json_encode(
 		'store_loaded' => function_exists( 'jpkcom_harden_trim_settings' ),
 		'invalid'      => function_exists( 'jpkcom_harden_trim_invalid_constants' ) ? jpkcom_harden_trim_invalid_constants() : null,
 		'xmlrpc'       => array() !== ( $GLOBALS['jht_hooks']['xmlrpc_enabled'] ?? array() ) || array() !== ( $GLOBALS['jht_hooks']['wp_xmlrpc_server_class'] ?? array() ),
-		'comments'     => array() !== ( $GLOBALS['jht_hooks']['comments_open'] ?? array() ) || array() !== ( $GLOBALS['jht_hooks']['rest_endpoints'] ?? array() ),
+		'comments'     => array() !== ( $GLOBALS['jht_hooks']['comments_open'] ?? array() ) || array() !== ( $GLOBALS['jht_hooks']['get_comments_number'] ?? array() ),
 	)
 );
 exit( 0 );

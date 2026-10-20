@@ -360,7 +360,7 @@ msgid "Answers requests to xmlrpc.php with a 403 error and stops advertising the
 msgstr ""
 
 #: includes/admin-page.php:146
-msgid "Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear. Warning: block editor Notes stop working too."
+msgid "Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, comment counts and comment feeds disappear, and the REST comment routes answer 404. Block editor Notes keep working."
 msgstr ""
 
 #: includes/admin-page.php:147
@@ -721,19 +721,19 @@ msgstr ""
 msgid "The username, email address or password is incorrect."
 msgstr ""
 
-#: includes/features-sitewide.php:197
+#: includes/features-sitewide.php:200
 msgid "XML-RPC is disabled."
 msgstr ""
 
-#: includes/features-sitewide.php:198
+#: includes/features-sitewide.php:201
 msgid "Error"
 msgstr ""
 
-#: includes/features-sitewide.php:408
+#: includes/features-sitewide.php:515
 msgid "Comments are disabled."
 msgstr ""
 
-#: includes/features-sitewide.php:409
+#: includes/features-sitewide.php:516
 msgid "Not Found"
 msgstr ""
 

@@ -4,13 +4,15 @@
  *
  * Two switches that mirror standalone JPKCom plugins hook for hook:
  * `xmlrpc` (JPKCom Disable XML-RPC 1.0.10) and `comments` (JPKCom Disable
- * Comments 1.0.10). Same hooks, priorities, accepted args and return values;
+ * Comments 1.0.11). Same hooks, priorities, accepted args and return values;
  * only the callback names and the text domain differ, plus two documented
  * exceptions: the XML-RPC fault text is an English literal, and the comment
  * feed refusal stays a wp_die() 404 instead of going through
  * jpkcom_harden_trim_force_404(). Both are global (no role exemption). The
- * standalone plugins' findings were measured against WordPress 7.0.2; the line
- * references below were re-read in 7.1.3.
+ * standalone plugins' findings up to their 1.0.10 were measured against
+ * WordPress 7.0.2; the Notes gate, the note-query pass-through and the comment
+ * count filter (Disable Comments 1.0.11) were read in the 7.1.3 source and not
+ * yet measured on a running site. The line references below are 7.1.3.
  *
  * @package JPKCom_Harden_Trim
  * @since   1.1.0
@@ -68,13 +70,14 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_register_sitewide_features
 
 			add_filter( 'wp_count_comments', 'jpkcom_harden_trim_comments_zero_counts', PHP_INT_MAX, 2 );
 			add_filter( 'comments_pre_query', 'jpkcom_harden_trim_comments_short_circuit_query', PHP_INT_MAX, 2 );
+			add_filter( 'get_comments_number', '__return_zero', PHP_INT_MAX );
 
 			add_filter( 'feed_links_show_comments_feed', '__return_false' );
 			add_action( 'template_redirect', 'jpkcom_harden_trim_comments_block_feed', 0 );
 
 			add_action( 'admin_menu', 'jpkcom_harden_trim_comments_remove_menu' );
 			add_action( 'admin_bar_menu', 'jpkcom_harden_trim_comments_remove_admin_bar_node', 999 );
-			add_filter( 'rest_endpoints', 'jpkcom_harden_trim_comments_remove_rest_routes' );
+			add_filter( 'rest_pre_dispatch', 'jpkcom_harden_trim_comments_rest_gate', PHP_INT_MAX, 3 );
 		}
 	}
 
@@ -250,6 +253,99 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_comments_close_rest_status
 
 }
 
+if ( ! function_exists( function: 'jpkcom_harden_trim_comments_is_note_request' ) ) {
+
+	/**
+	 * Whether a REST request on the comment routes is a block-editor Notes request.
+	 *
+	 * Notes (core since 6.9) are comments of type `note`, created and read
+	 * through `/wp/v2/comments`. A request counts as a note request when
+	 *
+	 * - it targets the collection route and its `type` parameter is exactly
+	 *   `note` - the same strict comparison core's controller makes
+	 *   (`'note' === $request['type']`), for GET and POST alike;
+	 * - it targets the item route `/wp/v2/comments/<id>` and that comment exists
+	 *   and is of type `note` (any method; core refuses to change a comment's
+	 *   type on update, 7.1.3 class-wp-rest-comments-controller.php:925).
+	 *
+	 * The route is read from `get_route()` and matched the way core matches it
+	 * (class-wp-rest-server.php:1172): case-insensitively, against the same
+	 * `[\d]+` item pattern, and with `$` accepting a trailing newline as core's
+	 * `@^…$@i` does. A trailing slash is tolerated as well. The ID is taken from
+	 * the route because the URL parameters are not populated yet on
+	 * `rest_pre_dispatch`: `dispatch()` applies the filter (:1079) before it
+	 * matches the route (:1096), and a batch sub-request is passed with its URL
+	 * parameters cleared (:1860-1866).
+	 *
+	 * Core's own permission checks still decide who may read or write notes.
+	 *
+	 * @since 1.1.0
+	 * @see   jpkcom-disable-comments/jpkcom-disable-comments.php jpkcom_disable_comments_is_note_request()
+	 *
+	 * @param WP_REST_Request $request The request about to be dispatched.
+	 * @return bool True for a note request, false for anything else.
+	 */
+	function jpkcom_harden_trim_comments_is_note_request( WP_REST_Request $request ): bool {
+		$route = (string) $request->get_route();
+
+		if ( 1 === preg_match( '#^/wp/v2/comments/?$#i', $route ) ) {
+			return 'note' === $request->get_param( 'type' );
+		}
+
+		if ( 1 !== preg_match( '#^/wp/v2/comments/([\d]+)/?$#i', $route, $matches ) ) {
+			return false;
+		}
+
+		$comment_id = (int) $matches[1];
+
+		// get_comment() of an empty ID falls back to the global $comment.
+		if ( $comment_id <= 0 ) {
+			return false;
+		}
+
+		$comment = get_comment( $comment_id );
+
+		return $comment instanceof WP_Comment && 'note' === $comment->comment_type;
+	}
+
+}
+
+if ( ! function_exists( function: 'jpkcom_harden_trim_comments_is_note_query' ) ) {
+
+	/**
+	 * Whether a comment query asks for notes and nothing else.
+	 *
+	 * Mirrors how `WP_Comment_Query::get_comment_ids()` reads the requested
+	 * types (7.1.3 class-wp-comment-query.php:776-789): `type` and `type__in`
+	 * are merged, and an empty string means "all types". The query counts as a
+	 * note query only when, after dropping those empty entries, exactly `note`
+	 * remains. `all`, `comment`, an empty type, a mix such as
+	 * `[ 'note', 'comment' ]` or a spelling core would not treat as a note
+	 * (`NOTE`, `note,comment`) do not qualify.
+	 *
+	 * @since 1.1.0
+	 * @see   jpkcom-disable-comments/jpkcom-disable-comments.php jpkcom_disable_comments_is_note_query()
+	 *
+	 * @param WP_Comment_Query $query The query about to run.
+	 * @return bool True when only notes are requested.
+	 */
+	function jpkcom_harden_trim_comments_is_note_query( WP_Comment_Query $query ): bool {
+		$types = array_merge(
+			(array) ( $query->query_vars['type'] ?? '' ),
+			(array) ( $query->query_vars['type__in'] ?? '' )
+		);
+
+		$types = array_values(
+			array_unique(
+				array_filter( $types, static fn ( mixed $type ): bool => '' !== $type )
+			)
+		);
+
+		return array( 'note' ) === $types;
+	}
+
+}
+
 if ( ! function_exists( function: 'jpkcom_harden_trim_comments_attach_rest_status' ) ) {
 
 	/**
@@ -359,7 +455,7 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_comments_zero_counts' ) ) 
 if ( ! function_exists( function: 'jpkcom_harden_trim_comments_short_circuit_query' ) ) {
 
 	/**
-	 * `comments_pre_query` callback: short-circuit every comment query.
+	 * `comments_pre_query` callback: short-circuit every comment query except note-only ones.
 	 *
 	 * `comments_array` only covers the template path. The dashboard Activity
 	 * widget queries comments straight through `WP_Comment_Query` (filter at
@@ -367,14 +463,25 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_comments_short_circuit_que
 	 * list still appeared there. `dashboard_recent_comments` has not been a
 	 * widget since WordPress 3.8, so removing that meta box does nothing.
 	 *
+	 * Queries for block-editor Notes and nothing else pass through untouched
+	 * (see jpkcom_harden_trim_comments_is_note_query()), so the Notes panel can
+	 * list notes and core gets the real note count. Notes are not public: core
+	 * leaves them out of every query that does not ask for them (:782-789), and
+	 * out of `comment_count` (comment.php:3138).
+	 *
 	 * @since 1.1.0
 	 * @see   jpkcom-disable-comments/jpkcom-disable-comments.php the comments_pre_query closure
 	 *
 	 * @param mixed            $comment_data Short-circuit value, null by default.
 	 * @param WP_Comment_Query $query        The query instance.
-	 * @return array|int `0` for counting queries, an empty array otherwise.
+	 * @return mixed `0` for counting queries, an empty array otherwise; the
+	 *               incoming value for a note-only query.
 	 */
-	function jpkcom_harden_trim_comments_short_circuit_query( mixed $comment_data, WP_Comment_Query $query ): array|int {
+	function jpkcom_harden_trim_comments_short_circuit_query( mixed $comment_data, WP_Comment_Query $query ): mixed {
+		if ( jpkcom_harden_trim_comments_is_note_query( $query ) ) {
+			return $comment_data;
+		}
+
 		return empty( $query->query_vars['count'] ) ? array() : 0;
 	}
 
@@ -447,32 +554,68 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_comments_remove_admin_bar_
 
 }
 
-if ( ! function_exists( function: 'jpkcom_harden_trim_comments_remove_rest_routes' ) ) {
+if ( ! function_exists( function: 'jpkcom_harden_trim_comments_rest_gate' ) ) {
 
 	/**
-	 * `rest_endpoints` callback: remove the REST API comment endpoints.
+	 * `rest_pre_dispatch` callback: close the REST comment routes to everything except block-editor Notes.
 	 *
-	 * Drops `/wp/v2/comments` and every route starting with `/wp/v2/comments/`;
-	 * `/wp/v2/commentsfoo` and every other route stay.
+	 * Up to Disable Comments 1.0.10 the `/wp/v2/comments` routes were removed on
+	 * `rest_endpoints`. That also broke Notes, which core reads and writes
+	 * through exactly those routes. The routes now stay registered, and this
+	 * gate answers every request on them that is not a note request (see
+	 * jpkcom_harden_trim_comments_is_note_request()) the way a missing route is
+	 * answered: `rest_no_route`, core's own message (default text domain, so the
+	 * translation is core's too) and status 404.
+	 *
+	 * A request is on the comment routes when its route is `/wp/v2/comments` or
+	 * lies below `/wp/v2/comments/`, compared case-insensitively as core does;
+	 * `?rest_route=` requests arrive with the same route. `/wp/v2/commentsfoo`
+	 * and other namespaces are not touched.
+	 *
+	 * PHP_INT_MAX, and a non-note request is answered even when an earlier
+	 * filter already produced a result - that includes core's OPTIONS handler
+	 * at priority 10 (7.1.3 rest-api.php:837), which would otherwise describe
+	 * the route. For a note request the incoming value is returned unchanged.
+	 *
+	 * The error is returned as a response, not as a `WP_Error`: in a batch
+	 * request core passes a `rest_pre_dispatch` result straight on to
+	 * `rest_post_dispatch` (class-wp-rest-server.php:1894), where
+	 * `rest_send_allow_header()` calls `get_matched_route()` on it, which a
+	 * `WP_Error` does not have. In a single request `dispatch()` returns the
+	 * response as is - the same bytes as core's own missing-route answer.
+	 *
+	 * Side effect: the route index at `/wp-json/` lists the comment routes
+	 * again; that is inherent to keeping them for Notes.
 	 *
 	 * @since 1.1.0
-	 * @see   jpkcom-disable-comments/jpkcom-disable-comments.php the rest_endpoints closure
+	 * @see   jpkcom-disable-comments/jpkcom-disable-comments.php the rest_pre_dispatch closure
 	 *
-	 * @param array $endpoints The registered REST API endpoints.
-	 * @return array The endpoints without comment routes.
+	 * @param mixed $result  Response from an earlier filter, null by default.
+	 * @param mixed $server  Server instance.
+	 * @param mixed $request The request about to be dispatched.
+	 * @return mixed The incoming value, or the 404 response.
 	 */
-	function jpkcom_harden_trim_comments_remove_rest_routes( array $endpoints ): array {
-		if ( isset( $endpoints['/wp/v2/comments'] ) ) {
-			unset( $endpoints['/wp/v2/comments'] );
+	function jpkcom_harden_trim_comments_rest_gate( mixed $result, mixed $server, mixed $request ): mixed {
+		if ( ! $request instanceof WP_REST_Request ) {
+			return $result;
 		}
 
-		foreach ( array_keys( $endpoints ) as $route ) {
-			if ( str_starts_with( haystack: $route, needle: '/wp/v2/comments/' ) ) {
-				unset( $endpoints[ $route ] );
-			}
+		if ( 1 !== preg_match( '#^/wp/v2/comments(?:/|$)#i', (string) $request->get_route() ) ) {
+			return $result;
 		}
 
-		return $endpoints;
+		if ( jpkcom_harden_trim_comments_is_note_request( $request ) ) {
+			return $result;
+		}
+
+		return rest_convert_error_to_response(
+			new WP_Error(
+				'rest_no_route',
+				// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- core's own string and domain, so the answer matches core's missing-route answer in every locale.
+				__( 'No route was found matching the URL and request method.' ),
+				array( 'status' => 404 )
+			)
+		);
 	}
 
 }

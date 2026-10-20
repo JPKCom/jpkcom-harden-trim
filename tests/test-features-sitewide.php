@@ -4,14 +4,16 @@
  * (includes/features-sitewide.php).
  *
  * Both switches mirror a standalone plugin: JPKCom Disable XML-RPC 1.0.10 and
- * JPKCom Disable Comments 1.0.10. Every applicable case of their
+ * JPKCom Disable Comments 1.0.11. Every applicable case of their
  * tests/test-hooks.php is ported here; each ported case names its source
  * ("xmlrpc:" or "comments:" followed by the original case name). On top of
  * them: hook priorities and accepted args of every registration, the
  * registration matrix (defaults, each switch alone, both off), the English
  * fault literal against a translating gettext stub, the last-resort and
- * comment-feed wp_die() calls, the screen redirect, and the real response of
- * the init guard under the built-in web server (fixture-xmlrpc-refuse.php).
+ * comment-feed wp_die() calls, the screen redirect, the REST gate's 404
+ * message staying core's string under a translating gettext stub, and the
+ * real response of the init guard under the built-in web server
+ * (fixture-xmlrpc-refuse.php).
  *
  * @package JPKCom_Harden_Trim
  * @since 1.1.0
@@ -174,8 +176,11 @@ if ( ! class_exists( class: 'WP_REST_Response' ) ) {
 	class WP_REST_Response {
 		private mixed $data;
 
-		public function __construct( mixed $data = null ) {
-			$this->data = $data;
+		private int $status;
+
+		public function __construct( mixed $data = null, int $status = 200 ) {
+			$this->data   = $data;
+			$this->status = $status;
 		}
 
 		public function get_data(): mixed {
@@ -185,6 +190,75 @@ if ( ! class_exists( class: 'WP_REST_Response' ) ) {
 		public function set_data( mixed $data ): void {
 			$this->data = $data;
 		}
+
+		public function get_status(): int {
+			return $this->status;
+		}
+	}
+}
+
+if ( ! class_exists( class: 'WP_REST_Request' ) ) {
+	/** Minimal request: method, route and the merged request parameters. */
+	class WP_REST_Request {
+		/** @param array<string,mixed> $params */
+		public function __construct( private string $method = 'GET', private string $route = '', private array $params = array() ) {
+		}
+
+		public function get_method(): string {
+			return $this->method;
+		}
+
+		public function get_route(): string {
+			return $this->route;
+		}
+
+		public function get_param( string $key ): mixed {
+			return $this->params[ $key ] ?? null;
+		}
+	}
+}
+
+if ( ! class_exists( class: 'WP_Comment' ) ) {
+	class WP_Comment {
+		public function __construct( public string $comment_ID = '0', public string $comment_type = 'comment' ) {
+		}
+	}
+}
+
+// Comments the stubbed get_comment() knows, by ID ($GLOBALS['jht_comments']), and what it
+// falls back to for an empty ID ($GLOBALS['jht_global_comment']; core returns the global $comment).
+
+if ( ! function_exists( function: 'get_comment' ) ) {
+	function get_comment( mixed $comment = null ): ?WP_Comment {
+		if ( empty( $comment ) ) {
+			return $GLOBALS['jht_global_comment'] ?? null;
+		}
+
+		return $GLOBALS['jht_comments'][ (int) $comment ] ?? null;
+	}
+}
+
+if ( ! function_exists( function: '__return_zero' ) ) {
+	function __return_zero(): int {
+		return 0;
+	}
+}
+
+if ( ! function_exists( function: 'rest_convert_error_to_response' ) ) {
+	/** Mirrors core (7.1.3 rest-api.php:3464) for a single-code error: status from the error data, code/message/data as body. */
+	function rest_convert_error_to_response( WP_Error $error ): WP_REST_Response {
+		$code   = (string) ( array_keys( array: $error->errors )[0] ?? '' );
+		$data   = $error->error_data[ $code ] ?? null;
+		$status = is_array( $data ) && isset( $data['status'] ) && is_numeric( $data['status'] ) ? (int) $data['status'] : 500;
+
+		return new WP_REST_Response(
+			array(
+				'code'    => $code,
+				'message' => $error->errors[ $code ][0] ?? '',
+				'data'    => $data,
+			),
+			$status
+		);
 	}
 }
 
@@ -284,7 +358,7 @@ function jht_sw_cb( string $hook ): ?callable {
 }
 
 $sw_xmlrpc_hooks   = array( 'init', 'xmlrpc_enabled', 'xmlrpc_methods', 'wp_xmlrpc_server_class' );
-$sw_comments_hooks = array( 'rest_api_init', 'wp_loaded', 'admin_init', 'comments_open', 'comments_array', 'wp_count_comments', 'comments_pre_query', 'feed_links_show_comments_feed', 'template_redirect', 'admin_menu', 'admin_bar_menu', 'rest_endpoints' );
+$sw_comments_hooks = array( 'rest_api_init', 'wp_loaded', 'admin_init', 'comments_open', 'comments_array', 'wp_count_comments', 'comments_pre_query', 'get_comments_number', 'feed_links_show_comments_feed', 'template_redirect', 'admin_menu', 'admin_bar_menu', 'rest_pre_dispatch' );
 
 // Registration matrix.
 
@@ -404,7 +478,7 @@ chk(
 );
 
 // ---------------------------------------------------------------------------
-// Comments, ported from jpkcom-disable-comments 1.0.10 tests/test-hooks.php.
+// Comments, ported from jpkcom-disable-comments 1.0.11 tests/test-hooks.php.
 // ---------------------------------------------------------------------------
 
 jht_sw_register( array( 'xmlrpc' => false, 'comments' => true ) );
@@ -467,6 +541,57 @@ if ( null !== $jht_cb ) {
 	chk( 'comments: comments_pre_query returns an empty array for listing queries', array() === $jht_cb( null, $jht_listing ) );
 	chk( 'comments: comments_pre_query returns 0 for counting queries', 0 === $jht_cb( null, $jht_counting ) );
 }
+
+// Source: comments "a note query (type note) runs", "a note query (type__in [note]) runs",
+// "a note query (type [note]) runs", "a note count query runs, so the real note count comes back",
+// "stays short-circuited: %s", "a non-note count query still returns 0",
+// "a note query keeps a value an earlier filter supplied". 1.0.10 short-circuited every
+// query, note queries included, so the block editor's Notes panel stayed empty. A query
+// passes only when the requested types are exactly `note` (core's own reading of type +
+// type__in in WP_Comment_Query::get_comment_ids(), where '' means "all").
+if ( null !== $jht_cb ) {
+	$jht_passes = static function ( array $vars ) use ( $jht_cb ): mixed {
+		$query             = new WP_Comment_Query();
+		$query->query_vars = $vars + array( 'count' => false, 'type' => '', 'type__in' => '' );
+
+		return $jht_cb( null, $query );
+	};
+
+	chk( 'comments: a note query (type note) runs', null === $jht_passes( array( 'type' => 'note' ) ) );
+	chk( 'comments: a note query (type__in [note]) runs', null === $jht_passes( array( 'type__in' => array( 'note' ) ) ) );
+	chk( 'comments: a note query (type [note]) runs', null === $jht_passes( array( 'type' => array( 'note' ) ) ) );
+	chk( 'comments: a note count query runs, so the real note count comes back', null === $jht_passes( array( 'type' => 'note', 'count' => true ) ) );
+
+	foreach (
+		array(
+			'no type (all types)'            => array(),
+			'type all'                       => array( 'type' => 'all' ),
+			'type comment'                   => array( 'type' => 'comment' ),
+			'type pings'                     => array( 'type' => 'pings' ),
+			'type NOTE (case variant)'       => array( 'type' => 'NOTE' ),
+			'type "note,comment" (string)'   => array( 'type' => 'note,comment' ),
+			'type__in [note, comment]'       => array( 'type__in' => array( 'note', 'comment' ) ),
+			'type note + type__in [comment]' => array( 'type' => 'note', 'type__in' => array( 'comment' ) ),
+			'type__in [note, all]'           => array( 'type__in' => array( 'note', 'all' ) ),
+		) as $jht_label => $jht_vars
+	) {
+		chk( "comments: stays short-circuited: {$jht_label}", array() === $jht_passes( $jht_vars ) );
+	}
+
+	chk( 'comments: a non-note count query still returns 0', 0 === $jht_passes( array( 'type' => 'comment', 'count' => true ) ) );
+
+	$jht_earlier             = new WP_Comment_Query();
+	$jht_earlier->query_vars = array( 'count' => false, 'type' => 'note', 'type__in' => '' );
+	chk( 'comments: a note query keeps a value an earlier filter supplied', array( 'kept' ) === $jht_cb( array( 'kept' ), $jht_earlier ) );
+}
+
+// Source: comments "get_comments_number is filtered at PHP_INT_MAX", "get_comments_number reports 0".
+// /feed/ items carried <comments>, <wfw:commentRss> and <slash:comments> (feed-rss2.php gates
+// them on get_comments_number() || comments_open()), Atom entries the replies links and
+// <thr:total>, and themes kept printing "N comments" for old comments.
+chk( 'comments: get_comments_number is filtered at PHP_INT_MAX (1 arg)', jht_sw_is( 'get_comments_number', PHP_INT_MAX, 1 ) );
+$jht_cb = jht_sw_cb( 'get_comments_number' );
+chk( 'comments: get_comments_number reports 0', null !== $jht_cb && 0 === $jht_cb( '5', 7 ) );
 
 // Source: comments "comment feed discovery links are removed".
 chk( 'comments: comment feed discovery links are removed', false === apply_filters( 'feed_links_show_comments_feed', true ) );
@@ -570,21 +695,159 @@ try {
 unset( $GLOBALS['pagenow'] );
 chk( 'comments: edit-comments.php is redirected to admin_url()', null !== $jht_redirect && 'https://example.test/wp-admin/' === $jht_redirect->location );
 
-// Source: comments "rest_endpoints is filtered", "removes the comments collection route",
-// "removes comment sub-routes", "keeps unrelated routes".
-chk( 'comments: rest_endpoints is filtered', jht_sw_is( 'rest_endpoints', 10, 1 ) );
-$jht_endpoints = apply_filters(
-	'rest_endpoints',
-	array(
-		'/wp/v2/comments'          => 'a',
-		'/wp/v2/comments/(?P<id>)' => 'b',
-		'/wp/v2/posts'             => 'c',
-		'/wp/v2/commentsfoo'       => 'd',
-	)
-);
-chk( 'comments: removes the comments collection route', ! isset( $jht_endpoints['/wp/v2/comments'] ) );
-chk( 'comments: removes comment sub-routes', ! isset( $jht_endpoints['/wp/v2/comments/(?P<id>)'] ) );
-chk( 'comments: keeps unrelated routes', isset( $jht_endpoints['/wp/v2/posts'] ) && isset( $jht_endpoints['/wp/v2/commentsfoo'] ) );
+// Source: comments "the comment routes stay registered (rest_endpoints is not pruned)",
+// "a rest_pre_dispatch gate is registered at PHP_INT_MAX with 3 arguments",
+// "the note-request check is a named, reusable function",
+// "the note-query check is a named, reusable function". Up to 1.0.10 the /wp/v2/comments
+// routes were removed on rest_endpoints, which also broke block-editor Notes (comments of
+// type `note`, read and written through those routes). The routes now stay registered and a
+// rest_pre_dispatch gate answers every request that is not a note request exactly as a
+// missing route does.
+chk( 'comments: the comment routes stay registered (rest_endpoints is not pruned)', array() === jht_sw_entries( 'rest_endpoints' ) );
+chk( 'comments: a rest_pre_dispatch gate is registered at PHP_INT_MAX with 3 arguments', jht_sw_is( 'rest_pre_dispatch', PHP_INT_MAX, 3 ) );
+chk( 'comments: the gate is jpkcom_harden_trim_comments_rest_gate', 'jpkcom_harden_trim_comments_rest_gate' === ( jht_sw_entries( 'rest_pre_dispatch' )[0][0] ?? null ) );
+chk( 'comments: the note-request check is a named, reusable function', function_exists( function: 'jpkcom_harden_trim_comments_is_note_request' ) );
+chk( 'comments: the note-query check is a named, reusable function', function_exists( function: 'jpkcom_harden_trim_comments_is_note_query' ) );
+
+$jht_gate = jht_sw_cb( 'rest_pre_dispatch' );
+if ( null !== $jht_gate ) {
+	$GLOBALS['jht_comments'] = array(
+		12 => new WP_Comment( '12', 'comment' ),
+		13 => new WP_Comment( '13', 'note' ),
+		14 => new WP_Comment( '14', 'pingback' ),
+		15 => new WP_Comment( '15', '' ),
+	);
+	// get_comment( 0 ) falls back to the global $comment in core.
+	$GLOBALS['jht_global_comment'] = $GLOBALS['jht_comments'][13];
+
+	$jht_dispatch = static function ( string $method, string $route, array $params = array(), mixed $result = null ) use ( $jht_gate ): mixed {
+		return $jht_gate( $result, null, new WP_REST_Request( $method, $route, $params ) );
+	};
+
+	$jht_is_404 = static function ( mixed $response ): bool {
+		if ( ! $response instanceof WP_REST_Response ) {
+			return false;
+		}
+
+		$data = $response->get_data();
+
+		return 404 === $response->get_status()
+			&& 'rest_no_route' === ( $data['code'] ?? '' )
+			&& 'No route was found matching the URL and request method.' === ( $data['message'] ?? '' )
+			&& array( 'status' => 404 ) === ( $data['data'] ?? null );
+	};
+
+	// Source: comments "collection request without type: rest_no_route 404",
+	// "item request for a regular comment: rest_no_route 404", "other comment sub-routes:
+	// rest_no_route 404", "unrelated routes pass untouched" (the old route-pruning cases).
+	chk( 'comments: collection request without type: rest_no_route 404', $jht_is_404( $jht_dispatch( 'GET', '/wp/v2/comments' ) ) );
+	chk( 'comments: item request for a regular comment: rest_no_route 404', $jht_is_404( $jht_dispatch( 'GET', '/wp/v2/comments/12' ) ) );
+	chk( 'comments: other comment sub-routes: rest_no_route 404', $jht_is_404( $jht_dispatch( 'GET', '/wp/v2/comments/12/extra' ) ) );
+	chk(
+		'comments: unrelated routes pass untouched',
+		null === $jht_dispatch( 'GET', '/wp/v2/posts' )
+			&& null === $jht_dispatch( 'GET', '/wp/v2/commentsfoo' )
+			&& null === $jht_dispatch( 'GET', '/myplugin/v1/wp/v2/comments' )
+	);
+	chk( 'comments: a non-request value passes untouched', 'kept' === $jht_gate( 'kept', null, '/wp/v2/comments' ) );
+
+	// Source: comments "the 404 is a WP_REST_Response (batch-safe), not a WP_Error". In a batch
+	// request core hands a rest_pre_dispatch result straight to rest_post_dispatch, where
+	// rest_send_allow_header() calls get_matched_route() on it.
+	chk( 'comments: the 404 is a WP_REST_Response (batch-safe), not a WP_Error', $jht_dispatch( 'GET', '/wp/v2/comments' ) instanceof WP_REST_Response );
+
+	// The message is core's own string in the default text domain, so it matches core's
+	// missing-route answer in every locale; the plugin's translation must not apply.
+	$GLOBALS['jht_translate'] = true;
+	$jht_translated           = $jht_dispatch( 'GET', '/wp/v2/comments' );
+	$GLOBALS['jht_translate'] = false;
+	chk( 'comments: the 404 message is core\'s string in the default text domain, not the plugin\'s', $jht_is_404( $jht_translated ) );
+
+	// Source: comments "GET collection type=note passes", "POST collection type=note passes",
+	// "%s on a note item passes", "a note request keeps a result an earlier filter supplied".
+	chk( 'comments: GET collection type=note passes', null === $jht_dispatch( 'GET', '/wp/v2/comments', array( 'type' => 'note', 'post' => 5 ) ) );
+	chk( 'comments: POST collection type=note passes', null === $jht_dispatch( 'POST', '/wp/v2/comments', array( 'type' => 'note', 'post' => 5 ) ) );
+	foreach ( array( 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' ) as $jht_method ) {
+		chk( "comments: {$jht_method} on a note item passes", null === $jht_dispatch( $jht_method, '/wp/v2/comments/13' ) );
+	}
+	chk( 'comments: a note request keeps a result an earlier filter supplied', 'earlier' === $jht_dispatch( 'GET', '/wp/v2/comments/13', array(), 'earlier' ) );
+
+	// Source: comments "404: %s" (everything that is not a note request).
+	foreach (
+		array(
+			'GET type=comment'                => array( 'GET', '/wp/v2/comments', array( 'type' => 'comment' ) ),
+			'GET type=pingback'               => array( 'GET', '/wp/v2/comments', array( 'type' => 'pingback' ) ),
+			'GET type=all'                    => array( 'GET', '/wp/v2/comments', array( 'type' => 'all' ) ),
+			'GET type="note,comment"'         => array( 'GET', '/wp/v2/comments', array( 'type' => 'note,comment' ) ),
+			'GET type[]=note (array)'         => array( 'GET', '/wp/v2/comments', array( 'type' => array( 'note' ) ) ),
+			'GET type=NOTE (case variant)'    => array( 'GET', '/wp/v2/comments', array( 'type' => 'NOTE' ) ),
+			'GET type="" (empty)'             => array( 'GET', '/wp/v2/comments', array( 'type' => '' ) ),
+			'POST without type'               => array( 'POST', '/wp/v2/comments', array( 'post' => 5, 'content' => 'x' ) ),
+			'POST type=comment'               => array( 'POST', '/wp/v2/comments', array( 'type' => 'comment', 'post' => 5 ) ),
+			'GET pingback item'               => array( 'GET', '/wp/v2/comments/14' ),
+			'GET legacy empty-type item'      => array( 'GET', '/wp/v2/comments/15' ),
+			'GET unknown item'                => array( 'GET', '/wp/v2/comments/999' ),
+			'GET item 0 (global fallback)'    => array( 'GET', '/wp/v2/comments/0' ),
+			'regular item claiming type=note' => array( 'GET', '/wp/v2/comments/12', array( 'type' => 'note' ) ),
+			'DELETE regular item'             => array( 'DELETE', '/wp/v2/comments/12' ),
+			'POST regular item'               => array( 'POST', '/wp/v2/comments/12', array( 'type' => 'note' ) ),
+			'OPTIONS collection'              => array( 'OPTIONS', '/wp/v2/comments' ),
+		) as $jht_label => $jht_case
+	) {
+		chk( "comments: 404: {$jht_label}", $jht_is_404( $jht_dispatch( ...$jht_case ) ) );
+	}
+
+	// Source: comments "a non-note request overrides a result an earlier filter supplied (e.g. the OPTIONS handler)".
+	chk(
+		'comments: a non-note request overrides a result an earlier filter supplied (e.g. the OPTIONS handler)',
+		$jht_is_404( $jht_dispatch( 'OPTIONS', '/wp/v2/comments', array(), new WP_REST_Response( array( 'endpoints' => array() ) ) ) )
+	);
+
+	// Source: comments "404: %s" for the spellings core still routes to the comments controller
+	// (@^…$@i: case-insensitive, `$` also before a trailing newline).
+	foreach (
+		array(
+			'upper-case collection'        => array( 'GET', '/WP/V2/COMMENTS' ),
+			'mixed-case item'              => array( 'GET', '/wp/v2/Comments/12' ),
+			'collection, trailing slash'   => array( 'GET', '/wp/v2/comments/' ),
+			'item, trailing slash'         => array( 'GET', '/wp/v2/comments/12/' ),
+			'collection, trailing newline' => array( 'GET', "/wp/v2/comments\n" ),
+			'item, trailing newline'       => array( 'GET', "/wp/v2/comments/12\n" ),
+			'item with leading zeros'      => array( 'GET', '/wp/v2/comments/012' ),
+		) as $jht_label => $jht_case
+	) {
+		chk( "comments: 404: {$jht_label}", $jht_is_404( $jht_dispatch( ...$jht_case ) ) );
+	}
+
+	// Source: comments "upper-case collection with type=note passes", "upper-case note item passes",
+	// "note item with leading zeros passes".
+	chk( 'comments: upper-case collection with type=note passes', null === $jht_dispatch( 'GET', '/WP/V2/COMMENTS', array( 'type' => 'note' ) ) );
+	chk( 'comments: upper-case note item passes', null === $jht_dispatch( 'GET', '/WP/V2/COMMENTS/13' ) );
+	chk( 'comments: note item with leading zeros passes', null === $jht_dispatch( 'GET', '/wp/v2/comments/013' ) );
+
+	// Source: comments "is_note_request: true for a note item, false for a regular one".
+	if ( function_exists( function: 'jpkcom_harden_trim_comments_is_note_request' ) ) {
+		chk(
+			'comments: is_note_request: true for a note item, false for a regular one',
+			jpkcom_harden_trim_comments_is_note_request( new WP_REST_Request( 'GET', '/wp/v2/comments/13' ) )
+				&& ! jpkcom_harden_trim_comments_is_note_request( new WP_REST_Request( 'GET', '/wp/v2/comments/12' ) )
+		);
+	}
+
+	// Source: comments "is_note_query: true for type note, false for all types".
+	if ( function_exists( function: 'jpkcom_harden_trim_comments_is_note_query' ) ) {
+		$jht_note_query             = new WP_Comment_Query();
+		$jht_note_query->query_vars = array( 'type' => 'note', 'type__in' => '' );
+		$jht_all_query              = new WP_Comment_Query();
+		$jht_all_query->query_vars  = array( 'type' => '', 'type__in' => '' );
+		chk(
+			'comments: is_note_query: true for type note, false for all types',
+			jpkcom_harden_trim_comments_is_note_query( $jht_note_query ) && ! jpkcom_harden_trim_comments_is_note_query( $jht_all_query )
+		);
+	}
+
+	unset( $GLOBALS['jht_comments'], $GLOBALS['jht_global_comment'] );
+}
 
 // ---------------------------------------------------------------------------
 // The init guard, end to end: real status, headers and body need a web SAPI

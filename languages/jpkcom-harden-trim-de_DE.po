@@ -364,8 +364,8 @@ msgid "Answers requests to xmlrpc.php with a 403 error and stops advertising the
 msgstr "Beantwortet Anfragen an xmlrpc.php mit einem 403-Fehler und macht den Endpunkt nicht mehr bekannt; auch Trackbacks werden abgewiesen. Standardmäßig und in jeder Voreinstellung aktiv, daher schaltet das Anwenden einer Voreinstellung die Sperre wieder ein; um sie dauerhaft auszuschalten, setze JPKCOM_HARDEN_TRIM_XMLRPC in der wp-config.php auf false. Warnung: Jetpack, die WordPress-Apps für Mobilgeräte und eingehende Pingbacks funktionieren dann nicht mehr."
 
 #: includes/admin-page.php:146
-msgid "Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear. Warning: block editor Notes stop working too."
-msgstr "Schließt Kommentare, Pings und Trackbacks bei allen Beitragstypen und blendet bestehende Kommentare aus (sie werden nicht gelöscht). Der Kommentarbildschirm, das Menü, die Zähler im Dashboard, die Kommentar-Feeds und die REST-Kommentarrouten verschwinden. Warnung: Auch die Anmerkungen im Block-Editor funktionieren dann nicht mehr."
+msgid "Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, comment counts and comment feeds disappear, and the REST comment routes answer 404. Block editor Notes keep working."
+msgstr "Schließt Kommentare, Pings und Trackbacks bei allen Beitragstypen und blendet bestehende Kommentare aus (sie werden nicht gelöscht). Der Kommentarbildschirm, das Menü, die Kommentarzähler und die Kommentar-Feeds verschwinden, und die REST-Kommentarrouten antworten mit 404. Die Anmerkungen im Block-Editor funktionieren weiterhin."
 
 #: includes/admin-page.php:147
 msgid "Logged-in users with one of these roles get the unchanged site for the features listed below. By default no role is exempt."
@@ -721,19 +721,19 @@ msgstr "Fehler:"
 msgid "The username, email address or password is incorrect."
 msgstr "Der Benutzername, die E-Mail-Adresse oder das Passwort ist nicht korrekt."
 
-#: includes/features-sitewide.php:197
+#: includes/features-sitewide.php:200
 msgid "XML-RPC is disabled."
 msgstr "XML-RPC ist deaktiviert."
 
-#: includes/features-sitewide.php:198
+#: includes/features-sitewide.php:201
 msgid "Error"
 msgstr "Fehler"
 
-#: includes/features-sitewide.php:408
+#: includes/features-sitewide.php:515
 msgid "Comments are disabled."
 msgstr "Kommentare sind deaktiviert."
 
-#: includes/features-sitewide.php:409
+#: includes/features-sitewide.php:516
 msgid "Not Found"
 msgstr "Nicht gefunden"
 

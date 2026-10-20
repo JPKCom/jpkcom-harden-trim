@@ -495,8 +495,10 @@ chk( 'xmlrpc description: every preset switches it back on, the constant keeps i
 $sw_desc = jpkcom_harden_trim_field_description( 'comments' );
 chk( 'comments description: comments, pings and trackbacks closed on every post type', str_contains( haystack: $sw_desc, needle: 'comments, pings and trackbacks on every post type' ) );
 chk( 'comments description: existing comments hidden, not deleted', str_contains( haystack: $sw_desc, needle: 'hides existing comments (they are not deleted)' ) );
-chk( 'comments description: screen, menu, dashboard counts, comment feeds and REST routes disappear', (bool) preg_match( '/Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear/', $sw_desc ) );
-chk( 'comments description warns: block editor Notes stop working too', (bool) preg_match( '/Warning: block editor Notes stop working too\./', $sw_desc ) );
+chk( 'comments description: screen, menu, comment counts and comment feeds disappear', str_contains( haystack: $sw_desc, needle: 'The Comments screen, menu, comment counts and comment feeds disappear' ) );
+chk( 'comments description: the REST comment routes answer 404', str_contains( haystack: $sw_desc, needle: 'the REST comment routes answer 404' ) );
+chk( 'comments description: block editor Notes keep working', str_ends_with( haystack: $sw_desc, needle: 'Block editor Notes keep working.' ) );
+chk( 'comments description: no Notes warning any more', ! str_contains( haystack: $sw_desc, needle: 'Warning' ) && ! str_contains( haystack: $sw_desc, needle: 'stop working' ) );
 
 // Preset summaries: xmlrpc is on in harmless (from the default), so Recommended must not list it as an addition.
 jht_reset_admin();

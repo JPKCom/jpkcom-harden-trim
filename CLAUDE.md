@@ -184,14 +184,14 @@ only for a switch that is on. Parity details in the next section.
 | Feature | Hooks |
 |---|---|
 | `xmlrpc` | `xmlrpc_enabled` false and `xmlrpc_methods` empty array, both @PHP_INT_MAX; `pings_open` false @PHP_INT_MAX (2 args; stops `X-Pingback` and `<link rel="pingback">`, also refuses trackbacks); `init` @0 `jpkcom_harden_trim_xmlrpc_refuse` (when `XMLRPC_REQUEST` is defined: `nocache_headers()`, 403, `text/xml`, an XML-RPC fault, `exit`); `wp_xmlrpc_server_class` last-resort `wp_die( 403 )` |
-| `comments` | `comments_open`, `pings_open` false and `comments_array` empty array, all @PHP_INT_MAX (2 args); `wp_count_comments` zeroed @PHP_INT_MAX; `comments_pre_query` short-circuit @PHP_INT_MAX (`[]`, or `0` for a count query); `wp_loaded` removes `comments` and `trackbacks` support from every post type (independently); `rest_api_init` attaches `rest_prepare_{post_type}` @PHP_INT_MAX that rewrites `comment_status` and `ping_status` to `closed`; `rest_endpoints` drops `/wp/v2/comments` and `/wp/v2/comments/…`; `template_redirect` @0 404 for comment feeds; `feed_links_show_comments_feed` false; `admin_menu` removes the Comments page; `admin_bar_menu` @999 removes the node; `admin_init` redirects `edit-comments.php` to the dashboard |
+| `comments` | `comments_open`, `pings_open` false and `comments_array` empty array, all @PHP_INT_MAX (2 args); `wp_count_comments` zeroed @PHP_INT_MAX; `comments_pre_query` short-circuit @PHP_INT_MAX (2 args; `[]`, or `0` for a count query, except queries whose types are exactly `note`, which run untouched: `jpkcom_harden_trim_comments_is_note_query()`); `get_comments_number` `__return_zero` @PHP_INT_MAX; `wp_loaded` removes `comments` and `trackbacks` support from every post type (independently); `rest_api_init` attaches `rest_prepare_{post_type}` @PHP_INT_MAX that rewrites `comment_status` and `ping_status` to `closed`; `rest_pre_dispatch` @PHP_INT_MAX (3 args) `jpkcom_harden_trim_comments_rest_gate`: on `/wp/v2/comments` and everything below it (case-insensitive) a non-note request gets `rest_no_route` / 404 / core's message as a `WP_REST_Response`, overriding any earlier result, a note request (`jpkcom_harden_trim_comments_is_note_request()`) gets the incoming value back; `template_redirect` @0 404 for comment feeds; `feed_links_show_comments_feed` false; `admin_menu` removes the Comments page; `admin_bar_menu` @999 removes the node; `admin_init` redirects `edit-comments.php` to the dashboard |
 
 ---
 
 ## Parity with the standalone plugins
 
 `xmlrpc` and `comments` mirror **JPKCom Disable XML-RPC 1.0.10** and **JPKCom
-Disable Comments 1.0.10**: same hooks, priorities, accepted arguments and return
+Disable Comments 1.0.11**: same hooks, priorities, accepted arguments and return
 values. Only the callback names (`jpkcom_harden_trim_…`, so both can be active
 together without a redeclare) and the text domain differ, plus two documented
 exceptions:
@@ -206,8 +206,8 @@ exceptions:
   so the answer is a 404 **XML** error document, not the theme's 404 template.
   This is the one forced 404 that is not an HTML page.
 
-Carried-over facts (the standalone plugins measured them against WP 7.0.2; the
-code comments cite the 7.1.3 lines):
+Carried-over facts (the standalone plugins measured them against WP 7.0.2,
+except where a bullet says otherwise; the code comments cite the 7.1.3 lines):
 
 - The 403 is written directly at `init` priority 0: with `XMLRPC_REQUEST`
   defined `wp_die()` dispatches to `_xmlrpc_wp_die_handler()`, which emits
@@ -227,14 +227,60 @@ code comments cite the 7.1.3 lines):
 - Comment feeds are built by `WP_Query` through `$wpdb` and bypass both comment
   filters, hence the `template_redirect` @0 refusal. `/feed/` is unaffected.
 - With `comments` on, `comment_ip` and its flood check have nothing to act on.
-- **Block editor Notes break with `comments` on** (inherited from the standalone
-  plugin, which does not document it). Notes (core since 6.9) are comments of
-  type `note` served by `/wp/v2/comments` (7.1.3
-  `class-wp-rest-comments-controller.php:126`, `:500`, `:662`; `post.php:42`,
-  `:78` `editor => notes`). `rest_endpoints` drops that route (`POST` and
-  `GET ?type=note` → 404 `rest_no_route`, measured live) and the
-  `comments_pre_query` short-circuit empties every note query. Behaviour stays
-  at parity; the field description and the README carry a warning.
+- **Block editor Notes keep working with `comments` on** (since Disable Comments
+  1.0.11; up to 1.0.10 they broke, because `rest_endpoints` removed the routes
+  and `comments_pre_query` emptied every note query). Notes (core since 6.9)
+  are comments of type `note` created and read through `/wp/v2/comments` by
+  logged-in users who can edit the post. Core lets them bypass `comments_open()` (7.1.3
+  `class-wp-rest-comments-controller.php:595` returns before the `comments_open`
+  check at `:633`) and gates them on the post type's `editor` support with
+  `notes` (`check_post_type_supports_notes()`, `:2173`), not on `comments`
+  support. So the routes stay registered and the `rest_pre_dispatch` gate lets
+  only note requests through: the collection with `type` exactly `note` (core's
+  own strict `'note' ===`, GET and POST), or the item route for an existing
+  comment whose stored `comment_type` is `note` (any method; core refuses a type
+  change on update, `:925`). Everything else — no `type`, `type=comment`/`all`,
+  `NOTE`, `note,comment`, `type[]=note`, a regular, pingback or unknown ID, ID 0,
+  sub-routes, `OPTIONS` — gets the 404. `WP_Comment_Query` leaves notes out of
+  every query that does not request `all` or `note`
+  (`class-wp-comment-query.php:776-789`), so passing note-only queries through
+  exposes nothing else.
+- **`rest_pre_dispatch` sees the request before routing.** `dispatch()` applies
+  the filter (`class-wp-rest-server.php:1079`) and only then matches the route
+  (`:1096`), so URL parameters such as `id` are not set yet; a batch sub-request
+  is passed with them cleared (`:1860-1866`). The gate parses `get_route()`
+  itself the way core matches it (`@^…$@i`, `:1172`): case-insensitive, and `$`
+  also matches before a trailing newline. `get_comment()` of an empty ID falls
+  back to the global `$comment`, hence the `id > 0` check. The 404 goes out
+  through `rest_convert_error_to_response()`, not as a `WP_Error`: in a batch the
+  pre-dispatch result reaches `rest_post_dispatch` unconverted (`:1894`), where
+  `rest_send_allow_header()` calls `get_matched_route()` on it — a fatal on
+  `WP_Error`. The message is core's string in the default text domain (no
+  `jpkcom-harden-trim` domain, deliberately not in the `.pot`), so it is
+  byte-identical to core's missing-route answer in every locale.
+- **Comment counts reach the feeds through `get_comments_number()`.** `/feed/`
+  prints `<comments>`, `<wfw:commentRss>` and `<slash:comments>` when
+  `get_comments_number() || comments_open()` (`feed-rss2.php:91`, `:112-114`),
+  Atom the `replies` links and `<thr:total>` (`feed-atom.php:98-102`). Filtering
+  it to `0` removes them and the themes' "N comments". Notes are unaffected:
+  core excludes them from `comment_count` (`comment.php:3138`).
+- The three bullets above were read in the 7.1.3 source for Disable Comments
+  1.0.11 and have **not yet been measured on a running site** (Notes created,
+  listed and resolved through the gate, the exact 404 bytes, `/feed/` without
+  the comment elements). Replace this bullet with what was measured once it has
+  been.
+- **Deliberate, documented:** the query-string comment feeds
+  (`?feed=comments-rss2`, `?p=N&feed=rss2`) get the 404 from the
+  `template_redirect` @0 guard before `redirect_canonical()` (priority 10) would
+  301 them to a pretty URL that would 404 too (owner decision 2026-10-20: keep);
+  the REST index at `/wp-json/` lists the comment routes again, inherent to
+  keeping them for Notes; `OPTIONS` on them answers the 404, where the removed
+  routes used to give core's empty 200 (`rest_handle_options_request()`,
+  `rest-api.php:837`, priority 10).
+- **JPKCom Disable Comments 1.0.10 or older next to the switch breaks Notes
+  again**: its `rest_endpoints` removal and unconditional `comments_pre_query`
+  short-circuit act regardless of this plugin. With 1.0.11 next to it both
+  gates agree (same priority, same decision), so the answer is unchanged.
 
 **Maintenance rule:** a behaviour fix in either standalone plugin must be carried
 over here (the reverse is the owner's call). Keep the mirrored versions above
@@ -491,7 +537,7 @@ the module and asserts; a failure exits 1.
 - `test-settings-store.php` — sanitiser edge cases, constant resolution, read/write round trip, exemption logic
 - `test-presets.php` — preset-managed keys, locked keys untouched, never-in-preset keys
 - `test-features-performance.php`, `test-features-head-security.php`, `test-features-privacy.php` — hook registration per setting, including "default settings register exactly the harmless set"
-- `test-features-sitewide.php` — the `xmlrpc` and `comments` switches: registration only when on, every ported parity case of the standalone suites, the `init` @0 guard as a subprocess (`fixture-xmlrpc-refuse.php`)
+- `test-features-sitewide.php` — the `xmlrpc` and `comments` switches: registration only when on, every ported parity case of the standalone suites (including the Notes gate: note and non-note requests, the 404's exact shape, case, trailing-slash and trailing-newline spellings; the note-only query pass-through; the comment count), the 404 message staying core's string under a translating gettext stub, the `init` @0 guard as a subprocess (`fixture-xmlrpc-refuse.php`)
 - `test-admin-page.php`, `test-import-export.php` — form application, import validation and rejection codes
 - `test-bootstrap-main.php` — main file, `Update URI`, module load order, kill switch values, activation callback
 - `test-uninstall.php`, `test-i18n.php` — uninstall cleanup, catalogue guard (`.pot` coverage, `.po` = `.mo` = `.l10n.php` per entry, one form of address per locale)
