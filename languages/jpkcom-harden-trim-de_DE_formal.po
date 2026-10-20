@@ -364,8 +364,8 @@ msgid "Answers requests to xmlrpc.php with a 403 error and stops advertising the
 msgstr "Beantwortet Anfragen an xmlrpc.php mit einem 403-Fehler und macht den Endpunkt nicht mehr bekannt; auch Trackbacks werden abgewiesen. Standardmäßig und in jeder Voreinstellung aktiv, daher schaltet das Anwenden einer Voreinstellung die Sperre wieder ein; um sie dauerhaft auszuschalten, setzen Sie JPKCOM_HARDEN_TRIM_XMLRPC in der wp-config.php auf false. Warnung: Jetpack, die WordPress-Apps für Mobilgeräte und eingehende Pingbacks funktionieren dann nicht mehr."
 
 #: includes/admin-page.php:146
-msgid "Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear."
-msgstr "Schließt Kommentare, Pings und Trackbacks bei allen Beitragstypen und blendet bestehende Kommentare aus (sie werden nicht gelöscht). Der Kommentarbildschirm, das Menü, die Zähler im Dashboard, die Kommentar-Feeds und die REST-Kommentarrouten verschwinden."
+msgid "Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear. Warning: block editor Notes stop working too."
+msgstr "Schließt Kommentare, Pings und Trackbacks bei allen Beitragstypen und blendet bestehende Kommentare aus (sie werden nicht gelöscht). Der Kommentarbildschirm, das Menü, die Zähler im Dashboard, die Kommentar-Feeds und die REST-Kommentarrouten verschwinden. Warnung: Auch die Anmerkungen im Block-Editor funktionieren dann nicht mehr."
 
 #: includes/admin-page.php:147
 msgid "Logged-in users with one of these roles get the unchanged site for the features listed below. By default no role is exempt."
@@ -456,12 +456,12 @@ msgid "Nothing changed."
 msgstr "Nichts geändert."
 
 #: includes/admin-page.php:382 includes/admin-page.php:426
-#: includes/admin-page.php:1124 includes/import-export.php:308
+#: includes/admin-page.php:1130 includes/import-export.php:308
 msgid "Sorry, you are not allowed to change these settings."
 msgstr "Sie dürfen diese Einstellungen leider nicht ändern."
 
 #: includes/admin-page.php:467 includes/admin-page.php:468
-#: includes/admin-page.php:1160
+#: includes/admin-page.php:1166
 msgid "Harden & Trim"
 msgstr "Harden & Trim"
 
@@ -599,93 +599,93 @@ msgstr "Empfohlen"
 msgid "Strict"
 msgstr "Streng"
 
-#: includes/admin-page.php:1077
+#: includes/admin-page.php:1083
 msgid "The defaults: nothing that changes how the site looks or how editors work. XML-RPC is disabled, as in every preset."
 msgstr "Die Voreinstellungen: nichts, was das Aussehen der Website oder die Arbeit der Redakteure verändert. XML-RPC ist deaktiviert, wie in jeder Voreinstellung."
 
 #. translators: %s: comma-separated settings.
-#: includes/admin-page.php:1079
+#: includes/admin-page.php:1085
 #, php-format
 msgid "Harmless, plus: %s."
 msgstr "Unbedenklich, zusätzlich: %s."
 
 #. translators: %s: comma-separated settings.
-#: includes/admin-page.php:1081
+#: includes/admin-page.php:1087
 #, php-format
 msgid "Recommended, plus: %s."
 msgstr "Empfohlen, zusätzlich: %s."
 
-#: includes/admin-page.php:1084
+#: includes/admin-page.php:1090
 msgid "Presets"
 msgstr "Voreinstellungen"
 
-#: includes/admin-page.php:1085
+#: includes/admin-page.php:1091
 msgid "A preset sets every setting it manages at once and is saved immediately. Settings locked by wp-config.php stay as they are."
 msgstr "Eine Voreinstellung setzt alle von ihr verwalteten Einstellungen auf einmal und wird sofort gespeichert. Durch wp-config.php gesperrte Einstellungen bleiben unverändert."
 
 #. translators: %s: comma-separated settings.
-#: includes/admin-page.php:1087
+#: includes/admin-page.php:1093
 #, php-format
 msgid "No preset ever touches: %s."
 msgstr "Keine Voreinstellung ändert jemals: %s."
 
 #. translators: 1: preset name, 2: comma-separated settings.
-#: includes/admin-page.php:1101
+#: includes/admin-page.php:1107
 #, php-format
 msgid "Apply the preset \"%1$s\"? Every setting the presets manage is overwritten, except settings locked by wp-config.php; this also switches XML-RPC blocking back on unless a wp-config.php constant keeps it off. No preset ever touches: %2$s."
 msgstr "Voreinstellung „%1$s“ anwenden? Alle von den Voreinstellungen verwalteten Einstellungen werden überschrieben, außer durch wp-config.php gesperrte Einstellungen; dabei wird auch die XML-RPC-Sperre wieder eingeschaltet, sofern keine Konstante in der wp-config.php sie ausgeschaltet hält. Keine Voreinstellung ändert jemals: %2$s."
 
 #. translators: %s: preset name.
-#: includes/admin-page.php:1104
+#: includes/admin-page.php:1110
 #, php-format
 msgid "Apply %s"
 msgstr "%s anwenden"
 
-#: includes/admin-page.php:1138
+#: includes/admin-page.php:1144
 msgid "Performance"
 msgstr "Performance"
 
-#: includes/admin-page.php:1139
+#: includes/admin-page.php:1145
 msgid "Load less on every page."
 msgstr "Auf jeder Seite weniger laden."
 
-#: includes/admin-page.php:1142
+#: includes/admin-page.php:1148
 msgid "Clean up <head>"
 msgstr "<head> aufräumen"
 
-#: includes/admin-page.php:1143
+#: includes/admin-page.php:1149
 msgid "Remove links and tags from the page head that mainly reveal information. These apply to everyone."
 msgstr "Entfernt Links und Tags aus dem Seitenkopf, die vor allem Informationen preisgeben. Diese gelten für alle."
 
-#: includes/admin-page.php:1146
+#: includes/admin-page.php:1152
 msgid "Privacy"
 msgstr "Datenschutz"
 
-#: includes/admin-page.php:1147
+#: includes/admin-page.php:1153
 msgid "Send less data to third parties and reveal less about the site and its users."
 msgstr "Weniger Daten an Dritte senden und weniger über die Website und ihre Benutzer preisgeben."
 
-#: includes/admin-page.php:1150
+#: includes/admin-page.php:1156
 msgid "Security"
 msgstr "Sicherheit"
 
-#: includes/admin-page.php:1151
+#: includes/admin-page.php:1157
 msgid "Security headers are sent by PHP on front-end pages. A header that WordPress or another plugin already set in PHP is left alone, but headers added by the web server, a proxy or a CDN cannot be seen from PHP and would be sent twice: if the server sends one of these headers, switch it off here. Pages delivered from a page cache may not carry the headers from PHP at all."
 msgstr "Sicherheits-Header werden von PHP auf Frontend-Seiten gesendet. Ein Header, den WordPress oder ein anderes Plugin bereits in PHP gesetzt hat, bleibt unangetastet, aber Header, die der Webserver, ein Proxy oder ein CDN hinzufügt, sind für PHP nicht sichtbar und würden doppelt gesendet: Sendet der Server einen dieser Header, schalten Sie ihn hier aus. Aus einem Seiten-Cache ausgelieferte Seiten tragen die Header aus PHP möglicherweise gar nicht."
 
-#: includes/admin-page.php:1154
+#: includes/admin-page.php:1160
 msgid "Roles"
 msgstr "Rollen"
 
-#: includes/admin-page.php:1155
+#: includes/admin-page.php:1161
 msgid "Exempt roles see the site without the role-scoped features, for example to compare or to debug."
 msgstr "Ausgenommene Rollen sehen die Website ohne die rollenbezogenen Funktionen, zum Beispiel zum Vergleichen oder zur Fehlersuche."
 
-#: includes/admin-page.php:1164
+#: includes/admin-page.php:1170
 msgid "Hardening, privacy and performance switches. The defaults change nothing visible; everything with a known side effect is off and says so, except XML-RPC, which is blocked from the start. A constant in wp-config.php (JPKCOM_HARDEN_TRIM_ followed by the setting key in capitals) overrides a setting and locks it here."
 msgstr "Schalter für Härtung, Datenschutz und Performance. Die Voreinstellungen ändern nichts Sichtbares; alles mit bekannter Nebenwirkung ist ausgeschaltet und weist darauf hin, außer XML-RPC, das von Anfang an gesperrt ist. Eine Konstante in der wp-config.php (JPKCOM_HARDEN_TRIM_ gefolgt vom Einstellungsschlüssel in Großbuchstaben) überschreibt eine Einstellung und sperrt sie hier."
 
-#: includes/admin-page.php:1188
+#: includes/admin-page.php:1194
 msgid "Save Changes"
 msgstr "Änderungen speichern"
 

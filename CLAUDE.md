@@ -227,6 +227,14 @@ code comments cite the 7.1.3 lines):
 - Comment feeds are built by `WP_Query` through `$wpdb` and bypass both comment
   filters, hence the `template_redirect` @0 refusal. `/feed/` is unaffected.
 - With `comments` on, `comment_ip` and its flood check have nothing to act on.
+- **Block editor Notes break with `comments` on** (inherited from the standalone
+  plugin, which does not document it). Notes (core since 6.9) are comments of
+  type `note` served by `/wp/v2/comments` (7.1.3
+  `class-wp-rest-comments-controller.php:126`, `:500`, `:662`; `post.php:42`,
+  `:78` `editor => notes`). `rest_endpoints` drops that route (`POST` and
+  `GET ?type=note` → 404 `rest_no_route`, measured live) and the
+  `comments_pre_query` short-circuit empties every note query. Behaviour stays
+  at parity; the field description and the README carry a warning.
 
 **Maintenance rule:** a behaviour fix in either standalone plugin must be carried
 over here (the reverse is the owner's call). Keep the mirrored versions above

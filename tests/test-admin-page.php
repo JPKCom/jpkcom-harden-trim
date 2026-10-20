@@ -496,6 +496,21 @@ $sw_desc = jpkcom_harden_trim_field_description( 'comments' );
 chk( 'comments description: comments, pings and trackbacks closed on every post type', str_contains( haystack: $sw_desc, needle: 'comments, pings and trackbacks on every post type' ) );
 chk( 'comments description: existing comments hidden, not deleted', str_contains( haystack: $sw_desc, needle: 'hides existing comments (they are not deleted)' ) );
 chk( 'comments description: screen, menu, dashboard counts, comment feeds and REST routes disappear', (bool) preg_match( '/Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear/', $sw_desc ) );
+chk( 'comments description warns: block editor Notes stop working too', (bool) preg_match( '/Warning: block editor Notes stop working too\./', $sw_desc ) );
+
+// Preset summaries: xmlrpc is on in harmless (from the default), so Recommended must not list it as an addition.
+jht_reset_admin();
+jht_store();
+ob_start();
+jpkcom_harden_trim_render_presets();
+$sw_presets = (string) ob_get_clean();
+preg_match( '/<li><strong>Recommended<\/strong> — ([^<]*)<\/li>/', $sw_presets, $sw_m );
+$sw_rec = $sw_m[1] ?? '';
+chk( 'presets: Recommended summary rendered (' . $sw_rec . ')', str_starts_with( haystack: $sw_rec, needle: 'Harmless, plus: ' ) && str_contains( haystack: $sw_rec, needle: 'Heartbeat' ) );
+chk( 'presets: Recommended summary does not list Disable XML-RPC as an addition', '' !== $sw_rec && ! str_contains( haystack: $sw_rec, needle: 'Disable XML-RPC' ) );
+preg_match( '/<li><strong>Strict<\/strong> — ([^<]*)<\/li>/', $sw_presets, $sw_m );
+$sw_strict = $sw_m[1] ?? '';
+chk( 'presets: Strict summary rendered, without Disable XML-RPC (' . $sw_strict . ')', str_starts_with( haystack: $sw_strict, needle: 'Recommended, plus: ' ) && ! str_contains( haystack: $sw_strict, needle: 'Disable XML-RPC' ) );
 
 chk( 'standalone hint API exists', function_exists( 'jpkcom_harden_trim_standalone_hint' ) );
 $sw_hint = static fn( string $key ): ?string => function_exists( 'jpkcom_harden_trim_standalone_hint' ) ? jpkcom_harden_trim_standalone_hint( $key ) : null;

@@ -143,7 +143,7 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_field_description' ) ) {
 			'app_passwords'       => __( 'Application passwords let external tools sign in through the REST API. Warning: MCP and Abilities API clients, the WordPress mobile app and integrations that use them stop working for users who lose access.', 'jpkcom-harden-trim' ),
 			'app_password_roles'  => __( 'Only used when application passwords are limited to selected roles. With no role selected, nobody can use them, administrators included.', 'jpkcom-harden-trim' ),
 			'xmlrpc'              => __( 'Answers requests to xmlrpc.php with a 403 error and stops advertising the endpoint; trackbacks are refused too. On by default and in every preset, so applying a preset switches it back on; to keep it off for good, set JPKCOM_HARDEN_TRIM_XMLRPC to false in wp-config.php. Warning: Jetpack, the WordPress mobile apps and incoming pingbacks stop working.', 'jpkcom-harden-trim' ),
-			'comments'            => __( 'Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear.', 'jpkcom-harden-trim' ),
+			'comments'            => __( 'Closes comments, pings and trackbacks on every post type and hides existing comments (they are not deleted). The Comments screen, menu, dashboard counts, comment feeds and REST comment routes disappear. Warning: block editor Notes stop working too.', 'jpkcom-harden-trim' ),
 			'exempt_roles'        => __( 'Logged-in users with one of these roles get the unchanged site for the features listed below. By default no role is exempt.', 'jpkcom-harden-trim' ),
 			default               => '',
 		};
@@ -1057,6 +1057,12 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_render_presets' ) ) {
 		$never   = array_values( array_diff( array_keys( jpkcom_harden_trim_schema() ), jpkcom_harden_trim_preset_managed_keys() ) );
 		$untouch = implode( ', ', array_map( 'jpkcom_harden_trim_field_label', $never ) );
 
+		// Each summary diffs against the effective values of the preset before it
+		// (defaults plus its overrides), not its bare override list: against the
+		// empty harmless list, xmlrpc (on by default) would show as an addition.
+		$harmless    = array_merge( jpkcom_harden_trim_defaults(), $presets['harmless'] );
+		$recommended = array_merge( jpkcom_harden_trim_defaults(), $presets['recommended'] );
+
 		$describe = static function ( array $values, array $base ): string {
 			$items = array();
 
@@ -1076,9 +1082,9 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_render_presets' ) ) {
 		$summaries = array(
 			'harmless'    => __( 'The defaults: nothing that changes how the site looks or how editors work. XML-RPC is disabled, as in every preset.', 'jpkcom-harden-trim' ),
 			/* translators: %s: comma-separated settings. */
-			'recommended' => sprintf( __( 'Harmless, plus: %s.', 'jpkcom-harden-trim' ), $describe( $presets['recommended'], $presets['harmless'] ) ),
+			'recommended' => sprintf( __( 'Harmless, plus: %s.', 'jpkcom-harden-trim' ), $describe( $presets['recommended'], $harmless ) ),
 			/* translators: %s: comma-separated settings. */
-			'strict'      => sprintf( __( 'Recommended, plus: %s.', 'jpkcom-harden-trim' ), $describe( $presets['strict'], $presets['recommended'] ) ),
+			'strict'      => sprintf( __( 'Recommended, plus: %s.', 'jpkcom-harden-trim' ), $describe( $presets['strict'], $recommended ) ),
 		);
 
 		echo '<h2 id="jht-presets">' . esc_html__( 'Presets', 'jpkcom-harden-trim' ) . '</h2>';
