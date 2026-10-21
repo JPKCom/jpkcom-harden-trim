@@ -30,8 +30,9 @@ Main file (jpkcom-harden-trim.php)
 ├── JPKCOM_HARDEN_TRIM_CORE_CONSTANTS_AT_LOAD  (snapshot taken at file load)
 ├── init @ 1: load_plugin_textdomain()
 ├── init @ 5: boot JPKComGitPluginUpdater
-├── plugins_loaded @ 5: require modules (schema, store, features.php, then
-│     features-*.php sorted), honour the kill switch,
+├── plugins_loaded @ 5: require modules (schema, store, status, abilities,
+│     features.php, then features-*.php sorted; admin-page + import-export in
+│     wp-admin; import-export + cli under WP-CLI), honour the kill switch,
 │     then jpkcom_harden_trim_register_features( settings )
 └── register_activation_hook: add_option() with defaults (never overwrites)
 ```
@@ -226,7 +227,8 @@ except where a bullet says otherwise; the code comments cite the 7.1.3 lines):
   zeroed `wp_count_comments`.
 - Comment feeds are built by `WP_Query` through `$wpdb` and bypass both comment
   filters, hence the `template_redirect` @0 refusal. `/feed/` is unaffected.
-- With `comments` on, `comment_ip` and its flood check have nothing to act on.
+- With `comments` on, `comment_ip` and its flood check act only on block editor Notes, which
+  still pass `wp_filter_comment()` (`class-wp-rest-comments-controller.php:795`).
 - **Block editor Notes keep working with `comments` on** (since Disable Comments
   1.0.11; up to 1.0.10 they broke, because `rest_endpoints` removed the routes
   and `comments_pre_query` emptied every note query). Notes (core since 6.9)
@@ -394,6 +396,9 @@ exact strings; ints from the allowed list; role lists an array or comma string.
 | `JPKCOM_HARDEN_TRIM_CORE_CONSTANTS_AT_LOAD` | array | Core constants already defined when the plugin file loads (`WP_POST_REVISIONS`, `AUTOSAVE_INTERVAL`, `DISALLOW_FILE_EDIT`, `WP_AI_SUPPORT`), so the UI can tell a site-set constant from one this plugin defined |
 | `JPKCOM_HARDEN_TRIM_DISABLE_ALL` | undefined | Kill switch: a true boolean value registers no feature hooks; the settings page stays reachable. Parsed with `filter_var( FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE )` like every boolean constant, so `'false'`, `'off'`, `'no'` and `'0'` do not kill; an unparseable value is ignored and named in the invalid-constants notice (`jpkcom_harden_trim_kill_switch_state()`) |
 | `JPKCOM_HARDEN_TRIM_IMPORT_MAX_BYTES` | `65536` | Upper bound checked before an import file is read |
+| `JPKCOM_HARDEN_TRIM_ABILITIES` | undefined | `false` suppresses the ability registration. The feature kill switch does not |
+| `JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY` | `jpkcom-site` | Ability category, registered first-wins |
+| `JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS` | map | Top-level input keys per ability, cross-checked against the registered schema by the tests |
 
 ---
 
@@ -414,6 +419,9 @@ jpkcom-harden-trim/
 │   ├── features-sitewide.php        ← xmlrpc and comments switches (parity with the standalone plugins)
 │   ├── admin-page.php               ← Settings screen, save and preset handlers
 │   ├── import-export.php            ← Export download, import
+│   ├── status.php                   ← jpkcom_harden_trim_status(): effective value, source, lock, acts/reason per key
+│   ├── cli.php                      ← `wp harden-trim` (loaded under WP-CLI only)
+│   ├── abilities.php                ← Abilities API: jpkcom-harden-trim/get-status
 │   └── class-plugin-updater.php     ← GitHub updater (namespace JPKComHardenTrimGitUpdate)
 ├── assets/                          ← admin CSS/JS (settings screen only), banners
 ├── languages/                       ← .pot, .po/.mo/.l10n.php for de_DE and de_DE_formal
@@ -423,6 +431,95 @@ jpkcom-harden-trim/
 ```
 
 ---
+
+## WP-CLI (`includes/cli.php`, since 1.2.0)
+
+`wp harden-trim status|get|set|reset|presets|preset|export|import`. Loaded only when `WP_CLI` is
+true, together with `import-export.php` (which is otherwise `is_admin()`-only). Every path is the
+settings page's own: `jpkcom_harden_trim_sanitize_value()` for a value,
+`jpkcom_harden_trim_save_settings()` for every write, `jpkcom_harden_trim_apply_preset()`,
+`jpkcom_harden_trim_parse_import()` / `jpkcom_harden_trim_export_payload()`. Nothing is re-derived.
+
+**Stricter than the form, deliberately.** The form stores what it can and reports the rest in a
+notice; a shell command cannot be "corrected afterwards" by someone reading a notice, so the
+command refuses instead and writes nothing:
+- a value `jpkcom_harden_trim_sanitize_value()` rejects (the message names the accepted values);
+- an empty string for a switch (`filter_var( '', FILTER_VALIDATE_BOOLEAN )` would quietly store
+  `false`);
+- a role slug that does not exist (the store would drop it and keep the rest);
+- a key locked by a plugin or core constant (`set`; `reset` skips it with a warning);
+- `block_library_css` / `global_styles` while the active theme is a block theme: the settings
+  page disables those fields and keeps their stored value (`handle_save()`), so `set` refuses and
+  `reset` skips them. `preset` never touches them anyway; `import` stores them, as the page's
+  import does.
+
+Flags are read with `WP_CLI\Utils\get_flag_value()`, never `isset()`: WP-CLI stores `--no-force`
+as `force => false`, so `isset()` would turn `--no-force` into an overwrite and `--no-all` into
+`--all`.
+
+`import` follows the settings page exactly instead (keys missing from the file keep their stored
+value, rejected keys are warned and left, an unknown role is reported as dropped while the rest of
+the list is applied, locked keys are stored with `$keep_locked = false` and a warning that the
+constant still wins). After every write the command warns when a constant decides
+(`jpkcom_harden_trim_unfiltered_settings()` differs from what was stored), when the
+`jpkcom_harden_trim_settings` filter returns something else (evaluated after the write, so a
+callback a theme adds late counts here but not on a normal request; the message says "as evaluated
+now"), and when the kill switch is on. `get` warns when a core constant decides instead of the
+setting. Nullable ints take the word `default`
+for null. Output is English (WP-CLI itself is not localised); no gettext calls, so nothing in
+`cli.php` enters the catalogue. Multisite: per site via the global `--url`.
+
+## Abilities API (`includes/abilities.php`, since 1.2.0)
+
+One read-only ability, `jpkcom-harden-trim/get-status`, in the category `jpkcom-site` (first-wins
+through `wp_has_ability_category()`). It returns `jpkcom_harden_trim_status()` (`includes/status.php`),
+the same function `wp harden-trim status` prints, so the two cannot disagree.
+
+**Why this ability and not a boolean per switch:** its value is the silent cases. A switch can be on
+and do nothing, and a value can come from somewhere the settings page does not edit (`source`:
+`constant`, `filter`, `core_constant`; the filter is checked before the constant, because it runs
+after the constants and may replace their value).
+
+**Every `reason` mirrors a gate in the feature code; a paraphrase that diverges is the defect class
+to watch.** The external review of 1.2.0 found four such divergences before release, all fixed and
+pinned by `tests/test-status.php`:
+- `kill_switch`, `core_constant` (a core lock from the load-time snapshot, **or** a
+  `DISALLOW_FILE_EDIT` / `AUTOSAVE_INTERVAL` that another plugin's file body defined after the
+  snapshot: `features-security.php` / `features-performance.php` skip when the constant exists; only
+  counted when the setting is active and the constant differs from it, because core defines
+  `AUTOSAVE_INTERVAL` itself and the plugin's own definition equals the setting);
+- `block_theme` for `block_library_css` / `global_styles`;
+- `plain_permalinks` for `block_author_enum` (`jpkcom_harden_trim_is_author_enum_request()` needs a
+  permalink structure);
+- `unused` for `app_password_roles` outside `roles` mode, and for `exempt_roles` while no
+  role-scoped feature acts. In `roles` mode an **empty** list acts: nobody may use application
+  passwords, administrators included (the settings page warns about exactly that);
+- `off` for an inactive value (`jpkcom_harden_trim_is_active_value()`). `source = filter` is
+measured, not assumed: `jpkcom_harden_trim_unfiltered_settings()` repeats the store's two steps
+before the filter and compares. A core-locked key keeps the plugin's value in `value` (core does not
+change it either) and reports the core constant in `core_value`. Role exemption is per user and is
+not folded into `acts`; `role_scoped` and `exempt_roles` say where it applies.
+
+- **Capability `manage_options`** (filter `jpkcom_harden_trim_ability_capability`): the answer
+  describes how the site is hardened. Listing abilities over REST is still `read`-gated by core, so
+  any logged-in user can read the label, description and schemas, not the answer.
+- **Input schema:** no `properties` key, `additionalProperties => false`, top-level
+  `default => (object) array()`. An empty `stdClass` for `properties` is an anonymous fatal in core
+  and `[]` is invalid JSON Schema; this shape is the only one that refuses every key cleanly.
+- **Annotations explicit** (`readonly` → GET-only run route), `show_in_rest`, `public`,
+  `mcp.public`; filter `jpkcom_harden_trim_ability_meta`.
+- **`JPKCOM_HARDEN_TRIM_ABILITIES = false`** suppresses registration. Read like every boolean
+  constant (`filter_var( …, FILTER_NULL_ON_FAILURE )`): `'false'` and `'off'` work, a non-boolean
+  value is ignored and listed by `jpkcom_harden_trim_invalid_constants()`. **`JPKCOM_HARDEN_TRIM_DISABLE_ALL`
+  does not**: the ability is how to see that the kill switch is on, so the two registration hooks
+  are added at file load whatever it says (`tests/fixture-kill-switch.php` excludes exactly those two
+  from its "no feature hooks" count and reports them separately).
+- **Throwable boundary:** a Throwable while reading becomes `WP_Error` with status 500 and a message
+  saying repeating the call will not help. No log line, because the plugin promises no PHP notice in
+  any mode.
+- **Texts stay English** in every language, as in every JPKCom plugin's abilities: they are listed
+  in the catalogue and deliberately untranslated. Do not read an empty `msgstr` on an
+  `abilities.php` string as a backlog.
 
 ## Settings screen
 
@@ -576,6 +673,9 @@ the module and asserts; a failure exits 1.
 - `test-uninstall.php`, `test-i18n.php` — uninstall cleanup, catalogue guard (`.pot` coverage, `.po` = `.mo` = `.l10n.php` per entry, one form of address per locale)
 - `test-release-workflow.php` — `release.yml` fetches phpDocumentor from a pinned GitHub release and runs `sha256sum -c` before executing it
 - `test-updater-family.php` — the family updater 1.5.0 (identical file in every JPKCom plugin): leader election, discovery of inactive JPKCom plugins, update entries, package stripping before storage, the SHA-256 gate, `plugins_api`, fetch policy
+- `test-status.php` — `jpkcom_harden_trim_status()`: one row per key in schema order, every source (default, stored, filter, constant, core constant) and every reason (kill switch, core constant, block theme before/after `after_setup_theme`, unused role list, off)
+- `test-cli.php` — `wp harden-trim` against a recording `WP_CLI` stub (`tests/stubs-cli.php`, `tests/stubs-cli-utils.php`): every subcommand, every refusal writes nothing, locked keys per process
+- `test-abilities.php` — the input-schema shape, annotations, permission, the answer equal to the status and valid against the declared output schema (validator with self-tests), the Throwable boundary, the registration gate per process
 - `test-debug-gate.php` — the updater is the unmodified family copy (normalised SHA256), the plugin's own code never references `error_log()` in any spelling (`error_log`, `\error_log`, `namespace\error_log`, `A\error_log`, `use function`, callable string); the detector is itself checked against `fixture-error-log.php`
 
 `tests/fixture-*.php` are **not** suites and are deliberately not named

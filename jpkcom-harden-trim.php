@@ -3,7 +3,7 @@
 Plugin Name: JPKCom Harden & Trim
 Plugin URI: https://github.com/JPKCom/jpkcom-harden-trim
 Description: Secure, private & lean WordPress: hardening, privacy and performance tweaks with safe defaults.
-Version: 1.1.3
+Version: 1.2.0
 Author: Jean Pierre Kolb <jpk@jpkc.com>
 Author URI: https://www.jpkc.com
 Contributors: JPKCom
@@ -11,7 +11,7 @@ Tags: Security, Privacy, Performance, Hardening, Cleanup
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 1.1.3
+Stable tag: 1.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: jpkcom-harden-trim
@@ -32,7 +32,7 @@ if ( ! defined( constant_name: 'WPINC' ) ) {
  * @since 1.0.0
  */
 if ( ! defined( 'JPKCOM_HARDEN_TRIM_VERSION' ) ) {
-	define( 'JPKCOM_HARDEN_TRIM_VERSION', '1.1.3' );
+	define( 'JPKCOM_HARDEN_TRIM_VERSION', '1.2.0' );
 }
 
 if ( ! defined( 'JPKCOM_HARDEN_TRIM_FILE' ) ) {
@@ -126,6 +126,8 @@ add_action( 'plugins_loaded', static function (): void {
 	$modules = array(
 		'includes/settings-schema.php',
 		'includes/settings-store.php',
+		'includes/status.php',
+		'includes/abilities.php',
 		'includes/features.php',
 	);
 
@@ -139,6 +141,12 @@ add_action( 'plugins_loaded', static function (): void {
 	if ( is_admin() ) {
 		$modules[] = 'includes/admin-page.php';
 		$modules[] = 'includes/import-export.php';
+	}
+
+	// WP-CLI shares the import / export functions with the settings page.
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		$modules[] = 'includes/import-export.php';
+		$modules[] = 'includes/cli.php';
 	}
 
 	foreach ( $modules as $module ) {

@@ -495,6 +495,7 @@ $out = json_decode( json: $run['out'], associative: true );
 chk( 'kill switch: exits 0 with JSON (' . trim( string: $run['out'] ) . ')', 0 === $run['exit'] && is_array( $out ) );
 chk( 'kill switch: register_features not called', false === ( $out['called'] ?? null ) );
 chk( 'kill switch: no feature hooks registered', 0 === ( $out['new_hooks'] ?? -1 ) );
+chk( 'kill switch: the ability registration hooks stay, so the ability can report the kill switch', true === ( $out['abilities'] ?? null ) );
 chk( 'kill switch: store still loaded', true === ( $out['store_loaded'] ?? null ) );
 
 summary();

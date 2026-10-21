@@ -344,7 +344,8 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_invalid_constants' ) ) {
 	 * Names of plugin constants that are defined but hold an invalid value.
 	 *
 	 * Such constants are ignored; the settings page names them in a notice.
-	 * Covers the setting constants and the kill switch.
+	 * Covers the setting constants, the kill switch and (since 1.2.0)
+	 * JPKCOM_HARDEN_TRIM_ABILITIES.
 	 *
 	 * @since 1.0.0
 	 *
@@ -365,6 +366,15 @@ if ( ! function_exists( function: 'jpkcom_harden_trim_invalid_constants' ) ) {
 
 		if ( $kill['defined'] && ! $kill['valid'] ) {
 			$invalid[] = 'JPKCOM_HARDEN_TRIM_DISABLE_ALL';
+		}
+
+		// Since 1.2.0: the Abilities API switch, read like every boolean constant.
+		if ( defined( constant_name: 'JPKCOM_HARDEN_TRIM_ABILITIES' ) ) {
+			$abilities = constant( name: 'JPKCOM_HARDEN_TRIM_ABILITIES' );
+
+			if ( ! is_scalar( $abilities ) || null === filter_var( $abilities, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE ) ) {
+				$invalid[] = 'JPKCOM_HARDEN_TRIM_ABILITIES';
+			}
 		}
 
 		return $invalid;

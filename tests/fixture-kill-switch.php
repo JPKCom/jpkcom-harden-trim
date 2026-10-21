@@ -64,13 +64,20 @@ function register_activation_hook( string $file, $callback ): void {
 }
 
 /**
- * Count every recorded hook callback.
+ * Count every recorded feature hook callback.
+ *
+ * The two Abilities API registration hooks are left out: abilities.php adds
+ * them on purpose whatever the kill switch says, because the ability is how
+ * to see that the kill switch is on. They are reported as `abilities`.
  *
  * @return int
  */
 function jht_count_hooks(): int {
 	$count = 0;
-	foreach ( $GLOBALS['jht_hooks'] as $priorities ) {
+	foreach ( $GLOBALS['jht_hooks'] as $hook => $priorities ) {
+		if ( in_array( needle: $hook, haystack: array( 'wp_abilities_api_categories_init', 'wp_abilities_api_init' ), strict: true ) ) {
+			continue;
+		}
 		foreach ( $priorities as $list ) {
 			$count += count( $list );
 		}
@@ -95,6 +102,7 @@ echo json_encode(
 		'called'       => $GLOBALS['jht_register_called'],
 		'new_hooks'    => jht_count_hooks() - $jht_before,
 		'store_loaded' => function_exists( 'jpkcom_harden_trim_settings' ),
+		'abilities'    => array() !== ( $GLOBALS['jht_hooks']['wp_abilities_api_init'] ?? array() ) && array() !== ( $GLOBALS['jht_hooks']['wp_abilities_api_categories_init'] ?? array() ),
 		'invalid'      => function_exists( 'jpkcom_harden_trim_invalid_constants' ) ? jpkcom_harden_trim_invalid_constants() : null,
 		'xmlrpc'       => array() !== ( $GLOBALS['jht_hooks']['xmlrpc_enabled'] ?? array() ) || array() !== ( $GLOBALS['jht_hooks']['wp_xmlrpc_server_class'] ?? array() ),
 		'comments'     => array() !== ( $GLOBALS['jht_hooks']['comments_open'] ?? array() ) || array() !== ( $GLOBALS['jht_hooks']['get_comments_number'] ?? array() ),
