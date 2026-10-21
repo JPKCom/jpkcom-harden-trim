@@ -3,7 +3,7 @@
 **Plugin Name:** JPKCom Harden & Trim  
 **Plugin URI:** https://github.com/JPKCom/jpkcom-harden-trim  
 **Description:** Secure, private & lean WordPress: hardening, privacy and performance tweaks with safe defaults.  
-**Version:** 1.1.1  
+**Version:** 1.1.2  
 **Author:** Jean Pierre Kolb <jpk@jpkc.com>  
 **Author URI:** https://www.jpkc.com  
 **Contributors:** JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 7.1  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.1.1  
+**Stable tag:** 1.1.2  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** jpkcom-harden-trim  
@@ -159,10 +159,12 @@ as on), so applying a preset never reopens it. The flip side: applying a preset
 switches it **on** again, also on a site where you had turned it off (for
 example for Jetpack). A `wp-config.php` constant keeps it off regardless.
 
-Never part of any preset: disabling comments, block library CSS, global styles,
-disabled heartbeat, removed asset versions, HSTS, feed link removal, application
-password settings and the role lists. Applying a preset asks for confirmation and lists the keys
-that changed.
+Never touched by any preset: disabling comments, block library CSS, global
+styles, HSTS, feed link removal, application password settings and the role
+lists. Every other switch gets the preset's value or its default, so a preset
+never switches heartbeat off or removes asset versions, but it does reset a
+disabled heartbeat or removed asset versions. Applying a preset asks for
+confirmation and lists the keys that changed.
 
 ### Import and export
 
@@ -280,6 +282,9 @@ multisite, from every site). Deactivating keeps them.
 
 
 ## Changelog
+
+### 1.1.2
+* Added: a plugin icon. The update manifest now points WordPress to the JPKCom logo, so the Updates screen (Dashboard → Updates) shows it next to this plugin instead of the generic pattern wordpress.org generates from the slug
 
 ### 1.1.1
 * Changed: the German translations call the defaults "Standardwerte"; "Voreinstellungen" now only means the presets, so the settings page no longer uses one word for both

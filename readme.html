@@ -4,7 +4,7 @@
 https://github.com/JPKCom/jpkcom-harden-trim<br />
 <strong>Description:</strong> Secure, private &amp; lean WordPress:
 hardening, privacy and performance tweaks with safe defaults.<br />
-<strong>Version:</strong> 1.1.1<br />
+<strong>Version:</strong> 1.1.2<br />
 <strong>Author:</strong> Jean Pierre Kolb <a href="mailto:jpk@jpkc.com"
 class="email">jpk@jpkc.com</a><br />
 <strong>Author URI:</strong> https://www.jpkc.com<br />
@@ -14,7 +14,7 @@ Cleanup<br />
 <strong>Requires at least:</strong> 7.1<br />
 <strong>Tested up to:</strong> 7.1<br />
 <strong>Requires PHP:</strong> 8.3<br />
-<strong>Stable tag:</strong> 1.1.1<br />
+<strong>Stable tag:</strong> 1.1.2<br />
 <strong>License:</strong> GPL-2.0-or-later<br />
 <strong>License URI:</strong>
 https://www.gnu.org/licenses/gpl-2.0.html<br />
@@ -570,10 +570,13 @@ all list it as on), so applying a preset never reopens it. The flip
 side: applying a preset switches it <strong>on</strong> again, also on a
 site where you had turned it off (for example for Jetpack). A
 <code>wp-config.php</code> constant keeps it off regardless.</p>
-<p>Never part of any preset: disabling comments, block library CSS,
-global styles, disabled heartbeat, removed asset versions, HSTS, feed
-link removal, application password settings and the role lists. Applying
-a preset asks for confirmation and lists the keys that changed.</p>
+<p>Never touched by any preset: disabling comments, block library CSS,
+global styles, HSTS, feed link removal, application password settings
+and the role lists. Every other switch gets the preset’s value or its
+default, so a preset never switches heartbeat off or removes asset
+versions, but it does reset a disabled heartbeat or removed asset
+versions. Applying a preset asks for confirmation and lists the keys
+that changed.</p>
 <h3 id="import-and-export">Import and export</h3>
 <p><strong>Export</strong> downloads the stored settings as a JSON file.
 It contains no site URL and no user data. <strong>Import</strong>
@@ -687,13 +690,20 @@ it?</h3>
 <p>Deleting the plugin removes its settings option and its cached data
 (on multisite, from every site). Deactivating keeps them.</p>
 <h2 id="changelog">Changelog</h2>
-<h3 id="section">1.1.1</h3>
+<h3 id="section">1.1.2</h3>
+<ul>
+<li>Added: a plugin icon. The update manifest now points WordPress to
+the JPKCom logo, so the Updates screen (Dashboard → Updates) shows it
+next to this plugin instead of the generic pattern wordpress.org
+generates from the slug</li>
+</ul>
+<h3 id="section-1">1.1.1</h3>
 <ul>
 <li>Changed: the German translations call the defaults “Standardwerte”;
 “Voreinstellungen” now only means the presets, so the settings page no
 longer uses one word for both</li>
 </ul>
-<h3 id="section-1">1.1.0</h3>
+<h3 id="section-2">1.1.0</h3>
 <ul>
 <li>Changed: <strong>XML-RPC is blocked on every site right after this
 update</strong>, because the new “Disable XML-RPC” switch is on by
@@ -728,7 +738,7 @@ plugin is active</li>
 <li>Added: German translations of the new texts (<code>de_DE</code>,
 <code>de_DE_formal</code>)</li>
 </ul>
-<h3 id="section-2">1.0.1</h3>
+<h3 id="section-3">1.0.1</h3>
 <ul>
 <li>Changed: the updater keeps its manifest cache, its failure marker
 and its fetch lock in site transients. On multisite the network now
@@ -737,7 +747,7 @@ nothing changes</li>
 <li>Changed: uninstalling also removes the updater’s network-wide cache
 entries, and still the per-site ones 1.0.0 wrote</li>
 </ul>
-<h3 id="section-3">1.0.0</h3>
+<h3 id="section-4">1.0.0</h3>
 <ul>
 <li>Added: Initial release.</li>
 <li>Added: performance switches (emoji, self pingbacks, asset versions,
