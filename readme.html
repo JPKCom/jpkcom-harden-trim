@@ -4,7 +4,7 @@
 https://github.com/JPKCom/jpkcom-harden-trim<br />
 <strong>Description:</strong> Secure, private &amp; lean WordPress:
 hardening, privacy and performance tweaks with safe defaults.<br />
-<strong>Version:</strong> 1.1.2<br />
+<strong>Version:</strong> 1.1.3<br />
 <strong>Author:</strong> Jean Pierre Kolb <a href="mailto:jpk@jpkc.com"
 class="email">jpk@jpkc.com</a><br />
 <strong>Author URI:</strong> https://www.jpkc.com<br />
@@ -14,7 +14,7 @@ Cleanup<br />
 <strong>Requires at least:</strong> 7.1<br />
 <strong>Tested up to:</strong> 7.1<br />
 <strong>Requires PHP:</strong> 8.3<br />
-<strong>Stable tag:</strong> 1.1.2<br />
+<strong>Stable tag:</strong> 1.1.3<br />
 <strong>License:</strong> GPL-2.0-or-later<br />
 <strong>License URI:</strong>
 https://www.gnu.org/licenses/gpl-2.0.html<br />
@@ -609,11 +609,14 @@ lets an anonymous <code>?author=N</code> request through.</li>
 </ul>
 <h3 id="privacy-of-the-plugin-itself">Privacy of the plugin itself</h3>
 <p>No remote requests, no telemetry, no tracking. The one exception is
-the plugin updater, which fetches a manifest from GitHub Pages whenever
-WordPress reads its list of plugin updates: in wp-admin, on the front
-end for logged-in users who can update plugins (the toolbar’s update
-counter), and in WordPress’s own update cron. The manifest is cached for
-a day, a failed fetch for an hour.</p>
+the plugin updater, which fetches a manifest from GitHub Pages when
+WordPress reads its list of plugin updates for a user who can update
+plugins (in wp-admin, and on the front end for the toolbar’s update
+counter), in WordPress’s own update cron and in WP-CLI. Anonymous
+visitors never trigger a fetch. When this plugin’s updater serves the
+other installed JPKCom plugins, including inactive ones, it fetches
+their manifests from GitHub Pages in the same way. A manifest is cached
+for a day (up to 30 hours), a failed fetch for an hour.</p>
 <h3 id="documentation">Documentation</h3>
 <p><strong>API Documentation:</strong> Complete PHPDoc-generated API
 documentation is available at: <a
@@ -690,20 +693,43 @@ it?</h3>
 <p>Deleting the plugin removes its settings option and its cached data
 (on multisite, from every site). Deactivating keeps them.</p>
 <h2 id="changelog">Changelog</h2>
-<h3 id="section">1.1.2</h3>
+<h3 id="section">1.1.3</h3>
+<ul>
+<li>Added: updates for inactive JPKCom plugins. WordPress never runs the
+code of a deactivated plugin, so its own updater never ran and it was
+never offered an update. Every JPKCom plugin now ships updater 1.5.0;
+one copy answers for all installed JPKCom plugins, active or not, with
+the update row, the icon and “View details”. The SHA-256 check applies
+to an inactive plugin exactly as to an active one. On multisite, at
+least one JPKCom plugin must be network-active or active on the main
+site</li>
+<li>Security: the stored list of plugin updates no longer contains
+JPKCom download URLs; they are added back only while a JPKCom updater is
+loaded, so a request without one cannot install an unverified package.
+The checksum check now also verifies a package another plugin supplied
+instead of accepting it, and recognises every GitHub address of a
+release file</li>
+<li>Changed: plugins installed as a Git (or other version-control)
+checkout or in a renamed folder are told about a new release but never
+updated automatically, because an update would delete the checkout or
+the renamed folder. Update information is fetched only for users who can
+update plugins, in WordPress’s update cron and in WP-CLI, never for
+anonymous visitors</li>
+</ul>
+<h3 id="section-1">1.1.2</h3>
 <ul>
 <li>Added: a plugin icon. The update manifest now points WordPress to
 the JPKCom logo, so the Updates screen (Dashboard → Updates) shows it
 next to this plugin instead of the generic pattern wordpress.org
 generates from the slug</li>
 </ul>
-<h3 id="section-1">1.1.1</h3>
+<h3 id="section-2">1.1.1</h3>
 <ul>
 <li>Changed: the German translations call the defaults “Standardwerte”;
 “Voreinstellungen” now only means the presets, so the settings page no
 longer uses one word for both</li>
 </ul>
-<h3 id="section-2">1.1.0</h3>
+<h3 id="section-3">1.1.0</h3>
 <ul>
 <li>Changed: <strong>XML-RPC is blocked on every site right after this
 update</strong>, because the new “Disable XML-RPC” switch is on by
@@ -738,7 +764,7 @@ plugin is active</li>
 <li>Added: German translations of the new texts (<code>de_DE</code>,
 <code>de_DE_formal</code>)</li>
 </ul>
-<h3 id="section-3">1.0.1</h3>
+<h3 id="section-4">1.0.1</h3>
 <ul>
 <li>Changed: the updater keeps its manifest cache, its failure marker
 and its fetch lock in site transients. On multisite the network now
@@ -747,7 +773,7 @@ nothing changes</li>
 <li>Changed: uninstalling also removes the updater’s network-wide cache
 entries, and still the per-site ones 1.0.0 wrote</li>
 </ul>
-<h3 id="section-4">1.0.0</h3>
+<h3 id="section-5">1.0.0</h3>
 <ul>
 <li>Added: Initial release.</li>
 <li>Added: performance switches (emoji, self pingbacks, asset versions,

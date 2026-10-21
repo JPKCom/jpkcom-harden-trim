@@ -582,11 +582,14 @@ lets an anonymous <code>?author=N</code> request through.</li>
 </ul>
 <h3 id="privacy-of-the-plugin-itself">Privacy of the plugin itself</h3>
 <p>No remote requests, no telemetry, no tracking. The one exception is
-the plugin updater, which fetches a manifest from GitHub Pages whenever
-WordPress reads its list of plugin updates: in wp-admin, on the front
-end for logged-in users who can update plugins (the toolbar’s update
-counter), and in WordPress’s own update cron. The manifest is cached for
-a day, a failed fetch for an hour.</p>
+the plugin updater, which fetches a manifest from GitHub Pages when
+WordPress reads its list of plugin updates for a user who can update
+plugins (in wp-admin, and on the front end for the toolbar’s update
+counter), in WordPress’s own update cron and in WP-CLI. Anonymous
+visitors never trigger a fetch. When this plugin’s updater serves the
+other installed JPKCom plugins, including inactive ones, it fetches
+their manifests from GitHub Pages in the same way. A manifest is cached
+for a day (up to 30 hours), a failed fetch for an hour.</p>
 <h3 id="documentation">Documentation</h3>
 <p><strong>API Documentation:</strong> Complete PHPDoc-generated API
 documentation is available at: <a

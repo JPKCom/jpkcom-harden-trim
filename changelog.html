@@ -1,17 +1,40 @@
-<h3 id="section">1.1.2</h3>
+<h3 id="section">1.1.3</h3>
+<ul>
+<li>Added: updates for inactive JPKCom plugins. WordPress never runs the
+code of a deactivated plugin, so its own updater never ran and it was
+never offered an update. Every JPKCom plugin now ships updater 1.5.0;
+one copy answers for all installed JPKCom plugins, active or not, with
+the update row, the icon and “View details”. The SHA-256 check applies
+to an inactive plugin exactly as to an active one. On multisite, at
+least one JPKCom plugin must be network-active or active on the main
+site</li>
+<li>Security: the stored list of plugin updates no longer contains
+JPKCom download URLs; they are added back only while a JPKCom updater is
+loaded, so a request without one cannot install an unverified package.
+The checksum check now also verifies a package another plugin supplied
+instead of accepting it, and recognises every GitHub address of a
+release file</li>
+<li>Changed: plugins installed as a Git (or other version-control)
+checkout or in a renamed folder are told about a new release but never
+updated automatically, because an update would delete the checkout or
+the renamed folder. Update information is fetched only for users who can
+update plugins, in WordPress’s update cron and in WP-CLI, never for
+anonymous visitors</li>
+</ul>
+<h3 id="section-1">1.1.2</h3>
 <ul>
 <li>Added: a plugin icon. The update manifest now points WordPress to
 the JPKCom logo, so the Updates screen (Dashboard → Updates) shows it
 next to this plugin instead of the generic pattern wordpress.org
 generates from the slug</li>
 </ul>
-<h3 id="section-1">1.1.1</h3>
+<h3 id="section-2">1.1.1</h3>
 <ul>
 <li>Changed: the German translations call the defaults “Standardwerte”;
 “Voreinstellungen” now only means the presets, so the settings page no
 longer uses one word for both</li>
 </ul>
-<h3 id="section-2">1.1.0</h3>
+<h3 id="section-3">1.1.0</h3>
 <ul>
 <li>Changed: <strong>XML-RPC is blocked on every site right after this
 update</strong>, because the new “Disable XML-RPC” switch is on by
@@ -46,7 +69,7 @@ plugin is active</li>
 <li>Added: German translations of the new texts (<code>de_DE</code>,
 <code>de_DE_formal</code>)</li>
 </ul>
-<h3 id="section-3">1.0.1</h3>
+<h3 id="section-4">1.0.1</h3>
 <ul>
 <li>Changed: the updater keeps its manifest cache, its failure marker
 and its fetch lock in site transients. On multisite the network now
@@ -55,7 +78,7 @@ nothing changes</li>
 <li>Changed: uninstalling also removes the updater’s network-wide cache
 entries, and still the per-site ones 1.0.0 wrote</li>
 </ul>
-<h3 id="section-4">1.0.0</h3>
+<h3 id="section-5">1.0.0</h3>
 <ul>
 <li>Added: Initial release.</li>
 <li>Added: performance switches (emoji, self pingbacks, asset versions,
