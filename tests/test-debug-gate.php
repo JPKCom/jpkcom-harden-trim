@@ -37,9 +37,10 @@ function jht_normalise_updater( string $source, string $namespace, string $slug 
 }
 
 // Normalised SHA256 of jpkcom-allow-blocks/includes/class-plugin-updater.php
-// (updater 1.4.0: site transients; identical in jpkcom-disable-xmlrpc). Bump it
-// only together with a family-wide updater release.
-const JHT_FAMILY_UPDATER_SHA256 = 'd40d016e4221e0e63bcb47a0cae572b82ff8d52fdd2cd393a9753c20872b23e5';
+// (updater 1.5.0: family updates for inactive plugins; identical in
+// jpkcom-disable-xmlrpc). Bump it only together with a family-wide updater
+// release.
+const JHT_FAMILY_UPDATER_SHA256 = 'b9f592fb774b7e07c0500ccc438f8dfea12297960d389065f41e20fd7de43190';
 
 $updater_file = $root . '/includes/class-plugin-updater.php';
 $updater      = (string) file_get_contents( filename: $updater_file );

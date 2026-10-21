@@ -3,7 +3,7 @@
 **Plugin Name:** JPKCom Harden & Trim  
 **Plugin URI:** https://github.com/JPKCom/jpkcom-harden-trim  
 **Description:** Secure, private & lean WordPress: hardening, privacy and performance tweaks with safe defaults.  
-**Version:** 1.1.2  
+**Version:** 1.1.3  
 **Author:** Jean Pierre Kolb <jpk@jpkc.com>  
 **Author URI:** https://www.jpkc.com  
 **Contributors:** JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 7.1  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.1.2  
+**Stable tag:** 1.1.3  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** jpkcom-harden-trim  
@@ -196,10 +196,13 @@ a value that is no boolean is ignored and named on the settings page.
 ### Privacy of the plugin itself
 
 No remote requests, no telemetry, no tracking. The one exception is the plugin
-updater, which fetches a manifest from GitHub Pages whenever WordPress reads its
-list of plugin updates: in wp-admin, on the front end for logged-in users who
-can update plugins (the toolbar's update counter), and in WordPress's own update
-cron. The manifest is cached for a day, a failed fetch for an hour.
+updater, which fetches a manifest from GitHub Pages when WordPress reads its
+list of plugin updates for a user who can update plugins (in wp-admin, and on
+the front end for the toolbar's update counter), in WordPress's own update cron
+and in WP-CLI. Anonymous visitors never trigger a fetch. When this plugin's
+updater serves the other installed JPKCom plugins, including inactive ones, it
+fetches their manifests from GitHub Pages in the same way. A manifest is cached
+for a day (up to 30 hours), a failed fetch for an hour.
 
 ### Documentation
 
@@ -282,6 +285,11 @@ multisite, from every site). Deactivating keeps them.
 
 
 ## Changelog
+
+### 1.1.3
+* Added: updates for inactive JPKCom plugins. WordPress never runs the code of a deactivated plugin, so its own updater never ran and it was never offered an update. Every JPKCom plugin now ships updater 1.5.0; one copy answers for all installed JPKCom plugins, active or not, with the update row, the icon and "View details". The SHA-256 check applies to an inactive plugin exactly as to an active one. On multisite, at least one JPKCom plugin must be network-active or active on the main site
+* Security: the stored list of plugin updates no longer contains JPKCom download URLs; they are added back only while a JPKCom updater is loaded, so a request without one cannot install an unverified package. The checksum check now also verifies a package another plugin supplied instead of accepting it, and recognises every GitHub address of a release file
+* Changed: plugins installed as a Git (or other version-control) checkout or in a renamed folder are told about a new release but never updated automatically, because an update would delete the checkout or the renamed folder. Update information is fetched only for users who can update plugins, in WordPress's update cron and in WP-CLI, never for anonymous visitors
 
 ### 1.1.2
 * Added: a plugin icon. The update manifest now points WordPress to the JPKCom logo, so the Updates screen (Dashboard → Updates) shows it next to this plugin instead of the generic pattern wordpress.org generates from the slug
