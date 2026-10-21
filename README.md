@@ -3,7 +3,7 @@
 **Plugin Name:** JPKCom Harden & Trim  
 **Plugin URI:** https://github.com/JPKCom/jpkcom-harden-trim  
 **Description:** Secure, private & lean WordPress: hardening, privacy and performance tweaks with safe defaults.  
-**Version:** 1.1.1  
+**Version:** 1.1.2  
 **Author:** Jean Pierre Kolb <jpk@jpkc.com>  
 **Author URI:** https://www.jpkc.com  
 **Contributors:** JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 7.1  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.1.1  
+**Stable tag:** 1.1.2  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** jpkcom-harden-trim  
@@ -282,6 +282,9 @@ multisite, from every site). Deactivating keeps them.
 
 
 ## Changelog
+
+### 1.1.2
+* Added: a plugin icon. The update manifest now points WordPress to the JPKCom logo, so the Updates screen (Dashboard → Updates) shows it next to this plugin instead of the generic pattern wordpress.org generates from the slug
 
 ### 1.1.1
 * Changed: the German translations call the defaults "Standardwerte"; "Voreinstellungen" now only means the presets, so the settings page no longer uses one word for both
