@@ -3,7 +3,7 @@
 **Plugin Name:** JPKCom Harden & Trim  
 **Plugin URI:** https://github.com/JPKCom/jpkcom-harden-trim  
 **Description:** Secure, private & lean WordPress: hardening, privacy and performance tweaks with safe defaults.  
-**Version:** 1.1.3  
+**Version:** 1.2.0  
 **Author:** Jean Pierre Kolb <jpk@jpkc.com>  
 **Author URI:** https://www.jpkc.com  
 **Contributors:** JPKCom  
@@ -11,7 +11,7 @@
 **Requires at least:** 7.1  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.3  
-**Stable tag:** 1.1.3  
+**Stable tag:** 1.2.0  
 **License:** GPL-2.0-or-later  
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html  
 **Text Domain:** jpkcom-harden-trim  
@@ -182,6 +182,38 @@ at all. The settings page stays reachable and shows a notice. The value is read
 like every boolean constant: `'false'`, `'off'` or `0` keep the features on, and
 a value that is no boolean is ignored and named on the settings page.
 
+### WP-CLI
+
+`wp harden-trim` reads and changes the settings through the same validation as
+the settings page. A value it cannot store as given (invalid, locked by a
+constant, a role that does not exist on the site, a switch the settings page
+does not offer with the active block theme) is an error, and nothing is
+written. On multisite, pick the site with `--url`.
+
+| Command | What it does |
+|---|---|
+| `wp harden-trim status` | Every setting: effective value, where it comes from (default, stored, constant, filter, core constant), the constant that locks it, and whether it acts. A switch can be on and still do nothing; the `reason` column says why. `--format=json` and `--fields=…` as usual |
+| `wp harden-trim get <key>` | The effective value of one setting |
+| `wp harden-trim set <key> <value>` | Change one setting. Switches take `true`/`false`, choices one of the listed words, revisions and autosave a listed number or `default`, role lists comma-separated slugs |
+| `wp harden-trim reset <key>…` / `--all` | Back to the default; `--all` asks first unless `--yes` |
+| `wp harden-trim presets` / `preset <name>` | What each preset would change here, and applying one |
+| `wp harden-trim export` / `import <file>` | The same JSON document as the settings page; `import -` reads standard input |
+
+`set`, `reset`, `preset` and `import` accept `--dry-run`.
+
+### Abilities API (MCP and AI clients)
+
+One read-only ability, `jpkcom-harden-trim/get-status`, answers what
+`wp harden-trim status` prints: what every setting does on this site and why,
+including the cases the settings page cannot show at a glance (the kill switch,
+a constant or a core constant that wins, a block theme, the settings filter, a
+constant ignored for an invalid value). Only administrators (`manage_options`)
+may run it; it changes nothing. `define( 'JPKCOM_HARDEN_TRIM_ABILITIES', false );`
+in `wp-config.php` removes it, and the filters
+`jpkcom_harden_trim_ability_capability` and `jpkcom_harden_trim_ability_meta`
+change who may run it and where it is exposed (REST, MCP). Its texts are English
+in every language, as in every JPKCom plugin's abilities.
+
 ### Filters for developers
 
 - `jpkcom_harden_trim_settings` (array) changes the effective settings; values
@@ -285,6 +317,11 @@ multisite, from every site). Deactivating keeps them.
 
 
 ## Changelog
+
+### 1.2.0
+* Added: WP-CLI command `wp harden-trim` with `status`, `get`, `set`, `reset`, `presets`, `preset`, `export` and `import`. It uses the same validation, presets and import/export as the settings page, and refuses (writing nothing) a value it cannot store as given: an invalid value, a setting locked by a constant, a role that does not exist. `--dry-run` everywhere it writes
+* Added: a read-only Abilities API ability, `jpkcom-harden-trim/get-status`, for MCP and AI clients: what every setting does on this site and why, including a switch that is on but does nothing (kill switch, a core constant, a block theme) and a value that comes from a constant or a filter instead of the settings page. Administrators only (`manage_options`); `JPKCOM_HARDEN_TRIM_ABILITIES` set to false removes it
+* Changed: nothing for existing sites. No setting, default or feature behaves differently
 
 ### 1.1.3
 * Added: updates for inactive JPKCom plugins. WordPress never runs the code of a deactivated plugin, so its own updater never ran and it was never offered an update. Every JPKCom plugin now ships updater 1.5.0; one copy answers for all installed JPKCom plugins, active or not, with the update row, the icon and "View details". The SHA-256 check applies to an inactive plugin exactly as to an active one. On multisite, at least one JPKCom plugin must be network-active or active on the main site

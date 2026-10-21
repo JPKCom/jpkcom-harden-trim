@@ -1,6 +1,61 @@
 Search.appendIndex(
     [
                 {
+            "fqsen": "\\JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY",
+            "name": "JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY",
+            "summary": "Ability\u0020category.",
+            "url": "namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY"
+        },                {
+            "fqsen": "\\JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS",
+            "name": "JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS",
+            "summary": "Top\u002Dlevel\u0020input\u0020keys\u0020per\u0020ability.",
+            "url": "namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_abilities_constant\u0028\u0029",
+            "name": "jpkcom_harden_trim_abilities_constant",
+            "summary": "JPKCOM_HARDEN_TRIM_ABILITIES\u0020as\u0020a\u0020boolean.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_abilities_constant"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_abilities_enabled\u0028\u0029",
+            "name": "jpkcom_harden_trim_abilities_enabled",
+            "summary": "Whether\u0020the\u0020ability\u0020should\u0020be\u0020registered\u0020at\u0020all.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_abilities_enabled"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_ability_capability\u0028\u0029",
+            "name": "jpkcom_harden_trim_ability_capability",
+            "summary": "Whether\u0020the\u0020current\u0020user\u0020may\u0020run\u0020an\u0020ability.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_ability_capability"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_ability_meta\u0028\u0029",
+            "name": "jpkcom_harden_trim_ability_meta",
+            "summary": "The\u0020meta\u0020array\u0020of\u0020an\u0020ability.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_ability_meta"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_ability_permission\u0028\u0029",
+            "name": "jpkcom_harden_trim_ability_permission",
+            "summary": "Permission\u0020callback\u0020of\u0020get\u002Dstatus.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_ability_permission"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_ability_get_status\u0028\u0029",
+            "name": "jpkcom_harden_trim_ability_get_status",
+            "summary": "Execute\u0020callback\u0020of\u0020get\u002Dstatus.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_ability_get_status"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_get_ability_definitions\u0028\u0029",
+            "name": "jpkcom_harden_trim_get_ability_definitions",
+            "summary": "The\u0020registration\u0020arguments\u0020of\u0020every\u0020ability.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_get_ability_definitions"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_register_ability_category\u0028\u0029",
+            "name": "jpkcom_harden_trim_register_ability_category",
+            "summary": "Register\u0020the\u0020category,\u0020unless\u0020another\u0020plugin\u0020already\u0020did.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_register_ability_category"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_register_abilities\u0028\u0029",
+            "name": "jpkcom_harden_trim_register_abilities",
+            "summary": "Register\u0020the\u0020abilities.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_register_abilities"
+        },                {
             "fqsen": "\\jpkcom_harden_trim_page_slug\u0028\u0029",
             "name": "jpkcom_harden_trim_page_slug",
             "summary": "Slug\u0020of\u0020the\u0020settings\u0020page.",
@@ -380,6 +435,101 @@ Search.appendIndex(
             "name": "validated_urls",
             "summary": "",
             "url": "classes/JPKComHardenTrimGitUpdate-JPKComGitPluginUpdater.html#property_validated_urls"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI",
+            "name": "JPKCom_Harden_Trim_CLI",
+            "summary": "Inspect\u0020and\u0020change\u0020the\u0020JPKCom\u0020Harden\u0020\u0026\u0020Trim\u0020settings\u0020of\u0020a\u0020site.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Astatus\u0028\u0029",
+            "name": "status",
+            "summary": "Show\u0020what\u0020every\u0020setting\u0020does\u0020on\u0020this\u0020site,\u0020and\u0020why.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_status"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Aget\u0028\u0029",
+            "name": "get",
+            "summary": "Print\u0020the\u0020effective\u0020value\u0020of\u0020one\u0020setting.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_get"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Aset\u0028\u0029",
+            "name": "set",
+            "summary": "Change\u0020one\u0020setting.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_set"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Areset\u0028\u0029",
+            "name": "reset",
+            "summary": "Set\u0020settings\u0020back\u0020to\u0020their\u0020default.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_reset"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Apresets\u0028\u0029",
+            "name": "presets",
+            "summary": "List\u0020the\u0020presets\u0020and\u0020what\u0020each\u0020one\u0020would\u0020change\u0020on\u0020this\u0020site.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_presets"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Apreset\u0028\u0029",
+            "name": "preset",
+            "summary": "Apply\u0020a\u0020preset.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_preset"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Aexport\u0028\u0029",
+            "name": "export",
+            "summary": "Export\u0020the\u0020stored\u0020settings\u0020as\u0020JSON.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_export"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Aimport\u0028\u0029",
+            "name": "import",
+            "summary": "Import\u0020settings\u0020from\u0020an\u0020export.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_import"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Awrite\u0028\u0029",
+            "name": "write",
+            "summary": "Store\u0020values\u0020over\u0020the\u0020current\u0020stored\u0020settings\u0020and\u0020report\u0020the\u0020changes.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_write"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Aflag\u0028\u0029",
+            "name": "flag",
+            "summary": "A\u0020boolean\u0020flag\u0020the\u0020WP\u002DCLI\u0020way\u003A\u0020\u002D\u002Dflag\u0020is\u0020true,\u0020\u002D\u002Dno\u002Dflag\u0020is\u0020false.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_flag"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Ablock_theme_unavailable\u0028\u0029",
+            "name": "block_theme_unavailable",
+            "summary": "Whether\u0020a\u0020key\u0020is\u0020unavailable\u0020because\u0020the\u0020active\u0020theme\u0020is\u0020a\u0020block\u0020theme.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_block_theme_unavailable"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Arefuse_block_theme\u0028\u0029",
+            "name": "refuse_block_theme",
+            "summary": "Stop\u0020with\u0020an\u0020error\u0020for\u0020a\u0020key\u0020the\u0020settings\u0020page\u0020does\u0020not\u0020offer\u0020with\u0020a\u0020block\u0020theme.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_refuse_block_theme"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Arequire_key\u0028\u0029",
+            "name": "require_key",
+            "summary": "Validate\u0020a\u0020key\u0020or\u0020stop\u0020with\u0020an\u0020error.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_require_key"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Arefuse_locked\u0028\u0029",
+            "name": "refuse_locked",
+            "summary": "Stop\u0020with\u0020an\u0020error\u0020when\u0020a\u0020key\u0020is\u0020locked\u0020by\u0020a\u0020constant.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_refuse_locked"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Aparse_value\u0028\u0029",
+            "name": "parse_value",
+            "summary": "Turn\u0020a\u0020command\u002Dline\u0020value\u0020into\u0020a\u0020validated\u0020setting\u0020value,\u0020or\u0020stop.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_parse_value"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Aaccepted_values\u0028\u0029",
+            "name": "accepted_values",
+            "summary": "Describe\u0020the\u0020values\u0020a\u0020key\u0020accepts.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_accepted_values"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Aprintable_row\u0028\u0029",
+            "name": "printable_row",
+            "summary": "A\u0020status\u0020row\u0020with\u0020every\u0020value\u0020printable\u0020in\u0020a\u0020table.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_printable_row"
+        },                {
+            "fqsen": "\\JPKCom_Harden_Trim_CLI\u003A\u003Aformat_value\u0028\u0029",
+            "name": "format_value",
+            "summary": "Format\u0020a\u0020setting\u0020value\u0020the\u0020way\u0020\u0060set\u0060\u0020accepts\u0020it.",
+            "url": "classes/JPKCom-Harden-Trim-CLI.html#method_format_value"
         },                {
             "fqsen": "\\jpkcom_harden_trim_register_head_features\u0028\u0029",
             "name": "jpkcom_harden_trim_register_head_features",
@@ -985,6 +1135,31 @@ Search.appendIndex(
             "name": "jpkcom_harden_trim_activate",
             "summary": "Store\u0020the\u0020defaults\u0020on\u0020activation\u003B\u0020never\u0020overwrites\u0020an\u0020existing\u0020option.",
             "url": "namespaces/default.html#function_jpkcom_harden_trim_activate"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_unfiltered_settings\u0028\u0029",
+            "name": "jpkcom_harden_trim_unfiltered_settings",
+            "summary": "Stored\u0020values\u0020with\u0020the\u0020valid\u0020plugin\u0020constants\u0020applied,\u0020before\u0020the\u0020filter.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_unfiltered_settings"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_is_block_theme\u0028\u0029",
+            "name": "jpkcom_harden_trim_is_block_theme",
+            "summary": "Whether\u0020the\u0020active\u0020theme\u0020is\u0020a\u0020block\u0020theme,\u0020when\u0020that\u0020can\u0020be\u0020known.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_is_block_theme"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_status\u0028\u0029",
+            "name": "jpkcom_harden_trim_status",
+            "summary": "The\u0020effective\u0020status\u0020of\u0020every\u0020setting.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_status"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_status_late_constant\u0028\u0029",
+            "name": "jpkcom_harden_trim_status_late_constant",
+            "summary": "A\u0020core\u0020constant\u0020defined\u0020after\u0020the\u0020plugin\u0027s\u0020load\u002Dtime\u0020snapshot\u0020that\u0020keeps\nan\u0020active\u0020setting\u0020from\u0020acting.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_status_late_constant"
+        },                {
+            "fqsen": "\\jpkcom_harden_trim_status_scalar\u0028\u0029",
+            "name": "jpkcom_harden_trim_status_scalar",
+            "summary": "A\u0020core\u0020constant\u0027s\u0020value\u0020as\u0020a\u0020JSON\u0020scalar.",
+            "url": "namespaces/default.html#function_jpkcom_harden_trim_status_scalar"
         },                {
             "fqsen": "\\JPKCOM_HARDEN_TRIM_VERSION",
             "name": "JPKCOM_HARDEN_TRIM_VERSION",

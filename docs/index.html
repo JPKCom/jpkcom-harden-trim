@@ -133,6 +133,13 @@
     </dl>
 
 
+    <h4 id="toc-classes">
+        Classes
+        <a href="namespaces/default.html#toc-classes" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <dl class="phpdocumentor-table-of-contents">
+                    <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/JPKCom-Harden-Trim-CLI.html"><abbr title="\JPKCom_Harden_Trim_CLI">JPKCom_Harden_Trim_CLI</abbr></a></dt><dd>Inspect and change the JPKCom Harden &amp; Trim settings of a site.</dd>    </dl>
 
 
 
@@ -153,6 +160,20 @@
     <span>
         &nbsp;: mixed&nbsp;= true                            </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY">JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY</a>
+    <span>
+        &nbsp;: mixed&nbsp;= &#039;jpkcom-site&#039;                            </span>
+</dt>
+<dd>Ability category.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS">JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS</a>
+    <span>
+        &nbsp;: mixed&nbsp;= array(&#039;jpkcom-harden-trim/get-status&#039; =&gt; array())                            </span>
+</dt>
+<dd>Top-level input keys per ability.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_CORE_CONSTANTS_AT_LOAD">JPKCOM_HARDEN_TRIM_CORE_CONSTANTS_AT_LOAD</a>
@@ -188,7 +209,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_VERSION">JPKCOM_HARDEN_TRIM_VERSION</a>
     <span>
-        &nbsp;: mixed&nbsp;= &#039;1.1.3&#039;                            </span>
+        &nbsp;: mixed&nbsp;= &#039;1.2.0&#039;                            </span>
 </dt>
 
     </dl>
@@ -202,6 +223,69 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_abilities_constant">jpkcom_harden_trim_abilities_constant()</a>
+    <span>
+                                &nbsp;: bool|null    </span>
+</dt>
+<dd>JPKCOM_HARDEN_TRIM_ABILITIES as a boolean.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_abilities_enabled">jpkcom_harden_trim_abilities_enabled()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether the ability should be registered at all.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_ability_capability">jpkcom_harden_trim_ability_capability()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether the current user may run an ability.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_ability_meta">jpkcom_harden_trim_ability_meta()</a>
+    <span>
+                                &nbsp;: array&lt;string, mixed&gt;    </span>
+</dt>
+<dd>The meta array of an ability.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_ability_permission">jpkcom_harden_trim_ability_permission()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Permission callback of get-status.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_ability_get_status">jpkcom_harden_trim_ability_get_status()</a>
+    <span>
+                                &nbsp;: array&lt;string, mixed&gt;|<abbr title="\WP_Error">WP_Error</abbr>    </span>
+</dt>
+<dd>Execute callback of get-status.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_get_ability_definitions">jpkcom_harden_trim_get_ability_definitions()</a>
+    <span>
+                                &nbsp;: array&lt;string, array&lt;string, mixed&gt;&gt;    </span>
+</dt>
+<dd>The registration arguments of every ability.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_register_ability_category">jpkcom_harden_trim_register_ability_category()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Register the category, unless another plugin already did.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_register_abilities">jpkcom_harden_trim_register_abilities()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Register the abilities.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_page_slug">jpkcom_harden_trim_page_slug()</a>
     <span>
@@ -1204,6 +1288,42 @@ ActivityPub&#039;s own document.</dd>
 </dt>
 <dd>Store the defaults on activation; never overwrites an existing option.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_unfiltered_settings">jpkcom_harden_trim_unfiltered_settings()</a>
+    <span>
+                                &nbsp;: array&lt;string, mixed&gt;    </span>
+</dt>
+<dd>Stored values with the valid plugin constants applied, before the filter.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_is_block_theme">jpkcom_harden_trim_is_block_theme()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Whether the active theme is a block theme, when that can be known.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_status">jpkcom_harden_trim_status()</a>
+    <span>
+                                &nbsp;: array{kill_switch: array{defined: bool, valid: bool, active: bool}, invalid_constants: list<string>, block_theme: bool, exempt_roles: list<string>, settings: list<array<string,mixed>>}    </span>
+</dt>
+<dd>The effective status of every setting.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_status_late_constant">jpkcom_harden_trim_status_late_constant()</a>
+    <span>
+                                &nbsp;: array{name: string, value: mixed}|null    </span>
+</dt>
+<dd>A core constant defined after the plugin&#039;s load-time snapshot that keeps
+an active setting from acting.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a class="" href="namespaces/default.html#function_jpkcom_harden_trim_status_scalar">jpkcom_harden_trim_status_scalar()</a>
+    <span>
+                                &nbsp;: bool|int|float|string|null    </span>
+</dt>
+<dd>A core constant&#039;s value as a JSON scalar.</dd>
+
     </dl>
 
         
@@ -1270,6 +1390,101 @@ ActivityPub&#039;s own document.</dd>
     
     
     
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY">
+        JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY
+        <a href="namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">42</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Ability category.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;jpkcom-site&#039;</span>
+</code>
+
+
+        <section class="phpdocumentor-description"><p>Categories are global and registration is FIRST-WINS, so this goes
+through wp_has_ability_category() rather than assuming.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="constant_JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY_tags">
+        Tags
+        <a href="namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_ABILITY_CATEGORY_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS">
+        JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS
+        <a href="namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">55</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Top-level input keys per ability.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS</span>
+    = <span class="phpdocumentor-signature__default-value">array(&#039;jpkcom-harden-trim/get-status&#039; =&gt; array())</span>
+</code>
+
+
+        <section class="phpdocumentor-description"><p>Cross-checked against the registered schema by tests/test-abilities.php.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="constant_JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS_tags">
+        Tags
+        <a href="namespaces/default.html#constant_JPKCOM_HARDEN_TRIM_ABILITY_INPUT_KEYS_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
 
         
     </article>
@@ -1460,7 +1675,7 @@ ActivityPub&#039;s own document.</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">JPKCOM_HARDEN_TRIM_VERSION</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;1.1.3&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;1.2.0&#039;</span>
 </code>
 
 
@@ -1478,6 +1693,487 @@ ActivityPub&#039;s own document.</dd>
             <a href="namespaces/default.html#functions" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_abilities_constant">
+        jpkcom_harden_trim_abilities_constant()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_abilities_constant" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">73</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">JPKCOM_HARDEN_TRIM_ABILITIES as a boolean.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_abilities_constant</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|null</span></code>
+
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_abilities_constant_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_abilities_constant_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Null when undefined or not a boolean value.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_abilities_enabled">
+        jpkcom_harden_trim_abilities_enabled()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_abilities_enabled" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">98</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether the ability should be registered at all.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_abilities_enabled</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p><code class="prettyprint">JPKCOM_HARDEN_TRIM_ABILITIES</code> set to false in wp-config.php suppresses
+it. The feature kill switch JPKCOM_HARDEN_TRIM_DISABLE_ALL does not: the
+ability is how to see that the kill switch is on.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_abilities_enabled_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_abilities_enabled_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>True when registration should proceed.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_ability_capability">
+        jpkcom_harden_trim_ability_capability()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_ability_capability" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">122</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether the current user may run an ability.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_ability_capability</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ability</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$ability</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Ability name.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_ability_capability_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_ability_capability_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>True when the current user holds the capability.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_ability_meta">
+        jpkcom_harden_trim_ability_meta()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_ability_meta" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">152</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The meta array of an ability.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_ability_meta</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$ability</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span></code>
+
+        <section class="phpdocumentor-description"><p>All three annotations explicit: they default to null and the REST run
+controller derives the HTTP verb from them, so without readonly the run
+route would be POST-only.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$ability</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Ability name.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_ability_meta_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_ability_meta_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Meta array.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_ability_permission">
+        jpkcom_harden_trim_ability_permission()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_ability_permission" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">189</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Permission callback of get-status.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_ability_permission</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$input</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Validated input, unused.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_ability_permission_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_ability_permission_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>True when the current user may run the ability.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_ability_get_status">
+        jpkcom_harden_trim_ability_get_status()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_ability_get_status" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">208</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Execute callback of get-status.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_ability_get_status</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$input</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;|<abbr title="\WP_Error">WP_Error</abbr></span></code>
+
+        <section class="phpdocumentor-description"><p>A Throwable from reading the settings becomes a WP_Error with status
+500 and a message saying that repeating the call will not help.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$input</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Ability input (an empty object).</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_ability_get_status_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_ability_get_status_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;|<abbr title="\WP_Error">WP_Error</abbr></span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Status or error.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_get_ability_definitions">
+        jpkcom_harden_trim_get_ability_definitions()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_get_ability_definitions" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">235</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The registration arguments of every ability.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_get_ability_definitions</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, array&lt;string, mixed&gt;&gt;</span></code>
+
+        <section class="phpdocumentor-description"><p>Reads no WordPress state and touches no registry, so the tests can
+assert the shape without a WordPress installation.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_get_ability_definitions_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_get_ability_definitions_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, array&lt;string, mixed&gt;&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Ability name =&gt; registration args.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_register_ability_category">
+        jpkcom_harden_trim_register_ability_category()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_register_ability_category" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">321</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Register the category, unless another plugin already did.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_register_ability_category</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_register_ability_category_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_register_ability_category_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_register_abilities">
+        jpkcom_harden_trim_register_abilities()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_register_abilities" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/abilities.php"><a href="files/includes-abilities.html"><abbr title="includes/abilities.php">abilities.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">353</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Register the abilities.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_register_abilities</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+        <section class="phpdocumentor-description"><p>wp_register_ability() returns null on every failure path and reports
+only through _doing_it_wrong(), which is silent in production.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_register_abilities_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_register_abilities_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+    
+</article>
                     <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_page_slug">
         jpkcom_harden_trim_page_slug()
@@ -9517,7 +10213,7 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">353</span>
+    <span class="phpdocumentor-element-found-in__line">354</span>
 
     </aside>
 
@@ -9529,7 +10225,8 @@ notice.</p>
                     <span class="phpdocumentor-signature__name">jpkcom_harden_trim_invalid_constants</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, string&gt;</span></code>
 
         <section class="phpdocumentor-description"><p>Such constants are ignored; the settings page names them in a notice.
-Covers the setting constants and the kill switch.</p>
+Covers the setting constants, the kill switch and (since 1.2.0)
+JPKCOM_HARDEN_TRIM_ABILITIES.</p>
 </section>
 
     
@@ -9568,7 +10265,7 @@ Covers the setting constants and the kill switch.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">391</span>
+    <span class="phpdocumentor-element-found-in__line">401</span>
 
     </aside>
 
@@ -9642,7 +10339,7 @@ every site.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">416</span>
+    <span class="phpdocumentor-element-found-in__line">426</span>
 
     </aside>
 
@@ -9682,7 +10379,7 @@ every site.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">436</span>
+    <span class="phpdocumentor-element-found-in__line">446</span>
 
     </aside>
 
@@ -9735,7 +10432,7 @@ already wins inside core.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">499</span>
+    <span class="phpdocumentor-element-found-in__line">509</span>
 
     </aside>
 
@@ -9810,7 +10507,7 @@ constant still wins at runtime.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">542</span>
+    <span class="phpdocumentor-element-found-in__line">552</span>
 
     </aside>
 
@@ -9882,7 +10579,7 @@ preset does not list it, its default. All other keys stay as they are.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">590</span>
+    <span class="phpdocumentor-element-found-in__line">600</span>
 
     </aside>
 
@@ -9948,7 +10645,7 @@ site is_super_admin() is not consulted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">616</span>
+    <span class="phpdocumentor-element-found-in__line">626</span>
 
     </aside>
 
@@ -10012,7 +10709,7 @@ Never cached: the answer depends on the user and is decided per call.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">656</span>
+    <span class="phpdocumentor-element-found-in__line">666</span>
 
     </aside>
 
@@ -10081,7 +10778,7 @@ Never cached: the answer depends on the user and is decided per call.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">693</span>
+    <span class="phpdocumentor-element-found-in__line">703</span>
 
     </aside>
 
@@ -10144,7 +10841,7 @@ modules call this inside their callbacks, where the user is known.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="includes/settings-store.php"><a href="files/includes-settings-store.html"><abbr title="includes/settings-store.php">settings-store.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">718</span>
+    <span class="phpdocumentor-element-found-in__line">728</span>
 
     </aside>
 
@@ -10174,6 +10871,314 @@ modules call this inside their callbacks, where the user is known.</p>
                         </dl>
 
     
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_unfiltered_settings">
+        jpkcom_harden_trim_unfiltered_settings()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_unfiltered_settings" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/status.php"><a href="files/includes-status.html"><abbr title="includes/status.php">status.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">38</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Stored values with the valid plugin constants applied, before the filter.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_unfiltered_settings</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span></code>
+
+        <section class="phpdocumentor-description"><p>The same two steps jpkcom_harden_trim_settings() takes before it applies
+<code class="prettyprint">jpkcom_harden_trim_settings</code>, so a difference to the effective settings
+is exactly what the filter changed.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_unfiltered_settings_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_unfiltered_settings_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string, mixed&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Key =&gt; value.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_is_block_theme">
+        jpkcom_harden_trim_is_block_theme()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_is_block_theme" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/status.php"><a href="files/includes-status.html"><abbr title="includes/status.php">status.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">66</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Whether the active theme is a block theme, when that can be known.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_is_block_theme</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+        <section class="phpdocumentor-description"><p>wp_is_block_theme() is only reliable from after_setup_theme on; before
+that the answer is false, as it is for the feature code.</p>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_is_block_theme_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_is_block_theme_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_status">
+        jpkcom_harden_trim_status()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_status" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/status.php"><a href="files/includes-status.html"><abbr title="includes/status.php">status.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">107</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">The effective status of every setting.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_status</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{kill_switch: array{defined: bool, valid: bool, active: bool}, invalid_constants: list<string>, block_theme: bool, exempt_roles: list<string>, settings: list<array<string,mixed>>}</span></code>
+
+        <section class="phpdocumentor-description"><p>Per key:</p>
+<ul>
+<li><code class="prettyprint">value</code>: the plugin's effective value (constant, else stored, else
+default, then the filter). A core constant does not change it, because
+core does not change it either; see <code class="prettyprint">core_value</code>.</li>
+<li><code class="prettyprint">source</code>: where <code class="prettyprint">value</code> comes from: <code class="prettyprint">core_constant</code> (a core constant
+defined before the plugin loaded decides instead of the plugin),
+<code class="prettyprint">constant</code>, <code class="prettyprint">filter</code>, <code class="prettyprint">stored</code> or <code class="prettyprint">default</code>.</li>
+<li><code class="prettyprint">locked_by</code>: the constant the settings page names as the lock, or null.</li>
+<li><code class="prettyprint">acts</code> / <code class="prettyprint">reason</code>: whether the plugin's feature does something on this
+request, and if not, why: <code class="prettyprint">kill_switch</code>, <code class="prettyprint">core_constant</code> (also a core
+constant another plugin defined before this one could),
+<code class="prettyprint">block_theme</code> (not available with a block theme), <code class="prettyprint">plain_permalinks</code>
+(the author-enumeration block needs pretty permalinks), <code class="prettyprint">unused</code> (a
+role list nothing reads right now) or <code class="prettyprint">off</code>.
+Role-scoped features (<code class="prettyprint">role_scoped</code>) still skip users holding an
+exempt role; that is decided per user and is not reflected in <code class="prettyprint">acts</code>.</li>
+</ul>
+</section>
+
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_status_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_status_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{kill_switch: array{defined: bool, valid: bool, active: bool}, invalid_constants: list<string>, block_theme: bool, exempt_roles: list<string>, settings: list<array<string,mixed>>}</span>
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_status_late_constant">
+        jpkcom_harden_trim_status_late_constant()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_status_late_constant" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/status.php"><a href="files/includes-status.html"><abbr title="includes/status.php">status.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">211</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">A core constant defined after the plugin&#039;s load-time snapshot that keeps
+an active setting from acting.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_status_late_constant</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array{name: string, value: mixed}|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$core</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{name: string, value: mixed}|null</span></code>
+
+        <section class="phpdocumentor-description"><p>file_edit and autosave_interval work by defining DISALLOW_FILE_EDIT and
+AUTOSAVE_INTERVAL on plugins_loaded, and skip when the constant already
+exists (features-security.php, features-performance.php). A constant
+defined by another plugin's file body comes after the snapshot but before
+that, so it is no core lock and still wins. Only an active value counts:
+core defines AUTOSAVE_INTERVAL itself when the plugin does not, and the
+plugin's own definition equals the setting.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Setting key.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Effective value.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$core</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array{name: string, value: mixed}|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Core lock, if any.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_status_late_constant_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_status_late_constant_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{name: string, value: mixed}|null</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The winning constant, or null.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_jpkcom_harden_trim_status_scalar">
+        jpkcom_harden_trim_status_scalar()
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_status_scalar" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="includes/status.php"><a href="files/includes-status.html"><abbr title="includes/status.php">status.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">238</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">A core constant&#039;s value as a JSON scalar.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">jpkcom_harden_trim_status_scalar</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|int|float|string|null</span></code>
+
+        <section class="phpdocumentor-description"><p>wp-config.php may define anything; arrays and objects are reported as
+their type name rather than passed through.</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Constant value.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="function_jpkcom_harden_trim_status_scalar_tags">
+        Tags
+        <a href="namespaces/default.html#function_jpkcom_harden_trim_status_scalar_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">since</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.2.0</span>
+                                                                                                        
+                                    </dd>
+                        </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool|int|float|string|null</span>
+            </section>
+
 </article>
             </section>
 

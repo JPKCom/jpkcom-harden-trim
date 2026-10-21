@@ -567,6 +567,80 @@ shows a notice. The value is read like every boolean constant:
 <code>'false'</code>, <code>'off'</code> or <code>0</code> keep the
 features on, and a value that is no boolean is ignored and named on the
 settings page.</p>
+<h3 id="wp-cli">WP-CLI</h3>
+<p><code>wp harden-trim</code> reads and changes the settings through
+the same validation as the settings page. A value it cannot store as
+given (invalid, locked by a constant, a role that does not exist on the
+site, a switch the settings page does not offer with the active block
+theme) is an error, and nothing is written. On multisite, pick the site
+with <code>--url</code>.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wp harden-trim status</code></td>
+<td>Every setting: effective value, where it comes from (default,
+stored, constant, filter, core constant), the constant that locks it,
+and whether it acts. A switch can be on and still do nothing; the
+<code>reason</code> column says why. <code>--format=json</code> and
+<code>--fields=…</code> as usual</td>
+</tr>
+<tr class="even">
+<td><code>wp harden-trim get &lt;key&gt;</code></td>
+<td>The effective value of one setting</td>
+</tr>
+<tr class="odd">
+<td><code>wp harden-trim set &lt;key&gt; &lt;value&gt;</code></td>
+<td>Change one setting. Switches take
+<code>true</code>/<code>false</code>, choices one of the listed words,
+revisions and autosave a listed number or <code>default</code>, role
+lists comma-separated slugs</td>
+</tr>
+<tr class="even">
+<td><code>wp harden-trim reset &lt;key&gt;…</code> /
+<code>--all</code></td>
+<td>Back to the default; <code>--all</code> asks first unless
+<code>--yes</code></td>
+</tr>
+<tr class="odd">
+<td><code>wp harden-trim presets</code> /
+<code>preset &lt;name&gt;</code></td>
+<td>What each preset would change here, and applying one</td>
+</tr>
+<tr class="even">
+<td><code>wp harden-trim export</code> /
+<code>import &lt;file&gt;</code></td>
+<td>The same JSON document as the settings page; <code>import -</code>
+reads standard input</td>
+</tr>
+</tbody>
+</table>
+<p><code>set</code>, <code>reset</code>, <code>preset</code> and
+<code>import</code> accept <code>--dry-run</code>.</p>
+<h3 id="abilities-api-mcp-and-ai-clients">Abilities API (MCP and AI
+clients)</h3>
+<p>One read-only ability, <code>jpkcom-harden-trim/get-status</code>,
+answers what <code>wp harden-trim status</code> prints: what every
+setting does on this site and why, including the cases the settings page
+cannot show at a glance (the kill switch, a constant or a core constant
+that wins, a block theme, the settings filter, a constant ignored for an
+invalid value). Only administrators (<code>manage_options</code>) may
+run it; it changes nothing.
+<code>define( 'JPKCOM_HARDEN_TRIM_ABILITIES', false );</code> in
+<code>wp-config.php</code> removes it, and the filters
+<code>jpkcom_harden_trim_ability_capability</code> and
+<code>jpkcom_harden_trim_ability_meta</code> change who may run it and
+where it is exposed (REST, MCP). Its texts are English in every
+language, as in every JPKCom plugin’s abilities.</p>
 <h3 id="filters-for-developers">Filters for developers</h3>
 <ul>
 <li><code>jpkcom_harden_trim_settings</code> (array) changes the

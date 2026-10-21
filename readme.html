@@ -4,7 +4,7 @@
 https://github.com/JPKCom/jpkcom-harden-trim<br />
 <strong>Description:</strong> Secure, private &amp; lean WordPress:
 hardening, privacy and performance tweaks with safe defaults.<br />
-<strong>Version:</strong> 1.1.3<br />
+<strong>Version:</strong> 1.2.0<br />
 <strong>Author:</strong> Jean Pierre Kolb <a href="mailto:jpk@jpkc.com"
 class="email">jpk@jpkc.com</a><br />
 <strong>Author URI:</strong> https://www.jpkc.com<br />
@@ -14,7 +14,7 @@ Cleanup<br />
 <strong>Requires at least:</strong> 7.1<br />
 <strong>Tested up to:</strong> 7.1<br />
 <strong>Requires PHP:</strong> 8.3<br />
-<strong>Stable tag:</strong> 1.1.3<br />
+<strong>Stable tag:</strong> 1.2.0<br />
 <strong>License:</strong> GPL-2.0-or-later<br />
 <strong>License URI:</strong>
 https://www.gnu.org/licenses/gpl-2.0.html<br />
@@ -594,6 +594,80 @@ shows a notice. The value is read like every boolean constant:
 <code>'false'</code>, <code>'off'</code> or <code>0</code> keep the
 features on, and a value that is no boolean is ignored and named on the
 settings page.</p>
+<h3 id="wp-cli">WP-CLI</h3>
+<p><code>wp harden-trim</code> reads and changes the settings through
+the same validation as the settings page. A value it cannot store as
+given (invalid, locked by a constant, a role that does not exist on the
+site, a switch the settings page does not offer with the active block
+theme) is an error, and nothing is written. On multisite, pick the site
+with <code>--url</code>.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wp harden-trim status</code></td>
+<td>Every setting: effective value, where it comes from (default,
+stored, constant, filter, core constant), the constant that locks it,
+and whether it acts. A switch can be on and still do nothing; the
+<code>reason</code> column says why. <code>--format=json</code> and
+<code>--fields=…</code> as usual</td>
+</tr>
+<tr class="even">
+<td><code>wp harden-trim get &lt;key&gt;</code></td>
+<td>The effective value of one setting</td>
+</tr>
+<tr class="odd">
+<td><code>wp harden-trim set &lt;key&gt; &lt;value&gt;</code></td>
+<td>Change one setting. Switches take
+<code>true</code>/<code>false</code>, choices one of the listed words,
+revisions and autosave a listed number or <code>default</code>, role
+lists comma-separated slugs</td>
+</tr>
+<tr class="even">
+<td><code>wp harden-trim reset &lt;key&gt;…</code> /
+<code>--all</code></td>
+<td>Back to the default; <code>--all</code> asks first unless
+<code>--yes</code></td>
+</tr>
+<tr class="odd">
+<td><code>wp harden-trim presets</code> /
+<code>preset &lt;name&gt;</code></td>
+<td>What each preset would change here, and applying one</td>
+</tr>
+<tr class="even">
+<td><code>wp harden-trim export</code> /
+<code>import &lt;file&gt;</code></td>
+<td>The same JSON document as the settings page; <code>import -</code>
+reads standard input</td>
+</tr>
+</tbody>
+</table>
+<p><code>set</code>, <code>reset</code>, <code>preset</code> and
+<code>import</code> accept <code>--dry-run</code>.</p>
+<h3 id="abilities-api-mcp-and-ai-clients">Abilities API (MCP and AI
+clients)</h3>
+<p>One read-only ability, <code>jpkcom-harden-trim/get-status</code>,
+answers what <code>wp harden-trim status</code> prints: what every
+setting does on this site and why, including the cases the settings page
+cannot show at a glance (the kill switch, a constant or a core constant
+that wins, a block theme, the settings filter, a constant ignored for an
+invalid value). Only administrators (<code>manage_options</code>) may
+run it; it changes nothing.
+<code>define( 'JPKCOM_HARDEN_TRIM_ABILITIES', false );</code> in
+<code>wp-config.php</code> removes it, and the filters
+<code>jpkcom_harden_trim_ability_capability</code> and
+<code>jpkcom_harden_trim_ability_meta</code> change who may run it and
+where it is exposed (REST, MCP). Its texts are English in every
+language, as in every JPKCom plugin’s abilities.</p>
 <h3 id="filters-for-developers">Filters for developers</h3>
 <ul>
 <li><code>jpkcom_harden_trim_settings</code> (array) changes the
@@ -693,7 +767,27 @@ it?</h3>
 <p>Deleting the plugin removes its settings option and its cached data
 (on multisite, from every site). Deactivating keeps them.</p>
 <h2 id="changelog">Changelog</h2>
-<h3 id="section">1.1.3</h3>
+<h3 id="section">1.2.0</h3>
+<ul>
+<li>Added: WP-CLI command <code>wp harden-trim</code> with
+<code>status</code>, <code>get</code>, <code>set</code>,
+<code>reset</code>, <code>presets</code>, <code>preset</code>,
+<code>export</code> and <code>import</code>. It uses the same
+validation, presets and import/export as the settings page, and refuses
+(writing nothing) a value it cannot store as given: an invalid value, a
+setting locked by a constant, a role that does not exist.
+<code>--dry-run</code> everywhere it writes</li>
+<li>Added: a read-only Abilities API ability,
+<code>jpkcom-harden-trim/get-status</code>, for MCP and AI clients: what
+every setting does on this site and why, including a switch that is on
+but does nothing (kill switch, a core constant, a block theme) and a
+value that comes from a constant or a filter instead of the settings
+page. Administrators only (<code>manage_options</code>);
+<code>JPKCOM_HARDEN_TRIM_ABILITIES</code> set to false removes it</li>
+<li>Changed: nothing for existing sites. No setting, default or feature
+behaves differently</li>
+</ul>
+<h3 id="section-1">1.1.3</h3>
 <ul>
 <li>Added: updates for inactive JPKCom plugins. WordPress never runs the
 code of a deactivated plugin, so its own updater never ran and it was
@@ -716,20 +810,20 @@ the renamed folder. Update information is fetched only for users who can
 update plugins, in WordPress’s update cron and in WP-CLI, never for
 anonymous visitors</li>
 </ul>
-<h3 id="section-1">1.1.2</h3>
+<h3 id="section-2">1.1.2</h3>
 <ul>
 <li>Added: a plugin icon. The update manifest now points WordPress to
 the JPKCom logo, so the Updates screen (Dashboard → Updates) shows it
 next to this plugin instead of the generic pattern wordpress.org
 generates from the slug</li>
 </ul>
-<h3 id="section-2">1.1.1</h3>
+<h3 id="section-3">1.1.1</h3>
 <ul>
 <li>Changed: the German translations call the defaults “Standardwerte”;
 “Voreinstellungen” now only means the presets, so the settings page no
 longer uses one word for both</li>
 </ul>
-<h3 id="section-3">1.1.0</h3>
+<h3 id="section-4">1.1.0</h3>
 <ul>
 <li>Changed: <strong>XML-RPC is blocked on every site right after this
 update</strong>, because the new “Disable XML-RPC” switch is on by
@@ -764,7 +858,7 @@ plugin is active</li>
 <li>Added: German translations of the new texts (<code>de_DE</code>,
 <code>de_DE_formal</code>)</li>
 </ul>
-<h3 id="section-4">1.0.1</h3>
+<h3 id="section-5">1.0.1</h3>
 <ul>
 <li>Changed: the updater keeps its manifest cache, its failure marker
 and its fetch lock in site transients. On multisite the network now
@@ -773,7 +867,7 @@ nothing changes</li>
 <li>Changed: uninstalling also removes the updater’s network-wide cache
 entries, and still the per-site ones 1.0.0 wrote</li>
 </ul>
-<h3 id="section-5">1.0.0</h3>
+<h3 id="section-6">1.0.0</h3>
 <ul>
 <li>Added: Initial release.</li>
 <li>Added: performance switches (emoji, self pingbacks, asset versions,
